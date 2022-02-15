@@ -44,7 +44,7 @@ export const start = () => {
 
 export const fx1 = () => {
   const { osc } = h;
-  osc(4, 0.1, 1.2).out();
+  osc(10, 0.1, 1.2).out();
 };
 
 const r = (min = 0, max = 1) => Math.random() * (max - min) + min;
