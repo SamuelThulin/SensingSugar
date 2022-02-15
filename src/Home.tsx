@@ -20,8 +20,8 @@ const Home: FC = () => {
 
   return (
     <Stack alignItems="center" justifyContent="center" gap={7} mt={7}>
-      <Typography align="center" color="primary" component="h1" variant="h2">
-        Sensing Sugar
+      <Typography align="center" color="secondary" component="h1" variant="h1">
+        Sensing Sugar 
       </Typography>
       <Box>
         <Stack justifyContent="center" gap={2}>
