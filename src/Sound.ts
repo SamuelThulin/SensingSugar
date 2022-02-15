@@ -7,7 +7,7 @@ const synth = new Tone.Synth().toDestination();
 export const playSimple = async () => {
   await Tone.start();
   //play a middle 'C' for the duration of an 8th note
-  synth.triggerAttackRelease('C4', '8n');
+  synth.triggerAttackRelease('G2', '8n');
 };
 
 // * simple double
@@ -15,9 +15,10 @@ export const playTimeControl = async () => {
   await Tone.start();
   const now = Tone.now();
   // trigger the attack immediately
-  synth.triggerAttack('C4', now);
+  //!synth.triggerAttack('C4', now);
   // wait one second before triggering the release
-  synth.triggerRelease(now + 1);
+  //! synth.triggerRelease(now + 3);
+  synth.triggerAttackRelease('G3', '1n', now + 1, 0.1);
 };
 
 // * Sequence
