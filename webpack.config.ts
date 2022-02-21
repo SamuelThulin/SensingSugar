@@ -40,9 +40,9 @@ const optimization = {
 
 const plugins: WebpackPluginInstance[] = [
   new CleanWebpackPlugin({ cleanStaleWebpackAssets: false }),
-  // new CopyWebpackPlugin({
-  //   patterns: [{ from: path.resolve(__dirname, 'src', 'assets'), to: 'assets' }],
-  // }),
+  new CopyWebpackPlugin({
+    patterns: [{ from: path.resolve(__dirname, 'src', 'assets'), to: 'assets' }],
+  }),
   new HtmlWebpackPlugin({
     template: path.resolve(__dirname, 'src', 'index.html'),
     // favicon: path.resolve(__dirname, 'src', 'assets', 'icons', 'favicon-32x32.png'),
