@@ -11,18 +11,22 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import React, { FC, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import PrivacyTerms from './PrivacyTerms';
-import Instuctions from './Instructions';
-import { useDropzone } from 'react-dropzone';
+import { useActions } from '@src/overmind';
 import { motion, useAnimation } from 'framer-motion';
-import Footer from '../../components/Footer';
+import React, { FC, useState } from 'react';
+import { useDropzone } from 'react-dropzone';
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+import Instuctions from './Instructions';
+import PrivacyTerms from './PrivacyTerms';
 
 const DataForm: FC = () => {
+  const { t } = useTranslation('common');
+  const { parseData } = useActions();
   const navigate = useNavigate();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isTablet = useMediaQuery(theme.breakpoints.down('md'));
   const dropZoneAnim = useAnimation();
 
   const [termsAccepted, setTermsAccepted] = useState(true);
@@ -61,7 +65,15 @@ const DataForm: FC = () => {
     });
 
     setError(false);
-    if (accepted) parseData(acceptedFiles[0]);
+    if (!accepted) return;
+
+    const response = await parseData(acceptedFiles[0]);
+    if (response !== true) {
+      setError(true);
+      return;
+    }
+
+    navigate('/play');
   };
 
   const { getRootProps, getInputProps, isDragReject } = useDropzone({
@@ -72,14 +84,10 @@ const DataForm: FC = () => {
     maxFiles: 1,
   });
 
-  const parseData = (file: File) => {
-    console.log('parse data', file);
-    // setError(true);
-    navigate('/play')
-  };
+  const acceptTermsLabel = t('accept_privacy_terms');
 
   return (
-    <Stack alignItems="center" height="100vh" spacing={7} pt={5} pb={1}>
+    <>
       <Typography
         align="center"
         color="primary"
@@ -90,26 +98,31 @@ const DataForm: FC = () => {
         Sensing Sugar
       </Typography>
       <Box maxWidth={1024} px={2}>
-        <Grid container spacing={20}>
-          <Grid item xs={6}>
+        <Grid container spacing={isTablet ? 5 : 20}>
+          <Grid item xs={12} sm={12} md={6}>
             <Typography color="primary" component="h2" variant={isMobile ? 'h6' : 'h5'}>
-              Upload your sugar data
+              {t('upload_your_sugar_data')}
             </Typography>
-            <Stack spacing={2}>
-              <Instuctions />
-              <FormControlLabel
-                control={<Checkbox checked={termsAccepted} onChange={handleChange} size="small" />}
-                label="Accept (privacy terms)"
-              />
+            <Stack direction={isMobile ? 'column' : isTablet ? 'row' : 'column'} spacing={2}>
+              <Box>
+                <Instuctions />
+                <FormControlLabel
+                  control={
+                    <Checkbox checked={termsAccepted} onChange={handleChange} size="small" />
+                  }
+                  label={`${acceptTermsLabel}`}
+                />
+              </Box>
               {termsAccepted && (
-                <Box {...getRootProps()} >
+                <Box {...getRootProps()}>
                   <input {...getInputProps()} />
                   <Paper
                     animate={dropZoneAnim}
                     component={motion.div}
                     elevation={1}
                     sx={{
-                      display: 'flex', justifyContent: 'center',
+                      display: 'flex',
+                      justifyContent: 'center',
                       p: 1,
                       borderWidth: 1,
                       borderColor: ({ palette }) => palette.secondary.dark,
@@ -119,8 +132,13 @@ const DataForm: FC = () => {
                     }}
                   >
                     <Box width="25ch" sx={{ display: 'flex', justifyContent: 'center' }}>
-                      <Typography align="center" color="primary.light" variant="overline">
-                        Drag &apos;n&apos; drop your data here, or click to select a file
+                      <Typography
+                        align="center"
+                        color="primary.light"
+                        variant="overline"
+                        sx={{ lineHeight: '1.5rem' }}
+                      >
+                        {t('drag_drop_your_data_here')}
                       </Typography>
                     </Box>
                   </Paper>
@@ -129,26 +147,24 @@ const DataForm: FC = () => {
               {error && (
                 <Box>
                   <Typography color="error" align="center" variant="body2">
-                    Error: Data mal-formed. Check instructions above.
+                    {t('error_data_malformed')}
                   </Typography>
                 </Box>
               )}
             </Stack>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={12} md={6}>
             <PrivacyTerms />
           </Grid>
         </Grid>
       </Box>
-      <Box flexGrow={1} />
+      {!isTablet && <Box flexGrow={1} />}
       <Stack alignItems="center" justifyContent="center" spacing={2}>
         <IconButton onClick={handleBackButton}>
           <ArrowBackIcon />
         </IconButton>
       </Stack>
-      {!isMobile && <Box flexGrow={1} />}
-      <Footer />
-    </Stack>
+    </>
   );
 };
 
