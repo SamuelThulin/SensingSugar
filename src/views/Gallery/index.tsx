@@ -1,22 +1,34 @@
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Box, Button, IconButton, Stack, Typography, useMediaQuery, useTheme } from '@mui/material';
+import React, { FC, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import Footer from '../../components/Footer';
+import type { FileDetail } from '../../@types';
+import { useActions } from '../../overmind';
 import Sample from './Sample';
 
-const samples = ['1', '2', '3', '4', '5', '6', '7'];
-
 const Gallery: FC = () => {
+  const { getDataGallery } = useActions();
   const { t } = useTranslation('common');
   const navigate = useNavigate();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
+  const [gallery, setGallery] = useState<FileDetail[]>([]);
+
+  useEffect(() => {
+    loadGallery();
+  }, []);
+
+  const loadGallery = async () => {
+    const response = await getDataGallery();
+    setGallery(response);
+  };
+
   const handleBackButton = () => navigate('/');
 
   return (
-    <Stack alignItems="center" height="100vh" spacing={7} pt={5} pb={1}>
+    <>
       <Typography
         align="center"
         color="primary"
@@ -39,8 +51,8 @@ const Gallery: FC = () => {
         </Typography>
       </Box>
       <Stack direction="row" justifyContent="center" flexWrap="wrap" px={2}>
-        {samples.map((id) => (
-          <Sample key={id} id={id} />
+        {gallery.map((data, index) => (
+          <Sample key={index} file={data} />
         ))}
       </Stack>
       <Stack alignItems="center" justifyContent="center" spacing={2}>
@@ -52,9 +64,7 @@ const Gallery: FC = () => {
           <ArrowBackIcon />
         </IconButton>
       </Stack>
-      {!isMobile && <Box flexGrow={1} />}
-      <Footer />
-    </Stack>
+    </>
   );
 };
 

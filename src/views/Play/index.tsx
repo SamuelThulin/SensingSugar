@@ -1,20 +1,41 @@
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { AppBar, Box, Button, Drawer, IconButton, Toolbar, Typography } from '@mui/material';
+import { useActions, useAppState } from '@src/overmind';
 import React, { FC, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useWindowSize } from 'react-use';
 import DataDrawer from './DataDrawer';
 import * as Visuals from './Visuals';
 
 const Play: FC = () => {
   const { t } = useTranslation('common');
+  const { data } = useAppState();
+  const { parseData } = useActions();
   const navigate = useNavigate();
+  const { sample } = useParams();
   const { width, height } = useWindowSize();
   const [showData, setShowData] = useState(false);
 
   useEffect(() => {
-    Visuals.start();
+    if (sample) {
+      loadData(sample);
+      return;
+    }
+
+    if (data.length === 0) return navigate('/');
+    start();
   }, []);
+
+  const loadData = async (name: string) => {
+    const response = await parseData(`/data/${name}.csv`);
+    if (response !== true) return navigate('/');
+    start();
+  };
+
+  const start = () => {
+    Visuals.start();
+  };
 
   const handleShowData = () => setShowData(true);
   const handleHideData = () => setShowData(false);

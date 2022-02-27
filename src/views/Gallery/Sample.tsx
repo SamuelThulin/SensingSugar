@@ -2,17 +2,17 @@ import { Box, Stack, Typography, useTheme } from '@mui/material';
 import { motion } from 'framer-motion';
 import React, { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import type { FileDetail } from '../../@types';
 interface SampleProps {
-  id: string;
+  file: FileDetail;
 }
 
-const Sample: FC<SampleProps> = ({ id }) => {
+const Sample: FC<SampleProps> = ({ file: file }) => {
   const navigate = useNavigate();
   const { palette } = useTheme();
-  const handleClick = () => navigate(`/play?sample=${id}`);
+  const handleClick = () => navigate(`/play/${file.name}`);
 
-  const imageUrl = `./assets/images/${id}.png`;
+  const imageUrl = `./${file.path}/${file.name}.png`;
 
   return (
     <Stack
@@ -34,7 +34,7 @@ const Sample: FC<SampleProps> = ({ id }) => {
         src={imageUrl}
       />
       <Typography align="center" color="primary" component="h2" variant="h6">
-        #{id}
+        #{file.name}
       </Typography>
     </Stack>
   );
