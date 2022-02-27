@@ -1,6 +1,6 @@
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Box, Button, IconButton, Stack, Typography, useMediaQuery, useTheme } from '@mui/material';
-import React, { FC } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import Footer from '../../components/Footer';
 import Sample from './Sample';
@@ -8,6 +8,7 @@ import Sample from './Sample';
 const samples = ['1', '2', '3', '4', '5', '6', '7'];
 
 const Gallery: FC = () => {
+  const { t } = useTranslation('common');
   const navigate = useNavigate();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -34,13 +35,7 @@ const Gallery: FC = () => {
             },
           }}
         >
-          It is a long established fact that a reader will be distracted by the readable content of
-          a page when looking at its layout. The point of using Lorem Ipsum is that it has a
-          more-or-less normal distribution of letters, as opposed to using Content here, content
-          here, making it look like readable English. Many desktop publishing packages and web page
-          editors now use Lorem Ipsum as their default model text, and a search for lorem ipsum will
-          uncover many web sites still in their infancy. Various versions have evolved over the
-          years, sometimes by accident, sometimes on purpose (injected humour and the like).
+          {t('short_intro')}
         </Typography>
       </Box>
       <Stack direction="row" justifyContent="center" flexWrap="wrap" px={2}>
@@ -50,7 +45,7 @@ const Gallery: FC = () => {
       </Stack>
       <Stack alignItems="center" justifyContent="center" spacing={2}>
         <Button color="primary" size="large" sx={{ borderRadius: 4 }} variant="outlined">
-          Try with your sugar
+          {t('feel_your_sugar')}
         </Button>
         <Box flexGrow={1} />
         <IconButton onClick={handleBackButton}>

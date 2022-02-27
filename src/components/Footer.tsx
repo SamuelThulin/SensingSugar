@@ -1,7 +1,9 @@
 import { Box, Button } from '@mui/material';
 import React, { FC } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const Footer: FC = () => {
+  const { t } = useTranslation('common');
   return (
     <Box sx={{ marginTop: 'auto' }}>
       <Button
@@ -11,7 +13,7 @@ const Footer: FC = () => {
         size="small"
         sx={{ borderRadius: 4 }}
       >
-        About
+        {t('about')}
       </Button>
     </Box>
   );

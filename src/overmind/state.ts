@@ -1,7 +1,7 @@
 type State = {
-  title: string;
+  language: Language;
 };
 
 export const state: State = {
-  title: 'Sensing Sugar',
+  language: { code: 'en-CA', name: 'english', shortName: 'en' },
 };

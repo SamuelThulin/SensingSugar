@@ -1,3 +1,24 @@
 {
-  
+  "common": {
+    " Privacy terms": "",
+    " Privacy terms_text": "",
+    "about": "à propos",
+    "accept_privacy_terms": "",
+    "drag_drop_your_data_here": "",
+    "error_data_malformed": "",
+    "experience_someone_else_sugar": "",
+    "feel_your_sugar": "",
+    "glucose": "",
+    "how_to_structure_your_file": "",
+    "illustration404": "",
+    "meal": "",
+    "meal_marker": "",
+    "message404": "Vous vous avancer sur des zones obscures, ou bien c'est une erreur. Retournez à <1>l'accueil.</1>",
+    "pageNotFound": "Page non trouvée",
+    "short_intro": "",
+    "show_data_source": "",
+    "timestamp": "",
+    "title404": "404: La page que vous cherchez n'est pas ici",
+    "upload_your_sugar_data": ""
+  }
 }

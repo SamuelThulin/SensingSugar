@@ -1,12 +1,13 @@
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { AppBar, Box, Button, Drawer, IconButton, Toolbar, Typography } from '@mui/material';
 import React, { FC, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useWindowSize } from 'react-use';
 import DataDrawer from './DataDrawer';
 import * as Visuals from './Visuals';
 
 const Play: FC = () => {
+  const { t } = useTranslation('common');
   const navigate = useNavigate();
   const { width, height } = useWindowSize();
   const [showData, setShowData] = useState(false);
@@ -36,7 +37,7 @@ const Play: FC = () => {
             Sensing Sugar
           </Typography>
           <Button color="inherit" onClick={handleShowData} size="small" sx={{ borderRadius: 4 }}>
-            Show data source
+            {t('show_data_source')}
           </Button>
         </Toolbar>
       </AppBar>

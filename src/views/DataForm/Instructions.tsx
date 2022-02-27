@@ -1,14 +1,16 @@
 import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
 import React, { FC } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const Instructions: FC = () => {
+  const { t } = useTranslation('common');
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
     <Box>
       <Typography color="secondary" component="h3" variant={isMobile ? 'subtitle1' : 'subtitle1'}>
-        How to structure your file
+        {t('how_to_structure_your_file')}
       </Typography>
       <Typography
         variant="body2"
