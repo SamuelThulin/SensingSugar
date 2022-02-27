@@ -1,5 +1,6 @@
-import path from 'path';
 import express from 'express';
+import path from 'path';
+import repository from './routes/repository';
 
 const publicPath = path.join(__dirname, '..', 'dist');
 
@@ -14,6 +15,7 @@ const loadDevTools = async () => {
 };
 
 if (process.env.NODE_ENV === 'development') loadDevTools();
+app.use('/api', repository);
 
 app.use(express.static(publicPath));
 
@@ -21,7 +23,6 @@ app.use(express.static(publicPath));
 // * turno off on dev. reason HMR doesn't work with this on.
 // if (process.env.NODE_ENV !== 'development') {
 app.get('*', (req, res) => {
-  // console.log('catch all');
   // res.set('Content-Type', 'text/event-stream');
   res.status(200).sendFile(path.join(publicPath, 'index.html'));
 });
