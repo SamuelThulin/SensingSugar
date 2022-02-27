@@ -1,28 +1,79 @@
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { Box, Button, Drawer, IconButton, Stack, Typography } from '@mui/material';
+import MedicationIcon from '@mui/icons-material/Medication';
+import RateReviewIcon from '@mui/icons-material/RateReview';
+import { Box, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
+import { styled } from '@mui/system';
+import { useAppState } from '@src/overmind';
 import React, { FC } from 'react';
+import { useTranslation } from 'react-i18next';
+
+const Cell = styled(TableCell)(() => ({
+  fontSize: '0.775rem',
+  lineHeight: '1.1rem',
+  border: 'unset',
+}));
 
 const DataDrawer: FC = () => {
+  const { t } = useTranslation('common');
+  const { data, unitGlucose, unitMeal } = useAppState();
+
+  // console.log(data);
+  // console.table([...data]);
+
   return (
-    <Stack width={300} p={2}>
-      <Typography>Data Source</Typography>
-      <Box>
-        <pre style={{ whiteSpace: 'pre-wrap', fontSize: '0.675rem'}}>
-          "Id";"Category_en_CA";"Category_fr_CA";"Extendable";"Description_en_CA";"Description_fr_CA";"OutputFormat";"Name";"Active";"CreatedDate";"UpdatedDate"
-"1";"Date and Time";"French Category Example";"0";"Matches date, time, intervals or date and time together";"French Desciption Example";"String in ISO-8601 format or Object:";"@sys.date-time";"1";"2020-09-15 21:16:21";"2020-09-15 21:16:21"
-"2";"Date and Time";"French Category Example";"0";"Matches a date";"French Desciption Example";"String in ISO-8601 format";"@sys.date";"1";"2020-09-15 21:16:21";"2020-09-15 21:16:21"
-"3";"Date and Time";"French Category Example";"0";"Matches a date intervalObject";"French Desciption Example";"Strings in ISO-8601 format";"@sys.date-period";"1";"2020-09-15 21:16:21";"2020-09-15 21:16:21"
-"4";"Date and Time";"test";"0";"Matches a time";"test";"String in ISO-8601 format";"@sys.time";"1";"2020-09-15 21:16:21";"2020-09-15 21:16:21"
-"5";"Date and Time";"test";"0";"Matches a time intervalObject";"test";"Strings in ISO-8601 format";"@sys.time-period";"1";"2020-09-15 21:16:21";"2020-09-15 21:16:21"
-"6";"Numbers";NULL;"1";"Ordinal and cardinal numbers";NULL;"Number";"@sys.number";"1";"2020-09-15 21:16:21";"2020-09-15 21:16:21"
-"7";"Numbers";NULL;"1";"Cardinal numbers";NULL;"Number";"@sys.cardinal";"1";"2020-09-15 21:16:21";"2020-09-15 21:16:21"
-"8";"Numbers";NULL;"0";"Ordinal numbers";NULL;"Number";"@sys.ordinal";"1";"2020-09-15 21:16:21";"2020-09-15 21:16:21"
-"9";"Numbers";NULL;"1";"Matches integers only";NULL;"Number";"@sys.number-integer";"1";"2020-09-15 21:16:21";"2020-09-15 21:16:21"
-"10";"Numbers";NULL;"1";"Matches number sequences";NULL;"String";"@sys.number-sequence";"1";"2020-09-15 21:16:21";"2020-09-15 21:16:21"
-"11";"Numbers";NULL;"1";"Alphanumeric flight numbers";NULL;"String";"@sys.flight-number";"1";"2020-09-15 21:16:21";"2020-09-15 21:16:21"
-        </pre>
-      </Box>
-    </Stack>
+    <Box maxWidth={550}>
+      <Table size="small" stickyHeader>
+        <TableHead>
+          <TableRow>
+            <Cell>{t('timestamp')}</Cell>
+            <Cell align="right">
+              {t('glucose')} <br /> [{unitGlucose}]
+            </Cell>
+            {data[0].meal && (
+              <Cell align="right">
+                {t('meal')} <br /> [{unitMeal}]
+              </Cell>
+            )}
+            {data[0].meal_marker && <Cell>{t('meal_marker')}</Cell>}
+            {data[0].medication && <Cell></Cell>}
+            {data[0].notes && <Cell></Cell>}
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {data.map((item, index) => {
+            const medication = item.medication?.split(',') ?? [];
+            return (
+              <TableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                <Cell component="th" scope="row">
+                  {item.timestamp}
+                </Cell>
+                <Cell align="right">{item.glucose || '-'}</Cell>
+                {data[0].meal && <Cell>{item.meal}</Cell>}
+                {data[0].meal_marker && <Cell>{item.meal_marker}</Cell>}
+                {data[0].medication && (
+                  <Cell>
+                    {medication.map((m: string, index: number) => (
+                      <MedicationIcon
+                        key={index}
+                        sx={{ width: 16, height: 16, color: ({ palette }) => palette.grey[500] }}
+                      />
+                    ))}
+                  </Cell>
+                )}
+                {data[0].notes && (
+                  <Cell>
+                    {item.notes && (
+                      <RateReviewIcon
+                        sx={{ width: 16, height: 16, color: ({ palette }) => palette.grey[400] }}
+                      />
+                    )}
+                  </Cell>
+                )}
+              </TableRow>
+            );
+          })}
+        </TableBody>
+      </Table>
+    </Box>
   );
 };
 
