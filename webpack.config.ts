@@ -41,7 +41,10 @@ const optimization = {
 const plugins: WebpackPluginInstance[] = [
   new CleanWebpackPlugin({ cleanStaleWebpackAssets: false }),
   new CopyWebpackPlugin({
-    patterns: [{ from: path.resolve(__dirname, 'src', 'assets'), to: 'assets' }],
+    patterns: [
+      { from: path.resolve(__dirname, 'src', 'assets'), to: 'assets' },
+      { from: path.resolve(__dirname, 'data'), to: 'data' },
+    ],
   }),
   new HtmlWebpackPlugin({
     template: path.resolve(__dirname, 'src', 'index.html'),
