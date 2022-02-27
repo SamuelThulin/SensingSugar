@@ -23,7 +23,9 @@
 	},
 	"scripts": {
 		"start": "env-cmd -e production ts-node ./server/index.ts",
+		"server-only:dev": "nodemon",
 		"server:dev": "env-cmd -e development nodemon",
+		"dev:webpack": "env-cmd -e development webpack",
 		"build": "NODE_ENV=production webpack",
 		"cm": "git-cz"
 	},
