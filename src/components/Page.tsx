@@ -7,11 +7,12 @@ interface PageProps {
   title?: string;
 }
 
-const Page = forwardRef<PageProps, any>(({ children, title = '', ...rest }, ref) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const Page = forwardRef<PageProps, any>(({ children, title, ...rest }, ref) => {
   return (
     <div ref={ref} {...rest}>
       <Helmet>
-        <title>leaf-writer</title>
+        <title>Sensing Sugar{title && ` - ${title}`}</title>
       </Helmet>
       {children}
     </div>
