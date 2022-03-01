@@ -1,9 +1,15 @@
-import { Box, Button, ButtonGroup, Stack, Typography } from '@mui/material';
+import HomeIcon from '@mui/icons-material/Home';
+import { Box, Button, ButtonGroup, IconButton, Stack, Typography } from '@mui/material';
 import React, { FC } from 'react';
+import { useNavigate } from 'react-router-dom';
 import * as Sound from './Sound';
 import * as Visuals from './Visuals';
 
 const Playground: FC = () => {
+  const navigate = useNavigate();
+
+  const handleClickPlayground = () => navigate('/');
+
   const handlePlaySimple = () => Sound.playSimple();
   const handlePlayTime = () => Sound.playTimeControl();
   const handlePlaySequence = () => Sound.playSquence();
@@ -19,9 +25,14 @@ const Playground: FC = () => {
   const handlefx2 = () => Visuals.fx2();
 
   return (
-    <Stack alignItems="center" justifyContent="center" gap={7} mt={7}>
+    <Stack alignItems="center" justifyContent="center" gap={7} pt={1}>
+      <Stack direction="row" alignItems="left" width="100%" px={2}>
+        <IconButton color="info" onClick={handleClickPlayground} size="small">
+          <HomeIcon fontSize="inherit" />
+        </IconButton>
+      </Stack>
       <Typography align="center" color="secondary" component="h1" variant="h1">
-        Sensing Sugar 
+        Sensing Sugar
       </Typography>
       <Box>
         <Stack justifyContent="center" gap={2}>
