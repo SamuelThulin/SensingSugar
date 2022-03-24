@@ -52,11 +52,15 @@ export const parse = async (
       skipEmptyLines: true,
       // transform: (value: string) => {},
       transformHeader: (header: string) => {
-        if (header === 'Date and Time' || header === 'Time') header = 'timestamp';
-        if (header === 'BGValue[mmol/L]' || header === 'mmol/L') {
+        if (header === 'Date and Time' || header === 'Time' || header === 'Local Time') {
+          header = 'timestamp';
+        }
+
+        if (header === 'BGValue[mmol/L]' || header === 'mmol/L' || header === 'Value') {
           if (header.includes('mmol/L')) actions.setGlucoseUnit('mmol/L');
           header = 'glucose';
         }
+
         if (header.includes('Meal[g]')) {
           if (header.includes('[g]')) actions.setMealUnit('g');
           header = 'meal';
@@ -64,6 +68,7 @@ export const parse = async (
 
         header = header.toLocaleLowerCase();
         header = header.replace(' ', '_');
+
         return header;
       },
     });
