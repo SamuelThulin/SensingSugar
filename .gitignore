@@ -9,7 +9,7 @@ yarn-error.log*
 .env-cmdrc.js
 
 /dist
-/data
+
 
 # Runtime data
 pids

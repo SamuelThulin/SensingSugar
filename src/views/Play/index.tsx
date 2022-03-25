@@ -7,6 +7,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useWindowSize } from 'react-use';
 import DataDrawer from './DataDrawer';
 import * as Visuals from './Visuals';
+import * as Sound from './Sound';
 
 const Play: FC = () => {
   const { t } = useTranslation('common');
@@ -35,6 +36,7 @@ const Play: FC = () => {
 
   const start = () => {
     Visuals.start();
+    Sound.play(data);
   };
 
   const handleShowData = () => setShowData(true);
