@@ -1,4 +1,6 @@
+import { Segment } from '@mui/icons-material';
 import * as Tone from 'tone';
+import { Envelope } from 'tone';
 
 //create a synth and connect it to the main output (your speakers)
 const synth = new Tone.Synth().toDestination();
@@ -6,8 +8,11 @@ const synth = new Tone.Synth().toDestination();
 // * simple
 export const playSimple = async () => {
   await Tone.start();
+  //debugging:
+  //console.log('hello');
+  //console.log(Tone);
   //play a middle 'C' for the duration of an 8th note
-  synth.triggerAttackRelease('G2', '8n');
+  synth.triggerAttackRelease('C3', '8n');
 };
 
 // * simple double
@@ -18,7 +23,7 @@ export const playTimeControl = async () => {
   //!synth.triggerAttack('C4', now);
   // wait one second before triggering the release
   //! synth.triggerRelease(now + 3);
-  synth.triggerAttackRelease('G3', '1n', now + 1, 0.1);
+  synth.triggerAttackRelease('G2', '1n', now + 1, 1);
 };
 
 // * Sequence
@@ -33,23 +38,64 @@ export const playSquence = async () => {
 // *  Scheduling
 export const playScheduling = async () => {
   await Tone.start();
+//proof of concept - the bgData numbers are rounded off and uses as indices for the notesArray in the Tone.Sequence below
+const bgData: number[] = [5.7, 2.3, 11.8, 9.5, 7.8]; 
+const notesArray: string[] = ['C3','A3', 'G3', 'E3', 'C2', 'C3','A3', 'G3', 'E3', 'C2','C3','A3', 'G3', 'E3', 'C2'];
 
   const synthA = new Tone.FMSynth().toDestination();
   const synthB = new Tone.AMSynth().toDestination();
 
   //play a note every quarter-note
-  const loopA = new Tone.Loop((time) => {
+  /*const loopA = new Tone.Loop((time) => {
     synthA.triggerAttackRelease('C2', '8n', time);
-  }, '4n').start(0);
+  }, '4n').start(0);*/
+
+const seq = new Tone.Sequence((time, note) => {
+	synthA.triggerAttackRelease(note, 0.1, time);
+	// subdivisions are given as subarrays
+}, [notesArray[Math.round(bgData[0])], [notesArray[1],notesArray[2],notesArray[3]], notesArray[Math.round(bgData[3])], [notesArray[3], notesArray[4]]]).start(0);
 
   //play another note every off quarter-note, by starting it "8n"
   const loopB = new Tone.Loop((time) => {
-    synthB.triggerAttackRelease('C4', '8n', time);
+    synthB.triggerAttackRelease('G2', '8n', time);
   }, '4n').start('8n');
-
   // all loops start until the Transport is started
+  Tone.Transport.bpm.value = 80;
   Tone.Transport.start();
-};
+  //Tone.Transport.start("+1", "2:0:0");// this works
+
+  // schedule an event on the 2nd measure
+Tone.Transport.schedule((time) => {
+	// invoked on measure 2
+
+	console.log("measure 2!");
+
+  seq.stop();
+  //synthB.envelope.attack = 0.6;
+  synthB.set({
+    harmonicity: 0.1,
+    envelope: {
+      attack: 0.1,
+      release: 0.1,
+
+    },
+  });
+  //Tone.Transport.bpm.value = 140;// not sure how to make this work properly
+}, "2:0:0");
+
+  // schedule an event on the 4th measure
+  Tone.Transport.schedule((time) => {
+    // invoked on measure 2
+   // loopA.stop(time);
+    console.log("measure 4!");
+    //synthB.setNote('F3');
+    seq.start();
+    //synthB.envelope.attack = 0.6;
+   synthB.harmonicity.rampTo(15, 2);
+    //synthB.harmonicity.value = 15;
+  }, "4:0:0");
+  };
+
 
 //*  Instruments
 export const playInstruments = async () => {
@@ -103,7 +149,7 @@ export const playEffectts = async () => {
 
   const player = new Tone.Player({
     url: 'https://tonejs.github.io/audio/berklee/gurgling_theremin_1.mp3',
-    loop: true,
+    loop: false,
     autostart: true,
   });
   //create a distortion effect
