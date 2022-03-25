@@ -10,6 +10,6 @@ type State = {
 export const state: State = {
   data: [],
   language: { code: 'en-CA', name: 'english', shortName: 'en' },
-  unitGlucose: 'mmol/2',
+  unitGlucose: 'mmol/L',
   unitMeal: 'm',
 };

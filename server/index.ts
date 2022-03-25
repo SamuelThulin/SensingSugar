@@ -1,7 +1,7 @@
-import chalk from 'chalk';
-import app from './server';
+import kleur from 'kleur';
+import server from './server';
 const port = process.env.PORT || 3000;
 
-app.listen(port, () => {
-  console.log(chalk.bgGreen.black(`\n Server listening on port ${port}! \n`));
+server.listen(port, () => {
+  console.log(kleur.bgGreen().black(`\n Server listening on port ${port}! \n`));
 });
