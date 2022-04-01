@@ -1,7 +1,7 @@
 import MedicationIcon from '@mui/icons-material/Medication';
 import RateReviewIcon from '@mui/icons-material/RateReview';
 import { Box, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
-import { styled } from '@mui/system';
+import { styled } from '@mui/material/styles';
 import { useAppState } from '@src/overmind';
 import React, { FC } from 'react';
 import { useTranslation } from 'react-i18next';

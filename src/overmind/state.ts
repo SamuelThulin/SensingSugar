@@ -1,7 +1,8 @@
 import type { Language } from '../utilities/util';
+import { IData } from '../@types'
 
 type State = {
-  data: any[];
+  data: IData[];
   language: Language;
   unitGlucose: string;
   unitMeal: string;

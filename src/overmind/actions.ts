@@ -1,3 +1,4 @@
+import { IData } from '@src/@types';
 import Papa, { ParseError, ParseMeta, ParseResult } from 'papaparse';
 import { supportedLanguages } from '../utilities/util';
 import { Context } from './';
@@ -29,7 +30,7 @@ export const parseData = async ({ state, actions }: Context, file: File | string
   const response = await actions.parse(file);
   if (response.errors.length > 0) response.errors[0].message;
 
-  state.data = response.data;
+  state.data = response.data as IData[];
   return true;
 };
 
