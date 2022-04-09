@@ -52,9 +52,9 @@ const plugins: WebpackPluginInstance[] = [
   }),
   new MiniCssExtractPlugin(),
   new WebpackBar({ color: env === 'development' ? '#7e57c2' : '#9ccc65' }),
-  new webpack.ProvidePlugin({
-    process: 'process/browser',
-  }),
+  // new webpack.ProvidePlugin({
+  //   process: 'process/browser',
+  // }),
   new webpack.DefinePlugin({
     'process.env.NODE_ENV': JSON.stringify(env),
   }),
