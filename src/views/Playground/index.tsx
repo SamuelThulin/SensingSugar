@@ -75,7 +75,7 @@ const Playground: FC = () => {
               height={1024}
               style={{
                 position: 'absolute',
-                top: 0,
+                top: 700,
                 left: 0,
                 zIndex: -1,
               }}

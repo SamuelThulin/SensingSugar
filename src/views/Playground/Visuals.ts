@@ -7,8 +7,8 @@ export const start = () => {
 
   h = new Hydra({
     canvas,                    // canvas element to render to. If none is supplied, a canvas will be created and appended to the screen
-    // width: 1280,            // defaults to canvas width when included, 1280 if not
-    // height: 720,            // defaults to canvas height when included, 720 if not
+    //width: 1280,            // defaults to canvas width when included, 1280 if not
+    //height: 720,            // defaults to canvas height when included, 720 if not
     autoLoop: true,            // if true, will automatically loop using requestAnimationFrame.If set to false, you must implement your own loop function using the tick() method (below)
     makeGlobal: false,         // if false, will not pollute global namespace (note: there are currently bugs with this)
     detectAudio: false,        // recommend setting this to false to avoid asking for microphone
@@ -66,3 +66,46 @@ export const fx2 = () => {
     )
     .out();
 };
+
+export const fx3 = (rate: any, colour: number) => {
+  const { osc } = h;
+  osc(rate, 0.1, colour).out();
+};
+
+export const fx4 = (sides: any) => {
+  const { shape } = h;
+  shape(sides, 0.2, 0.001).out();
+};
+
+export const fx5 = (rate: any, kal: any, red: any, speed: any) => {
+  const {osc} = h;
+  let pattern = () => osc(rate, 0.139, 0.857)
+	.kaleid(kal).shift(red, 0.8, 0.1, 1.9);
+// 
+pattern()
+	.scrollY(0.086, speed)
+	.mult(pattern(), 0.5)
+	.out();
+}
+
+//arg ranges: g 0-1, inv 0-1, nn 0 - 999, ns 0-1, rot 0.0001 - 0.01, lthrst 0.01-0.1, ltol 0.0001-0.1
+
+export const fx6 = (g: number, inv: number,nn: number, ns: number, rot: number, lthrsh: number, ltol: number ) => {
+  const {src, osc, noise, o0, o1} = h;
+  osc(5).color(0.5,g,0.6).saturate(5).invert(inv).mult(noise(nn, ns)).out(o1)
+src(o0)
+.rotate(0.05, rot)
+.scrollY(-0.05, 0.05)
+.layer(src(o1).luma(lthrsh, ltol))
+	.out(o0)
+}
+
+export const fx7 = (g: number, inv: number, sat: number, nn: number, ns: number, rot: number, lthrsh: number, ltol: number ) => {
+  const {src, osc, noise, o0, o1} = h;
+  osc(3.5).color(0.5,g,0.6).saturate(sat).invert(inv).mult(noise(nn, ns)).out(o1)
+src(o0)
+.rotate(0.05, rot)
+.scrollY(-0.05, 0.05)
+.diff(src(o1).luma(lthrsh, ltol))
+	.out(o0)
+}
