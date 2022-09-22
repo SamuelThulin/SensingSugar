@@ -43,7 +43,6 @@ function convertBGtoNotes(modeFormula: number[], upperLimit, baseOctave=2) {
   
 
 //create a synth and connect it to the main output (your speakers)
-//const reverbA = new Tone.Reverb(1).toDestination();
 const reverbA = new Tone.Reverb(1);
 
 const panVolS1 = new Tone.PanVol(-0.5, 0).toDestination();
@@ -70,7 +69,7 @@ fmSwell.set({
   oscillator: {type: "triangle13"}
   
   })
-//const synth4 = new Tone.Synth().toDestination();
+
 synth.connect(panVolS1);
 synth.chain(reverbA, Tone.Destination);
 synth2.connect(panVolS2);
@@ -89,7 +88,6 @@ fmSwell.connect(panVolS1);
 fmSwell.chain(reverbA, Tone.Destination);
 
 //BG array - this works, but there might be a more elegant way, and I need to decide whether to actually remove the null values or not
-
 //from Luciano: const glucoseValues = data.filter((value) => value.glucose !== null)
 let glucoseValues = data.map((value) => value.glucose);
 glucoseValues = glucoseValues.filter(Number)
@@ -109,9 +107,6 @@ const bgRange9 = glucoseValues.map((num) => convertRange(num, [minBG, maxBG],[0,
 const bgRange310 = glucoseValues.map((num) => convertRange(num, [minBG, maxBG],[0.0001,0.01]))
 const bgRange100 = glucoseValues.map((num) => convertRange(num, [minBG, maxBG],[0.01,0.1]))
 const bgRange300 = glucoseValues.map((num) => convertRange(num, [minBG, maxBG],[0.0001,0.1]))
-
-
-
 
 // * simple
 export const playSimple = async () => {
@@ -162,17 +157,14 @@ export const playTimeControl = async () => {
 
 export const playSquence = async () => {
   await Tone.start();
- // const now = Tone.now();
-
  let counterS1Vel = 0;
  let counterS2Vel = 0;
  let counterS3Vel = 0;
  const bgMIDI = convertBGtoNotes(myModeFormula, majorFormula.length*3, 4);
  const bgFreqs = bgMIDI.map((num)=>Tone.mtof(num));
-
  console.log(bgFreqs);
 
-  //k is # of pulses, n is # of slots, c is notename as String (ex. "C3")
+  //k is # of pulses, n is # of slots, c is notename as String (ex. "C3"); this is for creating rhythms from the data
   function bjorklund(k, n, c) {
     //returns k pulses (1s) followed by n-k rests (0s)
     let seq = _.times(k, _.constant([1])).concat(_.times(n - k, _.constant([0])));
@@ -187,39 +179,20 @@ export const playSquence = async () => {
       }
     }
    return _.flatten(seq).map(function(value){if(value == 1){return c}else{return null}})
-    //return _.flatten( seq);
-    
   };
-  //console.log(bjorklund(3,7, "A3"));
-let fft = new Tone.FFT(16); 
+
 let notes = []
 let notes2 = []
 let notes3 = []
+
+//FFT analyzes the audio output, can use the numbers it returns to do stuff to the visuals
+let fft = new Tone.FFT(16); 
 Tone.Destination.connect(fft);
 fft.set({
   normalRange: true,
   smoothing: 0.8 
 })
 
-console.log(notes);
-/*
-synth.set({
-  attackNoise: 10,
-});
-
-synth2.set({
-  envelope: {
-    attack: 0.005,
-    release: 0.1,
-    sustain: 0.3,
-  },
-});
-synth3.set({
-  envelope: {
-    attack: 0.005,
-    release: 0.1,
-  },
-});*/
 // create a new sequence with the synth and notes
 const synthPart = new Tone.Sequence(
   function(time, note) {
@@ -233,7 +206,6 @@ const synthPart = new Tone.Sequence(
       resonance: bgRange01[counterS1Vel%bgRange01.length]*0.4+0.6,
       release: 2,
     });
-    //console.log(bgRange01[counterS1Vel%bgRange01.length]);
     counterS1Vel++;
   },
   notes,
@@ -251,7 +223,6 @@ const synthPart2 = new Tone.Sequence(
       resonance: bgRange01[counterS2Vel%bgRange01.length]*0.4+0.6,
       release: 2,
     });
-    console.log("synthPart2")
     counterS2Vel++;
   },
   notes2,
@@ -269,7 +240,6 @@ const synthPart3 = new Tone.Sequence(
       resonance: bgRange01[counterS3Vel%bgRange01.length]*0.4+0.6,
       release: 2,
     });
-    console.log("synthPart3")
     counterS3Vel++;
   },
   notes3,
@@ -281,51 +251,21 @@ synthPart.start();
 synthPart2.start();
 synthPart3.start();
 
-//too music
-
-/*synthPart.humanize = true;
-synthPart2.humanize = true;
-synthPart3.humanize = true;*/
-
-//example of continuous/repeated scheduling 
-/*function synth1R (s, d, pos) {let srCounter = pos;
-Tone.Transport.scheduleRepeat((time) => {
-	// use the callback time to schedule events
-	//osc.start(time).stop(time + 0.1);
-  srCounter++,
-  //this works for reading through the values, but it would be even better if it's scope was more limited; you could modulo by the length of the glucoseValue array - 1
-  console.log("sr", glucoseValues[srCounter%4+pos]),
-  synth.set({
-    volume: -30*Math.random(),
-    harmonicity: glucoseValues[srCounter%4+pos],
-    modulationIndex: 1,
-    modulationEnvelope: {
-      attack: 0.005,
-      release: Math.random(),
-    },
-    envelope: {
-      attack: 0.005,
-      release: 1,
-    },
-  });
-  //s is when it should happen, d is how long it should repeat - not sure what effect this has
-}, "4n", s, d);
-}*/
-//synth1R(0);
-
 // Note that if you pass a time into the start method 
 // you can specify when the synth part starts 
 // e.g. .start('8n') will start after 1 eighth note// start the transport which controls the main timeline
+//Set the BPM and start the transport
 Tone.Transport.bpm.value = 200;
 Tone.Transport.start();
 
+//function for punctual events that will happen on top of the Euclidean rhythms created by the Bjorklund function
 function swellFMEvent1 (s, freq) {Tone.Transport.schedule((time)=>{
 fmSwell.triggerAttackRelease(freq, "1n")
 }, s);}
 
+//function for scheduling changes in the Bjorklund rhythm of the specified synth part and any other change that would be synchornized with these changes
 //s is for shedule - the time at which it happens; n is the BG number
 function bgEvent (s, n, freq) { Tone.Transport.schedule((time) => {
-  //works - but not very human readable - essentially splitting the BG reading at the decimal, chosing the smaller of the two result integers for the k (pulses) and the larger for the n (slots), could also do something with the note name to make it dynamic
   synthPart.events = bjorklund(bgSplitMin(n), bgSplitMax(n), freq)
   console.log(synthPart.events)
   console.log(n)
@@ -336,12 +276,13 @@ function bgEvent (s, n, freq) { Tone.Transport.schedule((time) => {
    console.log(time);
 	}, time);
 }, s);}
+
 //little function to get fft data values roughly between 0 and 1 - can change multiplier for different ranges etc.
 //Q- how can your perform an operation (multiply) on the value returned from a function?
 function fftNorm (){let y =  fft.getValue(); return y[0]*10}
+
+//function for scheduling changes in the Bjorklund rhythm of the specified synth part and any other change that would be synchornized with these changes
 function bgEvent2 (s, n, freq) { Tone.Transport.schedule((time) => {
-  //works - but not very human readable - essentially splitting the BG reading at the decimal, chosing the smaller of the two result integers for the k (pulses) and the larger for the n (slots), could also do something with the note name to make it dynamic
-  synthPart2.events = bjorklund(bgSplitMin(n), bgSplitMax(n), freq)
   console.log(synthPart2.events)
   console.log(n)
   Tone.Draw.schedule(() => {
@@ -352,8 +293,8 @@ function bgEvent2 (s, n, freq) { Tone.Transport.schedule((time) => {
 	}, time);
 }, s);}
 
+//function for scheduling changes in the Bjorklund rhythm of the specified synth part and any other change that would be synchornized with these changes
 function bgEvent3 (s, n, freq) { Tone.Transport.schedule((time) => {
-  //works - but not very human readable - essentially splitting the BG reading at the decimal, chosing the smaller of the two result integers for the k (pulses) and the larger for the n (slots), could also do something with the note name to make it dynamic
   synthPart3.events = bjorklund(bgSplitMin(n), bgSplitMax(n), freq)
   console.log(synthPart3.events)
   console.log(n)
@@ -365,29 +306,15 @@ function bgEvent3 (s, n, freq) { Tone.Transport.schedule((time) => {
 	}, time);
 }, s);}
 
-
-// bjorklund(Math.min(Math.round(data[1].glucose%1*10), Math.floor(data[1].glucose)), Math.max(Math.round(data[1].glucose%1*10), Math.floor(data[1].glucose)), "G5" )
+//helper functions for the bgEvent functions, Min splits the BG number at the decimal and returns the smaller of the two resulting integers, Max returns the larger
 function bgSplitMin (n){
   return Math.min(Math.round(n%1*10), Math.floor(n))
 }
 function bgSplitMax (n){
   return Math.max(Math.round(n%1*10), Math.floor(n))
 }
-console.log(bgSplitMin(data[1].glucose));
-console.log(bgSplitMax(data[1].glucose));
-//console.log(String("'"+Tone.Frequency(Math.floor(Math.random() * 128), "midi").toNote()+"'"));
-//bgEvent(5, data[2].glucose);
-/*window.setInterval(() => {
-  let fftBins = fft.getValue();
-  console.log(fftBins[1]*10)
-}, 1000 / 60);*/
-//this works!
-/*data.forEach((item, index)=>{
-  bgEvent(index*10, item.glucose);
-  bgEvent2(index*10+10, item.glucose);
-  bgEvent3(index*20+10, item.glucose);
-});*/
 
+//function for scheduling changes in the visuals
 //  s is when it will happen - when it is scheduled for.
 function bgVisEvent (s, g, inv, nn, ns, rot, lthrsh, ltol) { Tone.Transport.schedule((time) => {
     Tone.Draw.schedule(() => {
@@ -397,6 +324,7 @@ function bgVisEvent (s, g, inv, nn, ns, rot, lthrsh, ltol) { Tone.Transport.sche
 	}, time);
 }, s);}
 
+//function for scheduling changes in the visuals
 //  s is when it will happen - when it is scheduled for.
 function bgVisEvent2 (s, g, inv, sat, nn, ns, rot, lthrsh, ltol) { Tone.Transport.schedule((time) => {
   Tone.Draw.schedule(() => {
@@ -410,6 +338,9 @@ Visuals.fx7(g, inv, sat, nn, ns, rot, lthrsh, ltol)
 //with the current BG events they keep going with their current data until they receive a change
 //first variable of the BG event is when it is scheduled to happen, second is the BG value
 
+
+//Overarching strucutre of the generative composition: 1) create as many Time counters as necessary; a new Time counter is necessary for any change that doesn't happen at the same time as an existing change (which will already have its own Time counter)
+//2) Using a for loop, go through all the glucose values and create a score from that; this is where the timing of changes is determined, as well as what data is fed into the functions to determine what the changes are
 let bgTime = 0;
 let bgTimeB = 0;
 let bgTimeC = 0;
@@ -417,33 +348,34 @@ let bgTime2 = 0;
 for (let i = 0; i < glucoseValues.length; i++)
 {
   let bg = glucoseValues[i];
+  //differences in timing for different streams of events
   //multiplication factor determines how long to wait before changing
+  //addition in the bracket determines offset of BG value from dataset
   bgTime = bgTime + glucoseValues[i]*1;
-  bgTimeB = bgTime + glucoseValues[i+1]*1;
-  bgTimeC = bgTime + glucoseValues[i+2]*1;
+  bgTimeB = bgTimeB + glucoseValues[i+1]*1;
+  bgTimeC = bgTimeC + glucoseValues[i+2]*1;
   bgTime2 = bgTime2 + glucoseValues[i]*3;
+  //conditional statements to allow the possibility of different things happening depending on whether the BG reading is high, on target, or low (could add more conditions and/or change existing thresholds)
   if (bg >= 8.0){
     console.log("high ", glucoseValues[i], bgTime, bgFreqs[i])
     //do something here
+    //swell event happens at the designated time and with the designated Frequecy value (multiplication by 0.5 would lower it by 1 octave)
     swellFMEvent1(bgTime, bgFreqs[i]*0.125); 
-    //fmSwell.triggerAttackRelease(bgFreqs[i], "1n", bgTime);
+    //bgEvents are the Euclidean rhythms, here we determine when they change (ex. bgTime), what rhythm they change to (ex. glucoseValues[i]), and what frequency/note is played (ex. bg Freqs[i])
     bgEvent(bgTime, glucoseValues[i], bgFreqs[i]);
     bgEvent2(bgTimeB, glucoseValues[i+1], bgFreqs[i+1]);
     bgEvent3(bgTimeC, glucoseValues[i+2], bgFreqs[i+2]);
-    //synth1R(bgTime, 5, i);
+//scheduling of a change in the visuals, first variable determines when, the rest depend on the visual synth in question
     bgVisEvent2(bgTime2, bgRange01[i], bgRange01[i+1], bgRange9[i+2], bgRange9[i+7], bgRange01[i+3], bgRange310[i+4], bgRange100[i+5], bgRange300[i+6])
     //bgVisEvent2(bgTime, bgRange01[i], bgRange01[i], bgRange9[i],bgRange9[i], bgRange01[i], bgRange310[i], bgRange100[i], bgRange300[i])
   } else
   if (bg<= 7.9 && bg>=4.0 ){
     console.log("target ", glucoseValues[i], bgTime, bgFreqs[i])
     //do something here
-   // bgEvent2(bgTime, glucoseValues[i], bgFreqs[i]);
    swellFMEvent1(bgTime, bgFreqs[i]*0.125); 
-   //fmSwell.triggerAttackRelease(bgFreqs[i], "1n", bgTime);
    bgEvent(bgTime, glucoseValues[i], bgFreqs[i]);
    bgEvent2(bgTimeB, glucoseValues[i+1], bgFreqs[i+1]);
    bgEvent3(bgTimeC, glucoseValues[i+2], bgFreqs[i+2]);
-
 
    bgVisEvent2(bgTime2, bgRange01[i], bgRange01[i+1], bgRange9[i+2], bgRange9[i+7], bgRange01[i+3], bgRange310[i+4], bgRange100[i+5], bgRange300[i+6])
   // bgVisEvent2(bgTime, bgRange01[i], bgRange01[i], bgRange9[i],bgRange9[i], bgRange01[i], bgRange310[i], bgRange100[i], bgRange300[i])
@@ -452,8 +384,7 @@ for (let i = 0; i < glucoseValues.length; i++)
     console.log("low ", glucoseValues[i], bgTime, bgFreqs[i])
     //do something here
     swellFMEvent1(bgTime, bgFreqs[i]*0.125); 
-   // bgEvent3(bgTime, glucoseValues[i], bgFreqs[i]);
-   //fmSwell.triggerAttackRelease(bgFreqs[i], "1n", bgTime);
+ 
    bgEvent(bgTime, glucoseValues[i], bgFreqs[i]);
    bgEvent2(bgTimeB, glucoseValues[i+1], bgFreqs[i+1]);
    bgEvent3(bgTimeC, glucoseValues[i+2], bgFreqs[i+2]);
@@ -461,19 +392,6 @@ for (let i = 0; i < glucoseValues.length; i++)
   // bgVisEvent2(bgTime, bgRange01[i], bgRange01[i], bgRange9[i],bgRange9[i], bgRange01[i], bgRange310[i], bgRange100[i], bgRange300[i])
   }
 }
-
-/*Tone.Transport.schedule((time) => {
-	// use the time argument to schedule a callback with Draw
-	Tone.Draw.schedule(() => {
-		// do drawing or DOM manipulation here
-    Visuals.fx2(),
-		console.log(time);
-	}, time);
-}, "+10.5");*/
-
-//console.log(Math.round(data[1].glucose%1*10), Math.floor(data[1].glucose))
-//this works - not very human readable though...
-//console.log(bjorklund(Math.min(Math.round(data[1].glucose%1*10), Math.floor(data[1].glucose)), Math.max(Math.round(data[1].glucose%1*10), Math.floor(data[1].glucose)), "C3" ))
 };
 
 
