@@ -109,3 +109,19 @@ src(o0)
 .diff(src(o1).luma(lthrsh, ltol))
 	.out(o0)
 }
+
+export const fx8 = (bg_array, r)=> {
+const{src, osc, o0, o1} = h;
+osc(15, 0.1)
+.modulateScale(src(o0), 3.5, 2)
+.rotate(r)
+.scale(bg_array.fast(0.2).smooth(1))
+.diff(src(o1))
+.out(o0);
+
+osc(5, 0.1)
+.rotate(20)
+.out(o1);
+
+//render(o0)
+}

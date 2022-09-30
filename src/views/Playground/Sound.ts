@@ -3,7 +3,7 @@ import * as Tone from 'tone';
 import * as Visuals from './Visuals';
 import { Envelope } from 'tone';
 import { data } from './data';
-import _ from 'lodash'; 
+import _, { now } from 'lodash'; 
 
 //SCALE_MAKING (with help from https://www.guitarland.com/MusicTheoryWithToneJS/PlayModes.html)
 const majorFormula = [0,2,4,5,7,9,11];
@@ -157,12 +157,23 @@ export const playTimeControl = async () => {
 
 export const playSquence = async () => {
   await Tone.start();
+  
+//FFT analyzes the audio output, can use the numbers it returns to do stuff to the visuals
+  const fft = new Tone.FFT(16); 
+fmSwell.connect(fft);
+fft.set({
+  normalRange: true,
+  smoothing: 0.8 
+})
  let counterS1Vel = 0;
  let counterS2Vel = 0;
  let counterS3Vel = 0;
  const bgMIDI = convertBGtoNotes(myModeFormula, majorFormula.length*3, 4);
  const bgFreqs = bgMIDI.map((num)=>Tone.mtof(num));
  console.log(bgFreqs);
+ Visuals.start();
+ Visuals.fx8(bgRange01, fftNorm);
+ //bgVisEvent(now);
 
   //k is # of pulses, n is # of slots, c is notename as String (ex. "C3"); this is for creating rhythms from the data
   function bjorklund(k, n, c) {
@@ -185,13 +196,7 @@ let notes = []
 let notes2 = []
 let notes3 = []
 
-//FFT analyzes the audio output, can use the numbers it returns to do stuff to the visuals
-let fft = new Tone.FFT(16); 
-Tone.Destination.connect(fft);
-fft.set({
-  normalRange: true,
-  smoothing: 0.8 
-})
+
 
 // create a new sequence with the synth and notes
 const synthPart = new Tone.Sequence(
@@ -316,10 +321,10 @@ function bgSplitMax (n){
 
 //function for scheduling changes in the visuals
 //  s is when it will happen - when it is scheduled for.
-function bgVisEvent (s, g, inv, nn, ns, rot, lthrsh, ltol) { Tone.Transport.schedule((time) => {
+function bgVisEvent (s) { Tone.Transport.schedule((time) => {
     Tone.Draw.schedule(() => {
 		// do drawing or DOM manipulation here
-	Visuals.fx6(g, inv, nn, ns, rot, lthrsh, ltol)	
+	Visuals.fx8();
    console.log(time);
 	}, time);
 }, s);}
@@ -366,7 +371,7 @@ for (let i = 0; i < glucoseValues.length; i++)
     bgEvent2(bgTimeB, glucoseValues[i+1], bgFreqs[i+1]);
     bgEvent3(bgTimeC, glucoseValues[i+2], bgFreqs[i+2]);
 //scheduling of a change in the visuals, first variable determines when, the rest depend on the visual synth in question
-    bgVisEvent2(bgTime2, bgRange01[i], bgRange01[i+1], bgRange9[i+2], bgRange9[i+7], bgRange01[i+3], bgRange310[i+4], bgRange100[i+5], bgRange300[i+6])
+//bgVisEvent2(bgTime2, bgRange01[i], bgRange01[i+1], bgRange9[i+2], bgRange9[i+7], bgRange01[i+3], bgRange310[i+4], bgRange100[i+5], bgRange300[i+6])
     //bgVisEvent2(bgTime, bgRange01[i], bgRange01[i], bgRange9[i],bgRange9[i], bgRange01[i], bgRange310[i], bgRange100[i], bgRange300[i])
   } else
   if (bg<= 7.9 && bg>=4.0 ){
@@ -377,7 +382,7 @@ for (let i = 0; i < glucoseValues.length; i++)
    bgEvent2(bgTimeB, glucoseValues[i+1], bgFreqs[i+1]);
    bgEvent3(bgTimeC, glucoseValues[i+2], bgFreqs[i+2]);
 
-   bgVisEvent2(bgTime2, bgRange01[i], bgRange01[i+1], bgRange9[i+2], bgRange9[i+7], bgRange01[i+3], bgRange310[i+4], bgRange100[i+5], bgRange300[i+6])
+   //bgVisEvent2(bgTime2, bgRange01[i], bgRange01[i+1], bgRange9[i+2], bgRange9[i+7], bgRange01[i+3], bgRange310[i+4], bgRange100[i+5], bgRange300[i+6])
   // bgVisEvent2(bgTime, bgRange01[i], bgRange01[i], bgRange9[i],bgRange9[i], bgRange01[i], bgRange310[i], bgRange100[i], bgRange300[i])
   } else
   if (bg < 4.0){
@@ -388,10 +393,11 @@ for (let i = 0; i < glucoseValues.length; i++)
    bgEvent(bgTime, glucoseValues[i], bgFreqs[i]);
    bgEvent2(bgTimeB, glucoseValues[i+1], bgFreqs[i+1]);
    bgEvent3(bgTimeC, glucoseValues[i+2], bgFreqs[i+2]);
-    bgVisEvent2(bgTime2, bgRange01[i], bgRange01[i+1], bgRange9[i+2], bgRange9[i+7], bgRange01[i+3], bgRange310[i+4], bgRange100[i+5], bgRange300[i+6])
+    //bgVisEvent2(bgTime2, bgRange01[i], bgRange01[i+1], bgRange9[i+2], bgRange9[i+7], bgRange01[i+3], bgRange310[i+4], bgRange100[i+5], bgRange300[i+6])
   // bgVisEvent2(bgTime, bgRange01[i], bgRange01[i], bgRange9[i],bgRange9[i], bgRange01[i], bgRange310[i], bgRange100[i], bgRange300[i])
   }
 }
+
 };
 
 
