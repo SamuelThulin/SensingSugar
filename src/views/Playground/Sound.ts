@@ -49,6 +49,8 @@ const panVolS1 = new Tone.PanVol(-0.5, 0).toDestination();
 const panVolS2 = new Tone.PanVol(0.5, 0).toDestination();
 const panVolS3 = new Tone.PanVol(0, 0).toDestination();
 
+const kickSynth = new Tone.MembraneSynth().toDestination();
+
 const synth = new Tone.PluckSynth();
 const synth2 = new Tone.PluckSynth();
 const synth3 = new Tone.PluckSynth();
@@ -195,6 +197,7 @@ fft.set({
 let notes = []
 let notes2 = []
 let notes3 = []
+let kick = []
 
 
 
@@ -220,8 +223,8 @@ const synthPart = new Tone.Sequence(
 // create a new sequence with the synth and notes
 const synthPart2 = new Tone.Sequence(
   function(time, note) {
-    synth2.triggerAttackRelease(note, "64n", time, 1);
-    fmSynth2.triggerAttackRelease(note, "64n", time, bgRange01[counterS2Vel%bgRange01.length]);
+   synth2.triggerAttackRelease(note, "64n", time, 1);
+  fmSynth2.triggerAttackRelease(note, "64n", time, bgRange01[counterS2Vel%bgRange01.length]);
     synth2.set({
       attackNoise: bgRange01[counterS2Vel%bgRange01.length],
       dampening: bgRange01[counterS2Vel%bgRange01.length]*4000,
@@ -237,7 +240,7 @@ const synthPart2 = new Tone.Sequence(
 // create a new sequence with the synth and notes
 const synthPart3 = new Tone.Sequence(
   function(time, note) {
-    synth3.triggerAttackRelease(note, "64n", time, 1/*bgRange01[counterS2Vel%bgRange01.length]*/);
+   synth3.triggerAttackRelease(note, "64n", time, 1/*bgRange01[counterS2Vel%bgRange01.length]*/);
     fmSynth3.triggerAttackRelease(note, "64n", time, bgRange01[counterS2Vel%bgRange01.length]);
     synth3.set({
       attackNoise: bgRange01[counterS3Vel%bgRange01.length],
@@ -251,10 +254,21 @@ const synthPart3 = new Tone.Sequence(
   "8n"
 );
 
+// create a new sequence with the synth and notes
+const kickPart = new Tone.Sequence(
+  function(time, note) {
+    kickSynth.triggerAttackRelease(note, "16n", time, /*bgRange01[counterS2Vel%bgRange01.length]*/);
+    counterK1Vel++;
+  },
+  kick,
+  "2n"
+);
+
 // Setup the synth to be ready to play on beat 1
 synthPart.start();
 synthPart2.start();
 synthPart3.start();
+kickPart.start();
 
 // Note that if you pass a time into the start method 
 // you can specify when the synth part starts 
@@ -264,8 +278,18 @@ Tone.Transport.bpm.value = 200;
 Tone.Transport.start();
 
 //function for punctual events that will happen on top of the Euclidean rhythms created by the Bjorklund function
-function swellFMEvent1 (s, freq) {Tone.Transport.schedule((time)=>{
-fmSwell.triggerAttackRelease(freq, "1n")
+function swellFMEvent1 (s, freq, atk, dur) {Tone.Transport.schedule((time)=>{
+fmSwell.triggerAttackRelease(freq, dur);
+fmSwell.set({
+  harmonicity: 0.5,
+  modulationIndex: 5,
+  envelope: {attack: atk},
+  modulationEnvelope: {attack: atk,
+  decay: 1.5,
+  sustain: 0.1},
+  modulation: {type: "triangle8"},
+  oscillator: {type: "triangle13"}
+  });
 }, s);}
 
 //function for scheduling changes in the Bjorklund rhythm of the specified synth part and any other change that would be synchornized with these changes
@@ -288,6 +312,7 @@ function fftNorm (){let y =  fft.getValue(); return y[0]*10}
 
 //function for scheduling changes in the Bjorklund rhythm of the specified synth part and any other change that would be synchornized with these changes
 function bgEvent2 (s, n, freq) { Tone.Transport.schedule((time) => {
+  synthPart2.events = bjorklund(bgSplitMin(n), bgSplitMax(n), freq)
   console.log(synthPart2.events)
   console.log(n)
   Tone.Draw.schedule(() => {
@@ -302,6 +327,19 @@ function bgEvent2 (s, n, freq) { Tone.Transport.schedule((time) => {
 function bgEvent3 (s, n, freq) { Tone.Transport.schedule((time) => {
   synthPart3.events = bjorklund(bgSplitMin(n), bgSplitMax(n), freq)
   console.log(synthPart3.events)
+  console.log(n)
+  Tone.Draw.schedule(() => {
+		// do drawing or DOM manipulation here
+   // Visuals.fx3(/*function(){let y =  fft.getValue(); return y[1]*1000 + 1}*/s, function(){let y =  fft.getValue(); return y[0]*10});
+//	Visuals.fx4(n),	
+   console.log(time);
+	}, time);
+}, s);}
+
+//function for scheduling changes in the Bjorklund rhythm of the specified synth part and any other change that would be synchornized with these changes
+function bgEvent4 (s, n, freq) { Tone.Transport.schedule((time) => {
+  kickPart.events = bjorklund(bgSplitMin(n), bgSplitMax(n), freq)
+  console.log(kickPart.events)
   console.log(n)
   Tone.Draw.schedule(() => {
 		// do drawing or DOM manipulation here
@@ -365,11 +403,12 @@ for (let i = 0; i < glucoseValues.length; i++)
     console.log("high ", glucoseValues[i], bgTime, bgFreqs[i])
     //do something here
     //swell event happens at the designated time and with the designated Frequecy value (multiplication by 0.5 would lower it by 1 octave)
-    swellFMEvent1(bgTime, bgFreqs[i]*0.125); 
+    swellFMEvent1(bgTime, bgFreqs[i]*0.125, bgRange01[i], bgRange01[i]*2 ); 
     //bgEvents are the Euclidean rhythms, here we determine when they change (ex. bgTime), what rhythm they change to (ex. glucoseValues[i]), and what frequency/note is played (ex. bg Freqs[i])
     bgEvent(bgTime, glucoseValues[i], bgFreqs[i]);
     bgEvent2(bgTimeB, glucoseValues[i+1], bgFreqs[i+1]);
     bgEvent3(bgTimeC, glucoseValues[i+2], bgFreqs[i+2]);
+    bgEvent4(bgTime, glucoseValues[i], bgFreqs[i]*0.125);
 //scheduling of a change in the visuals, first variable determines when, the rest depend on the visual synth in question
 //bgVisEvent2(bgTime2, bgRange01[i], bgRange01[i+1], bgRange9[i+2], bgRange9[i+7], bgRange01[i+3], bgRange310[i+4], bgRange100[i+5], bgRange300[i+6])
     //bgVisEvent2(bgTime, bgRange01[i], bgRange01[i], bgRange9[i],bgRange9[i], bgRange01[i], bgRange310[i], bgRange100[i], bgRange300[i])
@@ -377,10 +416,11 @@ for (let i = 0; i < glucoseValues.length; i++)
   if (bg<= 7.9 && bg>=4.0 ){
     console.log("target ", glucoseValues[i], bgTime, bgFreqs[i])
     //do something here
-   swellFMEvent1(bgTime, bgFreqs[i]*0.125); 
+   swellFMEvent1(bgTime, bgFreqs[i]*0.125, bgRange01[i], bgRange01[i]*2); 
    bgEvent(bgTime, glucoseValues[i], bgFreqs[i]);
    bgEvent2(bgTimeB, glucoseValues[i+1], bgFreqs[i+1]);
    bgEvent3(bgTimeC, glucoseValues[i+2], bgFreqs[i+2]);
+   bgEvent4(bgTime, glucoseValues[i], bgFreqs[i]*0.125);
 
    //bgVisEvent2(bgTime2, bgRange01[i], bgRange01[i+1], bgRange9[i+2], bgRange9[i+7], bgRange01[i+3], bgRange310[i+4], bgRange100[i+5], bgRange300[i+6])
   // bgVisEvent2(bgTime, bgRange01[i], bgRange01[i], bgRange9[i],bgRange9[i], bgRange01[i], bgRange310[i], bgRange100[i], bgRange300[i])
@@ -388,11 +428,12 @@ for (let i = 0; i < glucoseValues.length; i++)
   if (bg < 4.0){
     console.log("low ", glucoseValues[i], bgTime, bgFreqs[i])
     //do something here
-    swellFMEvent1(bgTime, bgFreqs[i]*0.125); 
+    swellFMEvent1(bgTime, bgFreqs[i]*0.125, bgRange01[i], bgRange01[i]*2); 
  
    bgEvent(bgTime, glucoseValues[i], bgFreqs[i]);
    bgEvent2(bgTimeB, glucoseValues[i+1], bgFreqs[i+1]);
    bgEvent3(bgTimeC, glucoseValues[i+2], bgFreqs[i+2]);
+   bgEvent4(bgTime, glucoseValues[i], bgFreqs[i]*0.125);
     //bgVisEvent2(bgTime2, bgRange01[i], bgRange01[i+1], bgRange9[i+2], bgRange9[i+7], bgRange01[i+3], bgRange310[i+4], bgRange100[i+5], bgRange300[i+6])
   // bgVisEvent2(bgTime, bgRange01[i], bgRange01[i], bgRange9[i],bgRange9[i], bgRange01[i], bgRange310[i], bgRange100[i], bgRange300[i])
   }
