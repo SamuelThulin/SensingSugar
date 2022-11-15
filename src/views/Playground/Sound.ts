@@ -10,11 +10,15 @@ import _, { now } from 'lodash';
 let glucoseValues = data.map((value) => value.glucose);
 glucoseValues = glucoseValues.filter(Number)
 let midGlucose = glucoseValues.at(Math.floor(glucoseValues.length/2));
-let avgGlucose = Math.round(glucoseValues.reduce((previousValue, currentValue)=>previousValue + currentValue, 0)/glucoseValues.length)
+let avgGlucose = (glucoseValues.reduce((previousValue, currentValue)=>previousValue + currentValue, 0)/glucoseValues.length)
 let calcMode = (Math.round(midGlucose%1*10) + Math.floor(midGlucose))%7;
-let calcKey = avgGlucose%12;
+let calcKey = (Math.round(avgGlucose%1*10) + Math.floor(avgGlucose))%12;
+let bpmIndex = 0;
+let bpmRange = [120, 220]
+let calcBPM = convertRange((Math.round(glucoseValues.at(bpmIndex)%1*10)+Math.floor(glucoseValues.at(bpmIndex)))%20,[0, 20], bpmRange);
 console.log(calcMode);
 console.log(calcKey);
+console.log(calcBPM);
 // create new arrays with values to feed into visuals and sounds through scaling/linear interpolation
 //from: https://stackoverflow.com/questions/14224535/scaling-between-two-number-ranges
 function convertRange(value, r1, r2) {
@@ -70,13 +74,14 @@ function convertBGtoNotes(modeFormula: number[], upperLimit, baseOctave=2) {
   
 
 //create a synth and connect it to the main output (your speakers)
-const reverbA = new Tone.Reverb(1);
+const reverbA = new Tone.Reverb(10);
 
 const panVolS1 = new Tone.PanVol(-0.5, 0).toDestination();
 const panVolS2 = new Tone.PanVol(0.5, 0).toDestination();
 const panVolS3 = new Tone.PanVol(0, 0).toDestination();
+const panVolK1 = new Tone.PanVol(0, -6).toDestination();
 
-const kickSynth = new Tone.MembraneSynth().toDestination();
+const kickSynth = new Tone.MembraneSynth();
 
 const synth = new Tone.PluckSynth();
 const synth2 = new Tone.PluckSynth();
@@ -115,6 +120,9 @@ fmSynth3.chain(reverbA, Tone.Destination);
 
 fmSwell.connect(panVolS1);
 fmSwell.chain(reverbA, Tone.Destination);
+
+kickSynth.connect(panVolK1);
+
 
 
 // * simple
@@ -211,7 +219,7 @@ let kick = []
 // create a new sequence with the synth and notes
 const synthPart = new Tone.Sequence(
   function(time, note) {
-    synth.triggerAttackRelease(note, "64n", time, 1);
+    //synth.triggerAttackRelease(note, "64n", time, 1);
     fmSynth.triggerAttackRelease(note, "64n", time, bgRange01[counterS2Vel%bgRange01.length]);
     console.log("synthPart1");
     //this is a way of inserting other variable changes on a per note basis
@@ -230,7 +238,7 @@ const synthPart = new Tone.Sequence(
 // create a new sequence with the synth and notes
 const synthPart2 = new Tone.Sequence(
   function(time, note) {
-   synth2.triggerAttackRelease(note, "64n", time, 1);
+   //synth2.triggerAttackRelease(note, "64n", time, 1);
   fmSynth2.triggerAttackRelease(note, "64n", time, bgRange01[counterS2Vel%bgRange01.length]);
     synth2.set({
       attackNoise: bgRange01[counterS2Vel%bgRange01.length],
@@ -247,7 +255,7 @@ const synthPart2 = new Tone.Sequence(
 // create a new sequence with the synth and notes
 const synthPart3 = new Tone.Sequence(
   function(time, note) {
-   synth3.triggerAttackRelease(note, "64n", time, 1/*bgRange01[counterS2Vel%bgRange01.length]*/);
+   //synth3.triggerAttackRelease(note, "64n", time, 1/*bgRange01[counterS2Vel%bgRange01.length]*/);
     fmSynth3.triggerAttackRelease(note, "64n", time, bgRange01[counterS2Vel%bgRange01.length]);
     synth3.set({
       attackNoise: bgRange01[counterS3Vel%bgRange01.length],
@@ -264,8 +272,7 @@ const synthPart3 = new Tone.Sequence(
 // create a new sequence with the synth and notes
 const kickPart = new Tone.Sequence(
   function(time, note) {
-    kickSynth.triggerAttackRelease(note, "16n", time, /*bgRange01[counterS2Vel%bgRange01.length]*/);
-    counterK1Vel++;
+    kickSynth.triggerAttackRelease(note, "16n", time);
   },
   kick,
   "2n"
@@ -281,7 +288,7 @@ kickPart.start();
 // you can specify when the synth part starts 
 // e.g. .start('8n') will start after 1 eighth note// start the transport which controls the main timeline
 //Set the BPM and start the transport
-Tone.Transport.bpm.value = 200;
+Tone.Transport.bpm.value = calcBPM;
 Tone.Transport.start();
 
 //function for punctual events that will happen on top of the Euclidean rhythms created by the Bjorklund function
