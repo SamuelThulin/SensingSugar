@@ -5,11 +5,38 @@ import { Envelope } from 'tone';
 import { data } from './data';
 import _, { now } from 'lodash'; 
 
+//BG array - this works, but there might be a more elegant way, and I need to decide whether to actually remove the null values or not
+//from Luciano: const glucoseValues = data.filter((value) => value.glucose !== null)
+let glucoseValues = data.map((value) => value.glucose);
+glucoseValues = glucoseValues.filter(Number)
+let midGlucose = glucoseValues.at(Math.floor(glucoseValues.length/2));
+let avgGlucose = Math.round(glucoseValues.reduce((previousValue, currentValue)=>previousValue + currentValue, 0)/glucoseValues.length)
+let calcMode = (Math.round(midGlucose%1*10) + Math.floor(midGlucose))%7;
+let calcKey = avgGlucose%12;
+console.log(calcMode);
+console.log(calcKey);
+// create new arrays with values to feed into visuals and sounds through scaling/linear interpolation
+//from: https://stackoverflow.com/questions/14224535/scaling-between-two-number-ranges
+function convertRange(value, r1, r2) {
+  return (value - r1[0]) * (r2[1] - r2[0]) / (r1[1] - r1[0]) + r2[0];
+}
+const maxBG = Math.max(...glucoseValues)
+const minBG = Math.min(...glucoseValues)
+
+//arrays for use with visuals and audio (not dedicated, use as appropriate)
+const bgRange01 = glucoseValues.map((num) => convertRange(num, [minBG, maxBG],[0,1]))
+const bgRange9 = glucoseValues.map((num) => convertRange(num, [minBG, maxBG],[0,9]))
+const bgRange310 = glucoseValues.map((num) => convertRange(num, [minBG, maxBG],[0.0001,0.01]))
+const bgRange100 = glucoseValues.map((num) => convertRange(num, [minBG, maxBG],[0.01,0.1]))
+const bgRange300 = glucoseValues.map((num) => convertRange(num, [minBG, maxBG],[0.0001,0.1]))
+
+
 //SCALE_MAKING (with help from https://www.guitarland.com/MusicTheoryWithToneJS/PlayModes.html)
 const majorFormula = [0,2,4,5,7,9,11];
 const modeNames = ['major','dorian','phrygian','lydian','mixolydian','aeolian','locrian']
-const myModeNum = 1;
-const myModeFormula = makeModeFormula(majorFormula, myModeNum, 10, 11);
+const myModeNum = calcMode;
+const myKey = calcKey;
+const myModeFormula = makeModeFormula(majorFormula, myModeNum, myKey, 11);
 
 //parentScaleFormula is interval spacings to be repeated (ex. majorFormula), modeNum picks which interval to use as root (hence selects mode), root is pitch class (i.e key) base MIDI note from 0-11, formulaLength allows for creating longer and shorter repetitions of the interval spacings
 function makeModeFormula(parentScaleFormula, modeNum, root = 0, formulaLength=9,) {
@@ -89,26 +116,6 @@ fmSynth3.chain(reverbA, Tone.Destination);
 fmSwell.connect(panVolS1);
 fmSwell.chain(reverbA, Tone.Destination);
 
-//BG array - this works, but there might be a more elegant way, and I need to decide whether to actually remove the null values or not
-//from Luciano: const glucoseValues = data.filter((value) => value.glucose !== null)
-let glucoseValues = data.map((value) => value.glucose);
-glucoseValues = glucoseValues.filter(Number)
-
-
-// create new arrays with values to feed into visuals and sounds through scaling/linear interpolation
-//from: https://stackoverflow.com/questions/14224535/scaling-between-two-number-ranges
-function convertRange(value, r1, r2) {
-  return (value - r1[0]) * (r2[1] - r2[0]) / (r1[1] - r1[0]) + r2[0];
-}
-const maxBG = Math.max(...glucoseValues)
-const minBG = Math.min(...glucoseValues)
-
-//arrays for use with visuals and audio (not dedicated, use as appropriate)
-const bgRange01 = glucoseValues.map((num) => convertRange(num, [minBG, maxBG],[0,1]))
-const bgRange9 = glucoseValues.map((num) => convertRange(num, [minBG, maxBG],[0,9]))
-const bgRange310 = glucoseValues.map((num) => convertRange(num, [minBG, maxBG],[0.0001,0.01]))
-const bgRange100 = glucoseValues.map((num) => convertRange(num, [minBG, maxBG],[0.01,0.1]))
-const bgRange300 = glucoseValues.map((num) => convertRange(num, [minBG, maxBG],[0.0001,0.1]))
 
 // * simple
 export const playSimple = async () => {
