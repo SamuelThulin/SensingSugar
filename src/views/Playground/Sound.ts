@@ -74,7 +74,7 @@ function convertBGtoNotes(modeFormula: number[], upperLimit, baseOctave=2) {
   
 
 //create a synth and connect it to the main output (your speakers)
-const reverbA = new Tone.Reverb(10);
+const reverbA = new Tone.Reverb(1);
 
 const panVolS1 = new Tone.PanVol(-0.5, 0).toDestination();
 const panVolS2 = new Tone.PanVol(0.5, 0).toDestination();
@@ -219,16 +219,20 @@ let kick = []
 // create a new sequence with the synth and notes
 const synthPart = new Tone.Sequence(
   function(time, note) {
-    //synth.triggerAttackRelease(note, "64n", time, 1);
     fmSynth.triggerAttackRelease(note, "64n", time, bgRange01[counterS2Vel%bgRange01.length]);
     console.log("synthPart1");
     //this is a way of inserting other variable changes on a per note basis
-    synth.set({
-      attackNoise: bgRange01[counterS1Vel%bgRange01.length],
-      dampening: bgRange01[counterS1Vel%bgRange01.length]*2000,
-      resonance: bgRange01[counterS1Vel%bgRange01.length]*0.4+0.6,
-      release: 2,
-    });
+      //need to delete this if you want it to happen every bjorklund switch instead of note switch
+   /* fmSynth.set({
+      harmonicity: 1.5,
+      modulationIndex: 5,
+      envelope: {attack: 0.01},
+      modulationEnvelope: {attack: 0.1,
+      decay: 0.25,
+      sustain: 0.1},
+      modulation: {type: "sine"},
+      oscillator: {type: "sine"}
+      })*/
     counterS1Vel++;
   },
   notes,
@@ -238,13 +242,18 @@ const synthPart = new Tone.Sequence(
 // create a new sequence with the synth and notes
 const synthPart2 = new Tone.Sequence(
   function(time, note) {
-   //synth2.triggerAttackRelease(note, "64n", time, 1);
   fmSynth2.triggerAttackRelease(note, "64n", time, bgRange01[counterS2Vel%bgRange01.length]);
-    synth2.set({
-      attackNoise: bgRange01[counterS2Vel%bgRange01.length],
-      dampening: bgRange01[counterS2Vel%bgRange01.length]*4000,
-      resonance: bgRange01[counterS2Vel%bgRange01.length]*0.4+0.6,
-      release: 2,
+  console.log("synthPart2");
+  //need to delete this if you want it to happen every bjorklund switch instead of note switch
+  fmSynth2.set({
+    harmonicity: 0.5,
+      modulationIndex: 15,
+      envelope: {attack: 0.01},
+      modulationEnvelope: {attack: 0.1,
+      decay: 0.25,
+      sustain: 0.1},
+      modulation: {type: "sine"},
+      oscillator: {type: "sine"}
     });
     counterS2Vel++;
   },
@@ -255,14 +264,19 @@ const synthPart2 = new Tone.Sequence(
 // create a new sequence with the synth and notes
 const synthPart3 = new Tone.Sequence(
   function(time, note) {
-   //synth3.triggerAttackRelease(note, "64n", time, 1/*bgRange01[counterS2Vel%bgRange01.length]*/);
     fmSynth3.triggerAttackRelease(note, "64n", time, bgRange01[counterS2Vel%bgRange01.length]);
-    synth3.set({
-      attackNoise: bgRange01[counterS3Vel%bgRange01.length],
-      dampening: bgRange01[counterS3Vel%bgRange01.length]*2000,
-      resonance: bgRange01[counterS3Vel%bgRange01.length]*0.4+0.6,
-      release: 2,
-    });
+    console.log("synthPart3");
+      //need to delete this if you want it to happen every bjorklund switch instead of note switch
+   fmSynth3.set({
+      harmonicity: 5.5,
+      modulationIndex: 5,
+      envelope: {attack: 0.01},
+      modulationEnvelope: {attack: 0.1,
+      decay: 0.25,
+      sustain: 0.1},
+      modulation: {type: "sine"},
+      oscillator: {type: "sine"}
+      })
     counterS3Vel++;
   },
   notes3,
@@ -305,6 +319,19 @@ fmSwell.set({
   oscillator: {type: "triangle13"}
   });
 }, s);}
+
+function timbreShift(s, synthName, harmon, modindex) {Tone.Transport.schedule((time)=>{
+  synthName.set({
+    harmonicity: harmon,
+    modulationIndex: modindex,
+    envelope: {attack: 0.01},
+    modulationEnvelope: {attack: 0.1,
+    decay: 0.25,
+    sustain: 0.1},
+    modulation: {type: "sine"},
+    oscillator: {type: "sine"}
+    });
+  }, s);}
 
 //function for scheduling changes in the Bjorklund rhythm of the specified synth part and any other change that would be synchornized with these changes
 //s is for shedule - the time at which it happens; n is the BG number
@@ -420,6 +447,7 @@ for (let i = 0; i < glucoseValues.length; i++)
     swellFMEvent1(bgTime, bgFreqs[i]*0.125, bgRange01[i], bgRange01[i]*2 ); 
     //bgEvents are the Euclidean rhythms, here we determine when they change (ex. bgTime), what rhythm they change to (ex. glucoseValues[i]), and what frequency/note is played (ex. bg Freqs[i])
     bgEvent(bgTime, glucoseValues[i], bgFreqs[i]);
+    timbreShift(bgTime, fmSynth, 5, 5);
     bgEvent2(bgTimeB, glucoseValues[i+1], bgFreqs[i+1]);
     bgEvent3(bgTimeC, glucoseValues[i+2], bgFreqs[i+2]);
     bgEvent4(bgTime, glucoseValues[i], bgFreqs[i]*0.125);
@@ -430,8 +458,9 @@ for (let i = 0; i < glucoseValues.length; i++)
   if (bg<= 7.9 && bg>=4.0 ){
     console.log("target ", glucoseValues[i], bgTime, bgFreqs[i])
     //do something here
-   swellFMEvent1(bgTime, bgFreqs[i]*0.125, bgRange01[i], bgRange01[i]*2); 
+   swellFMEvent1(bgTime, bgFreqs[i]*0.125, bgRange01[i], bgRange01[i]*5); 
    bgEvent(bgTime, glucoseValues[i], bgFreqs[i]);
+   timbreShift(bgTime, fmSynth, 25, 15);
    bgEvent2(bgTimeB, glucoseValues[i+1], bgFreqs[i+1]);
    bgEvent3(bgTimeC, glucoseValues[i+2], bgFreqs[i+2]);
    bgEvent4(bgTime, glucoseValues[i], bgFreqs[i]*0.125);
@@ -445,6 +474,7 @@ for (let i = 0; i < glucoseValues.length; i++)
     swellFMEvent1(bgTime, bgFreqs[i]*0.125, bgRange01[i], bgRange01[i]*2); 
  
    bgEvent(bgTime, glucoseValues[i], bgFreqs[i]);
+   timbreShift(bgTime, fmSynth, 1.5, 15);
    bgEvent2(bgTimeB, glucoseValues[i+1], bgFreqs[i+1]);
    bgEvent3(bgTimeC, glucoseValues[i+2], bgFreqs[i+2]);
    bgEvent4(bgTime, glucoseValues[i], bgFreqs[i]*0.125);
