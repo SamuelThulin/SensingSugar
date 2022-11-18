@@ -74,10 +74,10 @@ function convertBGtoNotes(modeFormula: number[], upperLimit, baseOctave=2) {
   
 
 //create a synth and connect it to the main output (your speakers)
-const reverbA = new Tone.Reverb(1);
+const reverbA = new Tone.Reverb(10);
 
-const panVolS1 = new Tone.PanVol(-0.5, 0).toDestination();
-const panVolS2 = new Tone.PanVol(0.5, 0).toDestination();
+const panVolS1 = new Tone.PanVol(-0.7, 0).toDestination();
+const panVolS2 = new Tone.PanVol(0.7, 0).toDestination();
 const panVolS3 = new Tone.PanVol(0, 0).toDestination();
 const panVolK1 = new Tone.PanVol(0, -6).toDestination();
 
@@ -90,6 +90,8 @@ const synth3 = new Tone.PluckSynth();
 const fmSynth = new Tone.FMSynth();
 const fmSynth2 = new Tone.FMSynth();
 const fmSynth3 = new Tone.FMSynth();
+
+const fmMIOffset = 50;
 
 const fmSwell = new Tone.FMSynth();
 fmSwell.set({
@@ -245,7 +247,7 @@ const synthPart2 = new Tone.Sequence(
   fmSynth2.triggerAttackRelease(note, "64n", time, bgRange01[counterS2Vel%bgRange01.length]);
   console.log("synthPart2");
   //need to delete this if you want it to happen every bjorklund switch instead of note switch
-  fmSynth2.set({
+  /*fmSynth2.set({
     harmonicity: 0.5,
       modulationIndex: 15,
       envelope: {attack: 0.01},
@@ -254,7 +256,7 @@ const synthPart2 = new Tone.Sequence(
       sustain: 0.1},
       modulation: {type: "sine"},
       oscillator: {type: "sine"}
-    });
+    });*/
     counterS2Vel++;
   },
   notes2,
@@ -267,7 +269,7 @@ const synthPart3 = new Tone.Sequence(
     fmSynth3.triggerAttackRelease(note, "64n", time, bgRange01[counterS2Vel%bgRange01.length]);
     console.log("synthPart3");
       //need to delete this if you want it to happen every bjorklund switch instead of note switch
-   fmSynth3.set({
+  /* fmSynth3.set({
       harmonicity: 5.5,
       modulationIndex: 5,
       envelope: {attack: 0.01},
@@ -276,7 +278,7 @@ const synthPart3 = new Tone.Sequence(
       sustain: 0.1},
       modulation: {type: "sine"},
       oscillator: {type: "sine"}
-      })
+      })*/
     counterS3Vel++;
   },
   notes3,
@@ -324,12 +326,13 @@ function timbreShift(s, synthName, harmon, modindex) {Tone.Transport.schedule((t
   synthName.set({
     harmonicity: harmon,
     modulationIndex: modindex,
-    envelope: {attack: 0.01},
-    modulationEnvelope: {attack: 0.1,
-    decay: 0.25,
-    sustain: 0.1},
-    modulation: {type: "sine"},
-    oscillator: {type: "sine"}
+    envelope: {attack: 0.001,
+      decay: 0.005},
+      modulationEnvelope: {attack: 0.001,
+      decay: 0.05,
+      sustain: 0},
+      modulation: {type: "sine"},
+      oscillator: {type: "sine"}
     });
   }, s);}
 
@@ -447,9 +450,11 @@ for (let i = 0; i < glucoseValues.length; i++)
     swellFMEvent1(bgTime, bgFreqs[i]*0.125, bgRange01[i], bgRange01[i]*2 ); 
     //bgEvents are the Euclidean rhythms, here we determine when they change (ex. bgTime), what rhythm they change to (ex. glucoseValues[i]), and what frequency/note is played (ex. bg Freqs[i])
     bgEvent(bgTime, glucoseValues[i], bgFreqs[i]);
-    timbreShift(bgTime, fmSynth, 5, 5);
+    timbreShift(bgTime, fmSynth, 1.5, fmMIOffset*bgRange01[i]);
     bgEvent2(bgTimeB, glucoseValues[i+1], bgFreqs[i+1]);
+    timbreShift(bgTimeB, fmSynth2, 1.5, fmMIOffset*bgRange01[i+1]);
     bgEvent3(bgTimeC, glucoseValues[i+2], bgFreqs[i+2]);
+    timbreShift(bgTimeC, fmSynth3, 1.5, fmMIOffset*bgRange01[i+2]);
     bgEvent4(bgTime, glucoseValues[i], bgFreqs[i]*0.125);
 //scheduling of a change in the visuals, first variable determines when, the rest depend on the visual synth in question
 //bgVisEvent2(bgTime2, bgRange01[i], bgRange01[i+1], bgRange9[i+2], bgRange9[i+7], bgRange01[i+3], bgRange310[i+4], bgRange100[i+5], bgRange300[i+6])
@@ -460,9 +465,11 @@ for (let i = 0; i < glucoseValues.length; i++)
     //do something here
    swellFMEvent1(bgTime, bgFreqs[i]*0.125, bgRange01[i], bgRange01[i]*5); 
    bgEvent(bgTime, glucoseValues[i], bgFreqs[i]);
-   timbreShift(bgTime, fmSynth, 25, 15);
+   timbreShift(bgTime, fmSynth, 1.5, fmMIOffset*bgRange01[i]);
    bgEvent2(bgTimeB, glucoseValues[i+1], bgFreqs[i+1]);
+   timbreShift(bgTimeB, fmSynth2, 1.5, fmMIOffset*bgRange01[i+1]);
    bgEvent3(bgTimeC, glucoseValues[i+2], bgFreqs[i+2]);
+   timbreShift(bgTimeC, fmSynth3, 1.5, fmMIOffset*bgRange01[i+2]);
    bgEvent4(bgTime, glucoseValues[i], bgFreqs[i]*0.125);
 
    //bgVisEvent2(bgTime2, bgRange01[i], bgRange01[i+1], bgRange9[i+2], bgRange9[i+7], bgRange01[i+3], bgRange310[i+4], bgRange100[i+5], bgRange300[i+6])
@@ -474,9 +481,11 @@ for (let i = 0; i < glucoseValues.length; i++)
     swellFMEvent1(bgTime, bgFreqs[i]*0.125, bgRange01[i], bgRange01[i]*2); 
  
    bgEvent(bgTime, glucoseValues[i], bgFreqs[i]);
-   timbreShift(bgTime, fmSynth, 1.5, 15);
+   timbreShift(bgTime, fmSynth, 1.5, fmMIOffset*bgRange01[i]);
    bgEvent2(bgTimeB, glucoseValues[i+1], bgFreqs[i+1]);
+   timbreShift(bgTimeB, fmSynth2, 1.5, fmMIOffset*bgRange01[i+1]);
    bgEvent3(bgTimeC, glucoseValues[i+2], bgFreqs[i+2]);
+   timbreShift(bgTimeC, fmSynth3, 1.5, fmMIOffset*bgRange01[i+2]);
    bgEvent4(bgTime, glucoseValues[i], bgFreqs[i]*0.125);
     //bgVisEvent2(bgTime2, bgRange01[i], bgRange01[i+1], bgRange9[i+2], bgRange9[i+7], bgRange01[i+3], bgRange310[i+4], bgRange100[i+5], bgRange300[i+6])
   // bgVisEvent2(bgTime, bgRange01[i], bgRange01[i], bgRange9[i],bgRange9[i], bgRange01[i], bgRange310[i], bgRange100[i], bgRange300[i])
