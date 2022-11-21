@@ -15,6 +15,7 @@ const Cell = styled(TableCell)(() => ({
 const DataDrawer: FC = () => {
   const { t } = useTranslation('common');
   const { data, unitGlucose, unitMeal } = useAppState();
+  console.log(data);
 
   // console.log(data);
   // console.table([...data]);

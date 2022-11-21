@@ -2,7 +2,7 @@ import { ManTwoTone, Segment } from '@mui/icons-material';
 import * as Tone from 'tone';
 import * as Visuals from './Visuals';
 import { Envelope } from 'tone';
-import { data } from './data';
+import { data } from './data2'; //here is where I can load different data sets
 import _, { now } from 'lodash'; 
 
 //BG array - this works, but there might be a more elegant way, and I need to decide whether to actually remove the null values or not
@@ -74,7 +74,7 @@ function convertBGtoNotes(modeFormula: number[], upperLimit, baseOctave=2) {
   
 
 //create a synth and connect it to the main output (your speakers)
-const reverbA = new Tone.Reverb(10);
+const reverbA = new Tone.Reverb(5);
 
 const panVolS1 = new Tone.PanVol(-0.7, 0).toDestination();
 const panVolS2 = new Tone.PanVol(0.7, 0).toDestination();
