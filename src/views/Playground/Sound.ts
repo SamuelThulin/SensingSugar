@@ -2,7 +2,7 @@ import { ManTwoTone, Segment } from '@mui/icons-material';
 import * as Tone from 'tone';
 import * as Visuals from './Visuals';
 import { Envelope } from 'tone';
-import { data } from './data2'; //here is where I can load different data sets
+import { data } from './data1-short'; //here is where I can load different data sets
 import _, { now } from 'lodash'; 
 
 //BG array - this works, but there might be a more elegant way, and I need to decide whether to actually remove the null values or not
@@ -137,7 +137,7 @@ export const playSimple = async () => {
   Visuals.start();
   //Visuals.fx4(function(){return Math.random()*10});
  // Visuals.fx3(20, 0.5)
- Visuals.fx5(glucoseValues.map(x=> x * 10), glucoseValues, 0.6, 0.5);
+Visuals.fx5(glucoseValues.map(x=> x * 10), glucoseValues, 0.6, 0.5);
   synth.triggerAttackRelease('C3', '8n');
 //this works
  for (let i = 0; i < data.length; i++)
@@ -432,6 +432,7 @@ let bgTime = 0;
 let bgTimeB = 0;
 let bgTimeC = 0;
 let bgTime2 = 0;
+//FIGURE OUT HOW TO LOOP
 for (let i = 0; i < glucoseValues.length; i++)
 {
   let bg = glucoseValues[i];
