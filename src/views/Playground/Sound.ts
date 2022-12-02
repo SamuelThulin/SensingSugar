@@ -8,7 +8,11 @@ import _, { now } from 'lodash';
 //BG array - this works, but there might be a more elegant way, and I need to decide whether to actually remove the null values or not
 //from Luciano: const glucoseValues = data.filter((value) => value.glucose !== null)
 let glucoseValues = data.map((value) => value.glucose);
-glucoseValues = glucoseValues.filter(Number)
+glucoseValues = glucoseValues.filter(Number);
+glucoseValues.forEach((item, index) => {
+  console.log(item, index);
+});
+console.log(glucoseValues.reduce((previousValue, currentValue)=>previousValue + currentValue, 0));
 let midGlucose = glucoseValues.at(Math.floor(glucoseValues.length/2));
 let avgGlucose = (glucoseValues.reduce((previousValue, currentValue)=>previousValue + currentValue, 0)/glucoseValues.length)
 let calcMode = (Math.round(midGlucose%1*10) + Math.floor(midGlucose))%7;
@@ -16,9 +20,9 @@ let calcKey = (Math.round(avgGlucose%1*10) + Math.floor(avgGlucose))%12;
 let bpmIndex = 0;
 let bpmRange = [120, 220]
 let calcBPM = convertRange((Math.round(glucoseValues.at(bpmIndex)%1*10)+Math.floor(glucoseValues.at(bpmIndex)))%20,[0, 20], bpmRange);
-console.log(calcMode);
-console.log(calcKey);
-console.log(calcBPM);
+console.log("Mode # = " + calcMode);
+console.log("Key # = " + calcKey);
+console.log("BPM = " + calcBPM);
 // create new arrays with values to feed into visuals and sounds through scaling/linear interpolation
 //from: https://stackoverflow.com/questions/14224535/scaling-between-two-number-ranges
 function convertRange(value, r1, r2) {
@@ -66,8 +70,6 @@ function convertBGtoNotes(modeFormula: number[], upperLimit, baseOctave=2) {
   let bgIntervals;
   bgScaleDegs = glucoseValues.map((num) => Math.round(convertRange(num, [minBG, maxBG],[0, upperLimit-1])));
   bgIntervals = bgScaleDegs.map((num)=>modeFormula[num]+baseOctave*12);
-  console.log("test");
-  console.log(bgIntervals);
   return bgIntervals;
   }
 
@@ -191,7 +193,8 @@ fft.set({
  const bgFreqs = bgMIDI.map((num)=>Tone.mtof(num));
  console.log(bgFreqs);
  Visuals.start();
- Visuals.fx8(bgRange01, fftNorm);
+ //Visuals.fx5(glucoseValues.map(x=> x * 10), glucoseValues, 0.6, 0.5);
+ Visuals.fx8(/*bgRange01*/[0.5, 0.2], fftNorm);
  //bgVisEvent(now);
 
   //k is # of pulses, n is # of slots, c is notename as String (ex. "C3"); this is for creating rhythms from the data
@@ -346,7 +349,7 @@ function bgEvent (s, n, freq) { Tone.Transport.schedule((time) => {
 		// do drawing or DOM manipulation here
    // Visuals.fx3(/*function(){let y =  fft.getValue(); return y[1]*1000 + 1}*/s, function(){let y =  fft.getValue(); return y[0]*10});
 	//Visuals.fx5(n, n, fftNorm, n*0.05)	
-   console.log(time);
+   //console.log(time);
 	}, time);
 }, s);}
 
@@ -363,7 +366,7 @@ function bgEvent2 (s, n, freq) { Tone.Transport.schedule((time) => {
 		// do drawing or DOM manipulation here
    // Visuals.fx3(/*function(){let y =  fft.getValue(); return y[1]*1000 + 1}*/s, function(){let y =  fft.getValue(); return y[0]*10});
 //	Visuals.fx2(),	
-   console.log(time);
+   //console.log(time);
 	}, time);
 }, s);}
 
@@ -376,7 +379,7 @@ function bgEvent3 (s, n, freq) { Tone.Transport.schedule((time) => {
 		// do drawing or DOM manipulation here
    // Visuals.fx3(/*function(){let y =  fft.getValue(); return y[1]*1000 + 1}*/s, function(){let y =  fft.getValue(); return y[0]*10});
 //	Visuals.fx4(n),	
-   console.log(time);
+   //console.log(time);
 	}, time);
 }, s);}
 
@@ -389,7 +392,7 @@ function bgEvent4 (s, n, freq) { Tone.Transport.schedule((time) => {
 		// do drawing or DOM manipulation here
    // Visuals.fx3(/*function(){let y =  fft.getValue(); return y[1]*1000 + 1}*/s, function(){let y =  fft.getValue(); return y[0]*10});
 //	Visuals.fx4(n),	
-   console.log(time);
+   //console.log(time);
 	}, time);
 }, s);}
 
@@ -429,20 +432,13 @@ Visuals.fx7(g, inv, sat, nn, ns, rot, lthrsh, ltol)
 //Overarching strucutre of the generative composition: 1) create as many Time counters as necessary; a new Time counter is necessary for any change that doesn't happen at the same time as an existing change (which will already have its own Time counter)
 //2) Using a for loop, go through all the glucose values and create a score from that; this is where the timing of changes is determined, as well as what data is fed into the functions to determine what the changes are
 let bgTime = 0;
-let bgTimeB = 0;
-let bgTimeC = 0;
+let bgTimeB = 0; //if you don't want everything to start at once you can make an offset (ex. set bgTimeB to glucoseValues[1])
+let bgTimeC = 0; //if you don't want everything to start at once you can make an offset (ex. set bgTimeC to glucoseValues[2])
 let bgTime2 = 0;
 //FIGURE OUT HOW TO LOOP
 for (let i = 0; i < glucoseValues.length; i++)
 {
   let bg = glucoseValues[i];
-  //differences in timing for different streams of events
-  //multiplication factor determines how long to wait before changing
-  //addition in the bracket determines offset of BG value from dataset
-  bgTime = bgTime + glucoseValues[i]*1;
-  bgTimeB = bgTimeB + glucoseValues[i+1]*1;
-  bgTimeC = bgTimeC + glucoseValues[i+2]*1;
-  bgTime2 = bgTime2 + glucoseValues[i]*3;
   //conditional statements to allow the possibility of different things happening depending on whether the BG reading is high, on target, or low (could add more conditions and/or change existing thresholds)
   if (bg >= 8.0){
     console.log("high ", glucoseValues[i], bgTime, bgFreqs[i])
@@ -491,8 +487,33 @@ for (let i = 0; i < glucoseValues.length; i++)
     //bgVisEvent2(bgTime2, bgRange01[i], bgRange01[i+1], bgRange9[i+2], bgRange9[i+7], bgRange01[i+3], bgRange310[i+4], bgRange100[i+5], bgRange300[i+6])
   // bgVisEvent2(bgTime, bgRange01[i], bgRange01[i], bgRange9[i],bgRange9[i], bgRange01[i], bgRange310[i], bgRange100[i], bgRange300[i])
   }
+    //differences in timing for different streams of events
+  //multiplication factor determines how long to wait before changing
+  //addition in the bracket determines offset of BG value from dataset
+  bgTime = bgTime + glucoseValues[i]*1;
+  bgTimeB = bgTimeB + glucoseValues[(i+1)%glucoseValues.length]*1;
+  bgTimeC = bgTimeC + glucoseValues[(i+2)%glucoseValues.length]*1;
+  bgTime2 = bgTime2 + glucoseValues[i]*3;
+  console.log("bgTimeB" + bgTimeB) 
+console.log("bgTimeC" + bgTimeC) 
 }
+console.log("bgTime" + bgTime)
+console.log("bgTimeB" + bgTimeB) 
+console.log("bgTimeC" + bgTimeC)  
+//console.log(calcBPM*bgTime*0.01667*0.25);
+//console.log(calcBPM*bgTime*0.01667*0.25%Math.floor(calcBPM*bgTime*0.01667*0.25))
+const offSetTime = glucoseValues[0]+glucoseValues[1]+glucoseValues[2]; // not quite the right offset yet
+const bars = Math.floor(calcBPM*(bgTime+offSetTime)*0.01667*0.25)
+const beats = Math.floor((calcBPM*(bgTime+offSetTime)*0.01667*0.25%Math.floor(calcBPM*(bgTime+offSetTime)*0.01667*0.25))*4)
+console.log(offSetTime);
+console.log(bars);
+console.log(beats);
+console.log (bars + ":"+ beats);
 
+const endLoop = bars + ":"+ beats //4 + ":" + 1;/*calcBPM*(bgTime+2.9+3.6+12)*0.01667*0.25*/
+
+Tone.Transport.setLoopPoints(0, endLoop + "m");
+	 Tone.Transport.loop = true;
 };
 
 
@@ -653,7 +674,5 @@ export const playSignal = async () => {
   osc.frequency.rampTo('C5', 2);
 };
 
-console.log(data[0].glucose);
-data.forEach((item, index) => {
-  console.log(item.glucose, index*5);
-});
+
+
