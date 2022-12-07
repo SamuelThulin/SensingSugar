@@ -125,3 +125,22 @@ osc(5, 0.1)
 
 //render(o0)
 }
+
+export const fx8t = ()=> {
+  const{src, osc, o0} = h;
+  osc(15, 0.1)
+  .modulateScale(src(o0), 3.5, 2)
+  .rotate(30)
+  .scale([2, 4, 5].fast(0.2).smooth())
+  .out(o0);
+  }
+
+  export const fx8simple = ()=> {
+    const{osc} = h;
+    osc([15, 0.5].fast(0.1).smooth(1), 0.1)
+    .out();
+    }
+
+  export const fx9ease = () => {
+    const{shape} = h;
+    shape(4).rotate([-3.14,3.14].fast(0.1).ease('easeInOutCubic')).out()}

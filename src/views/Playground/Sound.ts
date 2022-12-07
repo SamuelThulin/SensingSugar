@@ -194,7 +194,11 @@ fft.set({
  console.log(bgFreqs);
  Visuals.start();
  //Visuals.fx5(glucoseValues.map(x=> x * 10), glucoseValues, 0.6, 0.5);
- Visuals.fx8(/*bgRange01*/[0.5, 0.2], fftNorm);
+ //Visuals.fx3(2, 0.6)
+ Visuals.fx8(bgRange01, fftNorm);
+ //Visuals.fx8t();
+ //Visuals.fx8simple();
+ //Visuals.fx9ease();
  //bgVisEvent(now);
 
   //k is # of pulses, n is # of slots, c is notename as String (ex. "C3"); this is for creating rhythms from the data
@@ -249,17 +253,6 @@ const synthPart2 = new Tone.Sequence(
   function(time, note) {
   fmSynth2.triggerAttackRelease(note, "64n", time, bgRange01[counterS2Vel%bgRange01.length]);
   console.log("synthPart2");
-  //need to delete this if you want it to happen every bjorklund switch instead of note switch
-  /*fmSynth2.set({
-    harmonicity: 0.5,
-      modulationIndex: 15,
-      envelope: {attack: 0.01},
-      modulationEnvelope: {attack: 0.1,
-      decay: 0.25,
-      sustain: 0.1},
-      modulation: {type: "sine"},
-      oscillator: {type: "sine"}
-    });*/
     counterS2Vel++;
   },
   notes2,
@@ -271,17 +264,6 @@ const synthPart3 = new Tone.Sequence(
   function(time, note) {
     fmSynth3.triggerAttackRelease(note, "64n", time, bgRange01[counterS3Vel%bgRange01.length]);
     console.log("synthPart3");
-      //need to delete this if you want it to happen every bjorklund switch instead of note switch
-  /* fmSynth3.set({
-      harmonicity: 5.5,
-      modulationIndex: 5,
-      envelope: {attack: 0.01},
-      modulationEnvelope: {attack: 0.1,
-      decay: 0.25,
-      sustain: 0.1},
-      modulation: {type: "sine"},
-      oscillator: {type: "sine"}
-      })*/
     counterS3Vel++;
   },
   notes3,
