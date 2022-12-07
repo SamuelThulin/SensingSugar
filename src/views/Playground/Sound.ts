@@ -224,7 +224,7 @@ let kick = []
 // create a new sequence with the synth and notes
 const synthPart = new Tone.Sequence(
   function(time, note) {
-    fmSynth.triggerAttackRelease(note, "64n", time, bgRange01[counterS2Vel%bgRange01.length]);
+    fmSynth.triggerAttackRelease(note, "64n", time, bgRange01[counterS1Vel%bgRange01.length]);
     console.log("synthPart1");
     //this is a way of inserting other variable changes on a per note basis
       //need to delete this if you want it to happen every bjorklund switch instead of note switch
@@ -237,7 +237,7 @@ const synthPart = new Tone.Sequence(
       sustain: 0.1},
       modulation: {type: "sine"},
       oscillator: {type: "sine"}
-      })*/
+      }) */
     counterS1Vel++;
   },
   notes,
@@ -269,7 +269,7 @@ const synthPart2 = new Tone.Sequence(
 // create a new sequence with the synth and notes
 const synthPart3 = new Tone.Sequence(
   function(time, note) {
-    fmSynth3.triggerAttackRelease(note, "64n", time, bgRange01[counterS2Vel%bgRange01.length]);
+    fmSynth3.triggerAttackRelease(note, "64n", time, bgRange01[counterS3Vel%bgRange01.length]);
     console.log("synthPart3");
       //need to delete this if you want it to happen every bjorklund switch instead of note switch
   /* fmSynth3.set({
@@ -448,10 +448,10 @@ for (let i = 0; i < glucoseValues.length; i++)
     //bgEvents are the Euclidean rhythms, here we determine when they change (ex. bgTime), what rhythm they change to (ex. glucoseValues[i]), and what frequency/note is played (ex. bg Freqs[i])
     bgEvent(bgTime, glucoseValues[i], bgFreqs[i]);
     timbreShift(bgTime, fmSynth, 1.5, fmMIOffset*bgRange01[i]);
-    bgEvent2(bgTimeB, glucoseValues[i+1], bgFreqs[i+1]);
-    timbreShift(bgTimeB, fmSynth2, 1.5, fmMIOffset*bgRange01[i+1]);
-    bgEvent3(bgTimeC, glucoseValues[i+2], bgFreqs[i+2]);
-    timbreShift(bgTimeC, fmSynth3, 1.5, fmMIOffset*bgRange01[i+2]);
+    bgEvent2(bgTimeB, glucoseValues[(i+1)%glucoseValues.length], bgFreqs[(i+1)%glucoseValues.length]);
+    timbreShift(bgTimeB, fmSynth2, 1.5, fmMIOffset*bgRange01[(i+1)%glucoseValues.length]);
+    bgEvent3(bgTimeC, glucoseValues[(i+2)%glucoseValues.length], bgFreqs[(i+2)%glucoseValues.length]);
+    timbreShift(bgTimeC, fmSynth3, 1.5, fmMIOffset*bgRange01[(i+2)%glucoseValues.length]);
     bgEvent4(bgTime, glucoseValues[i], bgFreqs[i]*0.125);
 //scheduling of a change in the visuals, first variable determines when, the rest depend on the visual synth in question
 //bgVisEvent2(bgTime2, bgRange01[i], bgRange01[i+1], bgRange9[i+2], bgRange9[i+7], bgRange01[i+3], bgRange310[i+4], bgRange100[i+5], bgRange300[i+6])
@@ -463,10 +463,10 @@ for (let i = 0; i < glucoseValues.length; i++)
    swellFMEvent1(bgTime, bgFreqs[i]*0.125, bgRange01[i], bgRange01[i]*5); 
    bgEvent(bgTime, glucoseValues[i], bgFreqs[i]);
    timbreShift(bgTime, fmSynth, 1.5, fmMIOffset*bgRange01[i]);
-   bgEvent2(bgTimeB, glucoseValues[i+1], bgFreqs[i+1]);
-   timbreShift(bgTimeB, fmSynth2, 1.5, fmMIOffset*bgRange01[i+1]);
-   bgEvent3(bgTimeC, glucoseValues[i+2], bgFreqs[i+2]);
-   timbreShift(bgTimeC, fmSynth3, 1.5, fmMIOffset*bgRange01[i+2]);
+   bgEvent2(bgTimeB, glucoseValues[(i+1)%glucoseValues.length], bgFreqs[(i+1)%glucoseValues.length]);
+   timbreShift(bgTimeB, fmSynth2, 1.5, fmMIOffset*bgRange01[(i+1)%glucoseValues.length]);
+   bgEvent3(bgTimeC, glucoseValues[(i+2)%glucoseValues.length], bgFreqs[(i+2)%glucoseValues.length]);
+   timbreShift(bgTimeC, fmSynth3, 1.5, fmMIOffset*bgRange01[(i+2)%glucoseValues.length]);
    bgEvent4(bgTime, glucoseValues[i], bgFreqs[i]*0.125);
 
    //bgVisEvent2(bgTime2, bgRange01[i], bgRange01[i+1], bgRange9[i+2], bgRange9[i+7], bgRange01[i+3], bgRange310[i+4], bgRange100[i+5], bgRange300[i+6])
@@ -479,10 +479,10 @@ for (let i = 0; i < glucoseValues.length; i++)
  
    bgEvent(bgTime, glucoseValues[i], bgFreqs[i]);
    timbreShift(bgTime, fmSynth, 1.5, fmMIOffset*bgRange01[i]);
-   bgEvent2(bgTimeB, glucoseValues[i+1], bgFreqs[i+1]);
-   timbreShift(bgTimeB, fmSynth2, 1.5, fmMIOffset*bgRange01[i+1]);
-   bgEvent3(bgTimeC, glucoseValues[i+2], bgFreqs[i+2]);
-   timbreShift(bgTimeC, fmSynth3, 1.5, fmMIOffset*bgRange01[i+2]);
+   bgEvent2(bgTimeB, glucoseValues[(i+1)%glucoseValues.length], bgFreqs[(i+1)%glucoseValues.length]);
+   timbreShift(bgTimeB, fmSynth2, 1.5, fmMIOffset*bgRange01[(i+1)%glucoseValues.length]);
+   bgEvent3(bgTimeC, glucoseValues[(i+2)%glucoseValues.length], bgFreqs[(i+2)%glucoseValues.length]);
+   timbreShift(bgTimeC, fmSynth3, 1.5, fmMIOffset*bgRange01[(i+2)%glucoseValues.length]);
    bgEvent4(bgTime, glucoseValues[i], bgFreqs[i]*0.125);
     //bgVisEvent2(bgTime2, bgRange01[i], bgRange01[i+1], bgRange9[i+2], bgRange9[i+7], bgRange01[i+3], bgRange310[i+4], bgRange100[i+5], bgRange300[i+6])
   // bgVisEvent2(bgTime, bgRange01[i], bgRange01[i], bgRange9[i],bgRange9[i], bgRange01[i], bgRange310[i], bgRange100[i], bgRange300[i])
@@ -491,8 +491,8 @@ for (let i = 0; i < glucoseValues.length; i++)
   //multiplication factor determines how long to wait before changing
   //addition in the bracket determines offset of BG value from dataset
   bgTime = bgTime + glucoseValues[i]*1;
-  bgTimeB = bgTimeB + glucoseValues[(i+1)%glucoseValues.length]*1;
-  bgTimeC = bgTimeC + glucoseValues[(i+2)%glucoseValues.length]*1;
+  bgTimeB = bgTimeB + glucoseValues[(i+1)%glucoseValues.length]*1;//need the modulo because of the offset (i+1), so it can wrap back around
+  bgTimeC = bgTimeC + glucoseValues[(i+2)%glucoseValues.length]*1;//need the modulo because of the offset (i+2), so it can wrap back around
   bgTime2 = bgTime2 + glucoseValues[i]*3;
   console.log("bgTimeB" + bgTimeB) 
 console.log("bgTimeC" + bgTimeC) 
@@ -502,17 +502,15 @@ console.log("bgTimeB" + bgTimeB)
 console.log("bgTimeC" + bgTimeC)  
 //console.log(calcBPM*bgTime*0.01667*0.25);
 //console.log(calcBPM*bgTime*0.01667*0.25%Math.floor(calcBPM*bgTime*0.01667*0.25))
-const offSetTime = glucoseValues[0]+glucoseValues[1]+glucoseValues[2]; // not quite the right offset yet
-const bars = Math.floor(calcBPM*(bgTime+offSetTime)*0.01667*0.25)
-const beats = Math.floor((calcBPM*(bgTime+offSetTime)*0.01667*0.25%Math.floor(calcBPM*(bgTime+offSetTime)*0.01667*0.25))*4)
-console.log(offSetTime);
+const bars = Math.floor(calcBPM*(bgTime)*0.01667*0.25)
+const beats = Math.floor((calcBPM*(bgTime)*0.01667*0.25%Math.floor(calcBPM*(bgTime)*0.01667*0.25))*4)
 console.log(bars);
 console.log(beats);
 console.log (bars + ":"+ beats);
 
 const endLoop = bars + ":"+ beats //4 + ":" + 1;/*calcBPM*(bgTime+2.9+3.6+12)*0.01667*0.25*/
 
-Tone.Transport.setLoopPoints(0, endLoop + "m");
+Tone.Transport.setLoopPoints(0, endLoop);
 	 Tone.Transport.loop = true;
 };
 
