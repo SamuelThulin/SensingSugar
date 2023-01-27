@@ -23,6 +23,20 @@ let calcBPM = convertRange((Math.round(glucoseValues.at(bpmIndex)%1*10)+Math.flo
 console.log("Mode # = " + calcMode);
 console.log("Key # = " + calcKey);
 console.log("BPM = " + calcBPM);
+
+//create a reordered array for CGM data playback, intersperses groups of 3
+let interBGArray = [];
+let interJump = Math.floor(glucoseValues.length/3);
+let partArray1 = glucoseValues.slice(0, interJump);
+let partArray2 = glucoseValues.slice(interJump, interJump*2);
+let partArray3 = glucoseValues.slice(interJump*2);
+for (let i = 0; i < interJump; i++){
+  interBGArray.push(partArray1[i], partArray2[i], partArray3[i]);
+  }
+  console.log("INTER =", interBGArray);
+  console.log("BG = ", glucoseValues)
+//////////////////////////////////
+
 // create new arrays with values to feed into visuals and sounds through scaling/linear interpolation
 //from: https://stackoverflow.com/questions/14224535/scaling-between-two-number-ranges
 function convertRange(value, r1, r2) {
