@@ -8,13 +8,13 @@ const server = express();
 
 server.use(express.json({ limit: '5mb' })); // support json encoded bodies
 
-// dev tools
-const loadDevTools = async () => {
-  const { devTools } = await import('./dev');
-  devTools(server);
+// dev server
+const loadDevServer = async () => {
+  const { devServer } = await import('./dev');
+  devServer(server);
 };
 
-if (process.env.NODE_ENV === 'development') loadDevTools();
+if (process.env.NODE_ENV === 'development') loadDevServer();
 server.use('/api', repository);
 
 server.use(express.static(publicPath));
