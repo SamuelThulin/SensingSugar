@@ -2,7 +2,7 @@ import { ManTwoTone, Segment } from '@mui/icons-material';
 import * as Tone from 'tone';
 import * as Visuals from './Visuals';
 import { Envelope } from 'tone';
-import { data } from './data1-short'; //here is where I can load different data sets
+import { data } from './CGMdata1'; //here is where I can load different data sets
 import _, { now } from 'lodash'; 
 
 //BG array - this works, but there might be a more elegant way, and I need to decide whether to actually remove the null values or not
