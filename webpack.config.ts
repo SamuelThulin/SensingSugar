@@ -1,6 +1,6 @@
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import CopyWebpackPlugin from 'copy-webpack-plugin';
-import { ESBuildMinifyPlugin } from 'esbuild-loader';
+import { EsbuildPlugin } from 'esbuild-loader';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import path from 'path';
@@ -32,8 +32,7 @@ const resolve: ResolveOptions = {
 const optimization = {
   emitOnErrors: env === 'development' ? true : false,
   minimize: env === 'development' ? false : true,
-  minimizer:
-    env === 'development' ? [] : [new ESBuildMinifyPlugin({ target: 'es2020', css: true })],
+  minimizer: env === 'development' ? [] : [new EsbuildPlugin({ target: 'es2020', css: true })],
   sideEffects: env === 'development' ? false : true,
   usedExports: env === 'development' ? false : true,
 };
@@ -62,20 +61,9 @@ const plugins: WebpackPluginInstance[] = [
 
 const rules: RuleSetRule[] = [
   {
-    test: /\.tsx?$/,
+    test: /\.[jt]sx?$/,
     loader: 'esbuild-loader',
-    options: {
-      loader: 'tsx', // Or 'ts' if you don't need tsx
-      target: 'es2020',
-    },
-  },
-  {
-    test: /\.js$/,
-    loader: 'esbuild-loader',
-    options: {
-      loader: 'js', // Remove this if you're not using JSX
-      target: 'es2020', // Syntax to compile to (see options below for possible values)
-    },
+    options: { tsconfig: './tsconfig.json' },
   },
   {
     test: /\.css$/,
