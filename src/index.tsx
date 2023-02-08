@@ -16,6 +16,7 @@ const overmind = createOvermind(config, {
 
 const container = document.getElementById('app');
 if (!container) throw new Error('React container missing!');
+
 const root = createRoot(container);
 root.render(
   <Provider value={overmind}>
@@ -25,4 +26,4 @@ root.render(
   </Provider>
 );
 
-if (module.hot) module.hot.accept();
+// if (module.hot) module.hot.accept();
