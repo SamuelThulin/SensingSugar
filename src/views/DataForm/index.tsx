@@ -77,7 +77,7 @@ const DataForm: FC = () => {
   };
 
   const { getRootProps, getInputProps, isDragReject } = useDropzone({
-    accept: 'text/csv',
+    accept: { 'text/csv': ['.csv'] },
     onDrop,
     onDragEnter,
     onDragLeave,
