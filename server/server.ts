@@ -1,3 +1,4 @@
+import compression from 'compression';
 import express from 'express';
 import path from 'path';
 import repository from './routes/repository';
@@ -7,6 +8,9 @@ const publicPath = path.join(__dirname, '..', 'dist');
 const server = express();
 
 server.use(express.json({ limit: '5mb' })); // support json encoded bodies
+server.use(compression());
+
+server.use('/api', repository);
 
 // dev server
 const loadDevServer = async () => {
@@ -14,8 +18,9 @@ const loadDevServer = async () => {
   devServer(server);
 };
 
+console.log(process.env.NODE_ENV )
+
 if (process.env.NODE_ENV === 'development') loadDevServer();
-server.use('/api', repository);
 
 server.use(express.static(publicPath));
 
