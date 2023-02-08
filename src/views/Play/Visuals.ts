@@ -1,3 +1,4 @@
+//@ts-ignore
 import Hydra from 'hydra-synth';
 
 let h: any;
@@ -53,6 +54,7 @@ export const fx2 = () => {
   const { src, osc, shape, o0, solid } = h;
 
   solid(1, 1, 1)
+    //@ts-ignore
     .diff(shape([4, 4, 4, 24].smooth().fast(0.5), r(0.6, 0.93), 0.09).repeat(20, 10))
     .modulateScale(osc(8).rotate(r(-0.5, 0.5)), 0.52)
     .add(

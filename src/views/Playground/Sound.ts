@@ -9,10 +9,10 @@ import _, { now } from 'lodash';
 //from Luciano: const glucoseValues = data.filter((value) => value.glucose !== null)
 let glucoseValues = data.map((value) => value.glucose);
 glucoseValues = glucoseValues.filter(Number);
-glucoseValues.forEach((item, index) => {
-  console.log(item, index);
-});
-console.log(glucoseValues.reduce((previousValue, currentValue)=>previousValue + currentValue, 0));
+// glucoseValues.forEach((item, index) => {
+//   console.log(item, index);
+// });
+// console.log(glucoseValues.reduce((previousValue, currentValue)=>previousValue + currentValue, 0));
 let midGlucose = glucoseValues.at(Math.floor(glucoseValues.length/2));
 let avgGlucose = (glucoseValues.reduce((previousValue, currentValue)=>previousValue + currentValue, 0)/glucoseValues.length)
 let calcMode = (Math.round(midGlucose%1*10) + Math.floor(midGlucose))%7;
