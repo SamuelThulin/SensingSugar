@@ -1,6 +1,6 @@
 import { Box, Button, ButtonGroup, Stack, Typography } from '@mui/material';
-// import * as Sound from './Sound';
-import * as Sound from './Sound_v1';
+import * as Sound from './Sound';
+//import * as Sound from './Sound_v1';
 import * as Visuals from './Visuals';
 
 export default function MusicBox() {
