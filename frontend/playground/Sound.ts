@@ -27,17 +27,19 @@ let avgGlucose =
 let calcMode = (Math.round((midGlucose % 1) * 10) + Math.floor(midGlucose)) % 7;
 let calcKey = (Math.round((avgGlucose % 1) * 10) + Math.floor(avgGlucose)) % 12;
 let bpmIndex = 0;
-let bpmRange = [120, 220];
+let bpmRange:[number, number] = [120, 220];
 
 //@ts-ignore
 let calcBPM = convertRange(
-  (Math.round((glucoseValues.at(bpmIndex) % 1) * 10) + Math.floor(glucoseValues.at(bpmIndex))) % 20,
+  //calculates a number between 0 and 20 based on the bgValue at a selected index (bpmIndex) and normalizes it to the bpmRange
+  (Math.round((glucoseValues[bpmIndex] % 1) * 10) + Math.floor(glucoseValues[bpmIndex])) % 20,
   [0, 20],
   bpmRange
 );
 console.log('Mode # = ' + calcMode);
 console.log('Key # = ' + calcKey);
 console.log('BPM = ' + calcBPM);
+
 
 //create a reordered array for CGM data playback, intersperses groups of 3
 let interBGArray = [];
@@ -75,7 +77,7 @@ const myKey = calcKey;
 const myModeFormula = makeModeFormula(majorFormula, myModeNum, myKey, 11);
 
 //parentScaleFormula is interval spacings to be repeated (ex. majorFormula), modeNum picks which interval to use as root (hence selects mode), root is pitch class (i.e key) base MIDI note from 0-11, formulaLength allows for creating longer and shorter repetitions of the interval spacings
-function makeModeFormula(parentScaleFormula, modeNum, root = 0, formulaLength = 9) {
+function makeModeFormula(parentScaleFormula: number[], modeNum: number, root = 0, formulaLength = 9) {
   let scaleIndex = 0;
   let modeFormula = [];
   let modeInterval;
@@ -92,7 +94,7 @@ function makeModeFormula(parentScaleFormula, modeNum, root = 0, formulaLength = 
 //modeFormula = the result of the modeMakeFormula
 //upperLimit = how many scaleDegrees and hence intervals to spread the notes out over, my recommended approach is to take the length of the majorFormula (or whatever base interval formula being used) and multiply by the desired number of octaves to spread out over.
 //baseOctave = what octave to start at
-function convertBGtoNotes(modeFormula: number[], upperLimit, baseOctave = 2) {
+function convertBGtoNotes(modeFormula: number[], upperLimit: number, baseOctave = 2) {
   let bgScaleDegs;
   let bgIntervals;
   bgScaleDegs = glucoseValues.map((num) =>
@@ -211,7 +213,7 @@ export const playSquence = async () => {
   let counterS2Vel = 0;
   let counterS3Vel = 0;
   const bgMIDI = convertBGtoNotes(myModeFormula, majorFormula.length * 3, 4);
-  const bgFreqs = bgMIDI.map((num) => Tone.mtof(num));
+  const bgFreqs = bgMIDI.map((num) => Tone.mtof(num));// this is weird, Tone.js says it wants a number... maybe because for all it knows it could be too high a number i.e above 127
   console.log(bgFreqs);
   Visuals.start();
   //Visuals.fx5(glucoseValues.map(x=> x * 10), glucoseValues, 0.6, 0.5);
@@ -223,7 +225,7 @@ export const playSquence = async () => {
   //bgVisEvent(now);
 
   //k is # of pulses, n is # of slots, c is notename as String (ex. "C3"); this is for creating rhythms from the data
-  function bjorklund(k, n, c) {
+  function bjorklund(k: number, n: number, c: number) {
     //returns k pulses (1s) followed by n-k rests (0s)
     let seq = _.times(k, _.constant([1])).concat(_.times(n - k, _.constant([0])));
     //console.log(_.times(k, _.constant([1])).concat(_.times(n - k, _.constant([0]))))
@@ -245,12 +247,7 @@ export const playSquence = async () => {
     });
   }
 
-  let notes = [];
-  let notes2 = [];
-  let notes3 = [];
-  let kick = [];
-
-  // create a new sequence with the synth and notes
+  // create a new sequence with the synth - actual sequence undefined here, but defined by bgEvent function
   const synthPart = new Tone.Sequence(
     function (time, note) {
       fmSynth.triggerAttackRelease(note, '64n', time, bgRange01[counterS1Vel % bgRange01.length]);
@@ -269,38 +266,38 @@ export const playSquence = async () => {
       }) */
       counterS1Vel++;
     },
-    notes,
+    undefined,
     '8n'
   );
 
-  // create a new sequence with the synth and notes
+  // create a new sequence with the synth - actual sequence undefined here, but defined by bgEvent function
   const synthPart2 = new Tone.Sequence(
     function (time, note) {
       fmSynth2.triggerAttackRelease(note, '64n', time, bgRange01[counterS2Vel % bgRange01.length]);
       console.log('synthPart2');
       counterS2Vel++;
     },
-    notes2,
+    undefined,
     '8n'
   );
 
-  // create a new sequence with the synth and notes
+  // create a new sequence with the synth - actual sequence undefined here, but defined by bgEvent function
   const synthPart3 = new Tone.Sequence(
     function (time, note) {
       fmSynth3.triggerAttackRelease(note, '64n', time, bgRange01[counterS3Vel % bgRange01.length]);
       console.log('synthPart3');
       counterS3Vel++;
     },
-    notes3,
+    undefined,
     '8n'
   );
 
-  // create a new sequence with the synth and notes
+  // create a new sequence with the synth - actual sequence undefined here, but defined by bgEvent function
   const kickPart = new Tone.Sequence(
     function (time, note) {
       kickSynth.triggerAttackRelease(note, '16n', time);
     },
-    kick,
+   undefined,
     '2n'
   );
 
@@ -318,7 +315,7 @@ export const playSquence = async () => {
   Tone.Transport.start();
 
   //function for punctual events that will happen on top of the Euclidean rhythms created by the Bjorklund function
-  function swellFMEvent1(s, freq, atk, dur) {
+  function swellFMEvent1(s: number, freq: number, atk:number, dur:number) {
     Tone.Transport.schedule((time) => {
       fmSwell.triggerAttackRelease(freq, dur);
       fmSwell.set({
@@ -332,7 +329,7 @@ export const playSquence = async () => {
     }, s);
   }
 
-  function timbreShift(s, synthName, harmon, modindex) {
+  function timbreShift(s:number, synthName:Tone.FMSynth, harmon:number, modindex:number) {
     Tone.Transport.schedule((time) => {
       synthName.set({
         harmonicity: harmon,
@@ -347,7 +344,7 @@ export const playSquence = async () => {
 
   //function for scheduling changes in the Bjorklund rhythm of the specified synth part and any other change that would be synchornized with these changes
   //s is for shedule - the time at which it happens; n is the BG number
-  function bgEvent(s, n, freq) {
+  function bgEvent(s:number, n:number, freq:number) {
     Tone.Transport.schedule((time) => {
       synthPart.events = bjorklund(bgSplitMin(n), bgSplitMax(n), freq);
       console.log(synthPart.events);
@@ -369,7 +366,7 @@ export const playSquence = async () => {
   }
 
   //function for scheduling changes in the Bjorklund rhythm of the specified synth part and any other change that would be synchornized with these changes
-  function bgEvent2(s, n, freq) {
+  function bgEvent2(s:number, n:number, freq:number) {
     Tone.Transport.schedule((time) => {
       synthPart2.events = bjorklund(bgSplitMin(n), bgSplitMax(n), freq);
       console.log(synthPart2.events);
@@ -384,7 +381,7 @@ export const playSquence = async () => {
   }
 
   //function for scheduling changes in the Bjorklund rhythm of the specified synth part and any other change that would be synchornized with these changes
-  function bgEvent3(s, n, freq) {
+  function bgEvent3(s:number, n:number, freq:number) {
     Tone.Transport.schedule((time) => {
       synthPart3.events = bjorklund(bgSplitMin(n), bgSplitMax(n), freq);
       console.log(synthPart3.events);
@@ -399,7 +396,7 @@ export const playSquence = async () => {
   }
 
   //function for scheduling changes in the Bjorklund rhythm of the specified synth part and any other change that would be synchornized with these changes
-  function bgEvent4(s, n, freq) {
+  function bgEvent4(s:number, n:number, freq:number) {
     Tone.Transport.schedule((time) => {
       kickPart.events = bjorklund(bgSplitMin(n), bgSplitMax(n), freq);
       console.log(kickPart.events);
@@ -414,16 +411,16 @@ export const playSquence = async () => {
   }
 
   //helper functions for the bgEvent functions, Min splits the BG number at the decimal and returns the smaller of the two resulting integers, Max returns the larger
-  function bgSplitMin(n) {
+  function bgSplitMin(n:number) {
     return Math.min(Math.round((n % 1) * 10), Math.floor(n));
   }
-  function bgSplitMax(n) {
+  function bgSplitMax(n:number) {
     return Math.max(Math.round((n % 1) * 10), Math.floor(n));
   }
-
+/*
   //function for scheduling changes in the visuals
   //  s is when it will happen - when it is scheduled for.
-  function bgVisEvent(s) {
+  function bgVisEvent(s:number) {
     Tone.Transport.schedule((time) => {
       Tone.Draw.schedule(() => {
         // do drawing or DOM manipulation here
@@ -432,10 +429,10 @@ export const playSquence = async () => {
       }, time);
     }, s);
   }
-
+*/
   //function for scheduling changes in the visuals
   //  s is when it will happen - when it is scheduled for.
-  function bgVisEvent2(s, g, inv, sat, nn, ns, rot, lthrsh, ltol) {
+  function bgVisEvent2(s:number, g:number, inv:number, sat:number, nn:number, ns:number, rot:number, lthrsh:number, ltol:number) {
     Tone.Transport.schedule((time) => {
       Tone.Draw.schedule(() => {
         // do drawing or DOM manipulation here
