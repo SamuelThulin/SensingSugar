@@ -120,6 +120,7 @@ osc(15, 0.1)
 .rotate(r)
 .scale(bg_array.fast(0.2).smooth(1))
 .diff(src(o1))
+.color(1,0,0)
 .out(o0);
 
 osc(5, 0.1)

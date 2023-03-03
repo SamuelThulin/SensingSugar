@@ -4,6 +4,7 @@ import * as Visuals from './Visuals';
 import { Envelope } from 'tone';
 import { data } from './data/CGMdata1'; //here is where I can load different data sets
 import _, { now } from 'lodash';
+import { MidiNote } from 'tone/build/esm/core/type/NoteUnits';
 
 //BG array - this works, but there might be a more elegant way, and I need to decide whether to actually remove the null values or not
 //from Luciano: const glucoseValues = data.filter((value) => value.glucose !== null)
@@ -213,7 +214,7 @@ export const playSquence = async () => {
   let counterS2Vel = 0;
   let counterS3Vel = 0;
   const bgMIDI = convertBGtoNotes(myModeFormula, majorFormula.length * 3, 4);
-  const bgFreqs = bgMIDI.map((num) => Tone.mtof(num));// this is weird, Tone.js says it wants a number... maybe because for all it knows it could be too high a number i.e above 127
+  const bgFreqs = bgMIDI.map((num) => Tone.mtof(num as MidiNote));// this is weird, Tone.js says it wants a number... maybe because for all it knows it could be too high a number i.e above 127
   console.log(bgFreqs);
   Visuals.start();
   //Visuals.fx5(glucoseValues.map(x=> x * 10), glucoseValues, 0.6, 0.5);
@@ -225,6 +226,7 @@ export const playSquence = async () => {
   //bgVisEvent(now);
 
   //k is # of pulses, n is # of slots, c is notename as String (ex. "C3"); this is for creating rhythms from the data
+  //bjorklund funtion source: https://codepen.io/teropa/pen/zPEYbY by Tero Parvaianen
   function bjorklund(k: number, n: number, c: number) {
     //returns k pulses (1s) followed by n-k rests (0s)
     let seq = _.times(k, _.constant([1])).concat(_.times(n - k, _.constant([0])));
@@ -235,7 +237,7 @@ export const playSquence = async () => {
       //console.log(head, remainder, seq);
       if (remainder.length < 2) break;
       for (let i = 0; i < Math.min(head.length, remainder.length); i++) {
-        seq[i] = seq[i].concat(seq.pop());
+        seq[i] = seq[i].concat(seq.pop() ?? 0);
       }
     }
     return _.flatten(seq).map(function (value) {
@@ -476,7 +478,7 @@ export const playSquence = async () => {
         bgFreqs[(i + 2) % glucoseValues.length]
       );
       timbreShift(bgTimeC, fmSynth3, 1.5, fmMIOffset * bgRange01[(i + 2) % glucoseValues.length]);
-      bgEvent4(bgTime, glucoseValues[i], bgFreqs[i] * 0.125);
+      bgEvent4(bgTime, glucoseValues[i], bgFreqs[i] * 0.0625);
       //scheduling of a change in the visuals, first variable determines when, the rest depend on the visual synth in question
       //bgVisEvent2(bgTime2, bgRange01[i], bgRange01[i+1], bgRange9[i+2], bgRange9[i+7], bgRange01[i+3], bgRange310[i+4], bgRange100[i+5], bgRange300[i+6])
       //bgVisEvent2(bgTime, bgRange01[i], bgRange01[i], bgRange9[i],bgRange9[i], bgRange01[i], bgRange310[i], bgRange100[i], bgRange300[i])
@@ -498,7 +500,7 @@ export const playSquence = async () => {
         bgFreqs[(i + 2) % glucoseValues.length]
       );
       timbreShift(bgTimeC, fmSynth3, 1.5, fmMIOffset * bgRange01[(i + 2) % glucoseValues.length]);
-      bgEvent4(bgTime, glucoseValues[i], bgFreqs[i] * 0.125);
+      bgEvent4(bgTime, glucoseValues[i], bgFreqs[i] * 0.0625);
 
       //bgVisEvent2(bgTime2, bgRange01[i], bgRange01[i+1], bgRange9[i+2], bgRange9[i+7], bgRange01[i+3], bgRange310[i+4], bgRange100[i+5], bgRange300[i+6])
       // bgVisEvent2(bgTime, bgRange01[i], bgRange01[i], bgRange9[i],bgRange9[i], bgRange01[i], bgRange310[i], bgRange100[i], bgRange300[i])
@@ -521,7 +523,7 @@ export const playSquence = async () => {
         bgFreqs[(i + 2) % glucoseValues.length]
       );
       timbreShift(bgTimeC, fmSynth3, 1.5, fmMIOffset * bgRange01[(i + 2) % glucoseValues.length]);
-      bgEvent4(bgTime, glucoseValues[i], bgFreqs[i] * 0.125);
+      bgEvent4(bgTime, glucoseValues[i], bgFreqs[i] * 0.0625);
       //bgVisEvent2(bgTime2, bgRange01[i], bgRange01[i+1], bgRange9[i+2], bgRange9[i+7], bgRange01[i+3], bgRange310[i+4], bgRange100[i+5], bgRange300[i+6])
       // bgVisEvent2(bgTime, bgRange01[i], bgRange01[i], bgRange9[i],bgRange9[i], bgRange01[i], bgRange310[i], bgRange100[i], bgRange300[i])
     }
