@@ -118,7 +118,7 @@ const{src, osc, o0, o1} = h;
 osc(15, 0.1)
 .modulateScale(src(o0), 3.5, 2)
 .rotate(r)
-.scale(bg_array.fast(0.2).smooth(1))
+.scale(bg_array.fast(0.1).smooth(1))
 .diff(src(o1))
 .color(1,0,0)
 .out(o0);
@@ -151,3 +151,29 @@ export const fx8t = ()=> {
     const{shape} = h;
     //@ts-ignore
     shape(4).rotate([-3.14,3.14].fast(0.1).ease('easeInOutCubic')).out()}
+
+export const fx10 = () => {
+  const{osc, shape} = h;
+    var lfo = () => osc(1, 10, 0)
+
+shape(5).color(1,0,0).mult(lfo())
+  .add(shape(4).color(0,0,1).mult(lfo().invert()),1)
+  .out()
+}
+
+export const fx11 = (r) => {
+  const{osc, shape, src, o0} = h;
+var lfo = () => osc(1, 0.5, 0)
+
+osc(15, 0.1)
+.modulateScale(src(o0), 3.5, 2)
+.rotate(r)
+.scale(0.5)
+.color(1,0,0).mult(lfo())
+  .mult(osc(15, 0.1)
+.modulateScale(src(o0), 3.5, 2)
+        .rotate(120)
+.scale(0.5)
+.color(1,0,0))
+  .out(o0)
+}

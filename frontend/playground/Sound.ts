@@ -64,8 +64,9 @@ const maxBG = Math.max(...glucoseValues);
 const minBG = Math.min(...glucoseValues);
 
 //arrays for use with visuals and audio (not dedicated, use as appropriate)
-const bgRange01 = glucoseValues.map((num) => convertRange(num, [minBG, maxBG], [0, 1]));
-const bgRange9 = glucoseValues.map((num) => convertRange(num, [minBG, maxBG], [0, 9]));
+const bgRange01 = glucoseValues.map((num) => convertRange(num, [minBG, maxBG], [0.0001, 1]));
+console.log('bgRange01 = ', bgRange01);
+const bgRange9 = glucoseValues.map((num) => convertRange(num, [minBG, maxBG], [0.0001, 9]));
 const bgRange310 = glucoseValues.map((num) => convertRange(num, [minBG, maxBG], [0.0001, 0.01]));
 const bgRange100 = glucoseValues.map((num) => convertRange(num, [minBG, maxBG], [0.01, 0.1]));
 const bgRange300 = glucoseValues.map((num) => convertRange(num, [minBG, maxBG], [0.0001, 0.1]));
@@ -217,13 +218,9 @@ export const playSquence = async () => {
   const bgFreqs = bgMIDI.map((num) => Tone.mtof(num as MidiNote));// this is weird, Tone.js says it wants a number... maybe because for all it knows it could be too high a number i.e above 127
   console.log(bgFreqs);
   Visuals.start();
-  //Visuals.fx5(glucoseValues.map(x=> x * 10), glucoseValues, 0.6, 0.5);
-  //Visuals.fx3(2, 0.6)
-  Visuals.fx8(bgRange01, fftNorm);
-  //Visuals.fx8t();
-  //Visuals.fx8simple();
-  //Visuals.fx9ease();
-  //bgVisEvent(now);
+  //Visuals.fx8(bgRange01, fftNorm);
+  Visuals.fx11(fftNorm);
+  
 
   //k is # of pulses, n is # of slots, c is notename as String (ex. "C3"); this is for creating rhythms from the data
   //bjorklund funtion source: https://codepen.io/teropa/pen/zPEYbY by Tero Parvaianen
