@@ -219,7 +219,7 @@ export const playSquence = async () => {
   console.log(bgFreqs);
   Visuals.start();
   //Visuals.fx8(bgRange01, fftNorm);
-  Visuals.fx11(fftNorm);
+  Visuals.fx11(fftNorm,()=>Math.sin(Tone.Transport.seconds)-1.5);
   
 
   //k is # of pulses, n is # of slots, c is notename as String (ex. "C3"); this is for creating rhythms from the data
