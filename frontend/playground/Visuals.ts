@@ -161,19 +161,20 @@ shape(5).color(1,0,0).mult(lfo())
   .out()
 }
 
-export const fx11 = (r, s) => {
+//@ts-ignore
+export const fx11 = (r, s:number[]) => {
   const{osc, shape, src, o0} = h;
 var lfo = () => osc(1, 0.5, 0)
-
 osc(15, 0.1)
 .modulateScale(src(o0), 3.5, 2)
-.rotate(r)
-.scale(s)
+.rotate(r, 0.02)
+.scale(s.fit(0.03, 0.6).fast(10).smooth())
 .color(1,0,0).mult(lfo())
-  .mult(osc(15, 0.1)
+  .add(osc(15, 0.1)
 .modulateScale(src(o0), 3.5, 2)
         .rotate(120)
 //.scale(0.5)
-.color(1,0,0))
+//.color(1,0,0)
+)
   .out(o0)
 }

@@ -71,6 +71,33 @@ const bgRange310 = glucoseValues.map((num) => convertRange(num, [minBG, maxBG], 
 const bgRange100 = glucoseValues.map((num) => convertRange(num, [minBG, maxBG], [0.01, 0.1]));
 const bgRange300 = glucoseValues.map((num) => convertRange(num, [minBG, maxBG], [0.0001, 0.1]));
 
+//function to interpolate between values in an array (http://hevi.info/do-it-yourself/interpolating-and-array-to-fit-another-size/; https://stackoverflow.com/questions/26941168/javascript-interpolate-an-array-of-numbers)
+// modified to fix typescript errors
+function interpolateArray(data: number[], fitCount:number) {
+
+  var linearInterpolate = function (before:number, after:number, atPoint:number) {
+      return before + (after - before) * atPoint;
+  };
+
+  var newData = new Array();
+  var springFactor = (data.length - 1) / (fitCount - 1);
+  newData[0] = data[0]; // for new allocation
+  for ( var i = 1; i < fitCount - 1; i++) {
+      var tmp = i * springFactor;
+      var before:number = Math.floor(tmp);
+      var after:number = Math.ceil(tmp);
+      var atPoint = tmp - before;
+      newData[i] = linearInterpolate(data[before], data[after], atPoint);
+  }
+  newData[fitCount - 1] = data[data.length - 1]; // for new allocation
+  return newData;
+};
+
+//interpolating between selections from the glucose array; taking first value, quarter-way value, half-way value, three-quarter value, and back to first value
+const glucoseSel = [glucoseValues[0], glucoseValues[Math.floor(glucoseValues.length*0.25)], glucoseValues[Math.floor(glucoseValues.length*0.5)],glucoseValues[Math.floor(glucoseValues.length*0.75)], glucoseValues[0]]
+const glucoseInterpolated: number[] = interpolateArray(glucoseSel, 105)
+console.log(glucoseInterpolated)
+
 //SCALE_MAKING (with help from https://www.guitarland.com/MusicTheoryWithToneJS/PlayModes.html)
 const majorFormula = [0, 2, 4, 5, 7, 9, 11];
 const modeNames = ['major', 'dorian', 'phrygian', 'lydian', 'mixolydian', 'aeolian', 'locrian'];
@@ -219,7 +246,7 @@ export const playSquence = async () => {
   console.log(bgFreqs);
   Visuals.start();
   //Visuals.fx8(bgRange01, fftNorm);
-  Visuals.fx11(fftNorm,()=>Math.sin(Tone.Transport.seconds)-1.5);
+  Visuals.fx11(fftNorm, glucoseInterpolated);
   
 
   //k is # of pulses, n is # of slots, c is notename as String (ex. "C3"); this is for creating rhythms from the data
