@@ -110,7 +110,7 @@ export const data = [
     {
         "#": 10,
         "timestamp": "23/01/2022 21:34:18",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,

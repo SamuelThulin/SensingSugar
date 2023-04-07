@@ -66,10 +66,12 @@ const minBG = Math.min(...glucoseValues);
 //arrays for use with visuals and audio (not dedicated, use as appropriate)
 const bgRange01 = glucoseValues.map((num) => convertRange(num, [minBG, maxBG], [0.0001, 1]));
 console.log('bgRange01 = ', bgRange01);
-const bgRange9 = glucoseValues.map((num) => convertRange(num, [minBG, maxBG], [0.0001, 9]));
-const bgRange310 = glucoseValues.map((num) => convertRange(num, [minBG, maxBG], [0.0001, 0.01]));
-const bgRange100 = glucoseValues.map((num) => convertRange(num, [minBG, maxBG], [0.01, 0.1]));
-const bgRange300 = glucoseValues.map((num) => convertRange(num, [minBG, maxBG], [0.0001, 0.1]));
+const bgRangeColour = glucoseValues.map((num) => convertRange(num, [minBG, maxBG], [0, 2.5]));
+const bgRangeScale = glucoseValues.map((num) => convertRange(num, [minBG, maxBG], [0.03, 2]));
+const bgRangeOscSync = glucoseValues.map((num) => convertRange(num, [minBG, maxBG], [0.05, 0.15]));
+const bgRangeRota = glucoseValues.map((num) => convertRange(num, [minBG, maxBG], [0.01, 0.2]));
+const bgRangeMsMult = glucoseValues.map((num) => convertRange(num, [minBG, maxBG], [1, 99]));
+const bgRangeMsOffSet = glucoseValues.map((num) => convertRange(num, [minBG, maxBG], [0.2, 5]));
 
 //function to interpolate between values in an array (http://hevi.info/do-it-yourself/interpolating-and-array-to-fit-another-size/; https://stackoverflow.com/questions/26941168/javascript-interpolate-an-array-of-numbers)
 // modified to fix typescript errors
@@ -94,9 +96,41 @@ function interpolateArray(data: number[], fitCount:number) {
 };
 
 //interpolating between selections from the glucose array; taking first value, quarter-way value, half-way value, three-quarter value, and back to first value
-const glucoseSel = [glucoseValues[0], glucoseValues[Math.floor(glucoseValues.length*0.25)], glucoseValues[Math.floor(glucoseValues.length*0.5)],glucoseValues[Math.floor(glucoseValues.length*0.75)], glucoseValues[0]]
-const glucoseInterpolated: number[] = interpolateArray(glucoseSel, 105)
+const glucoseSel = [bgRangeScale[0], bgRangeScale[Math.floor(bgRangeScale.length*0.25)], bgRangeScale[Math.floor(bgRangeScale.length*0.5)],bgRangeScale[Math.floor(bgRangeScale.length*0.75)], bgRangeScale[0]]
+const glucoseInterpolated: number[] = interpolateArray(glucoseSel, 1005)
 console.log(glucoseInterpolated)
+const scaleOff = Math.floor(bgRangeScale.length*0.125)
+const glucoseSel2 = [bgRangeScale[0+scaleOff], bgRangeScale[Math.floor(bgRangeScale.length*0.25)+scaleOff], bgRangeScale[Math.floor(bgRangeScale.length*0.5)+scaleOff],bgRangeScale[Math.floor(bgRangeScale.length*0.75)+scaleOff], bgRangeScale[0+scaleOff]]
+const glucoseInterpolated2: number[] = interpolateArray(glucoseSel2, 505)
+
+//generating values to drive the colours of the visuals
+const r1: number = bgRangeColour[0];
+const g1: number = bgRangeColour[Math.floor(glucoseValues.length*0.167)]
+const b1: number = bgRangeColour[Math.floor(glucoseValues.length*0.333)]
+const r2: number = bgRangeColour[Math.floor(glucoseValues.length*0.5)]
+const g2: number = bgRangeColour[Math.floor(glucoseValues.length*0.667)]
+const b2: number = bgRangeColour[Math.floor(glucoseValues.length*0.833)]
+console.log("colour", r1, g1, b1, r2, g2, b2)
+
+//generating values to drive the osc sync of the visuals
+const oscSync1 = bgRangeOscSync[0];
+const oscSync2 = bgRangeOscSync[bgRangeOscSync.length-1]
+console.log("oscSync", oscSync1, oscSync2)
+
+//generating values to drive the rotation speed of the visuals
+const rota1 = bgRangeRota[1];
+const rota2 = bgRangeRota[bgRangeOscSync.length-2]*-1
+console.log("rota", rota1, rota2)
+
+//generating values to drive the modulateScale multiple of the visuals
+const msMult1 = bgRangeMsMult[2];
+const msMult2 = bgRangeMsMult[bgRangeOscSync.length-3]
+console.log("msMult", msMult1, msMult2)
+
+//generating values to drive the modulateScale offset of the visuals
+const msOffSet1 = bgRangeMsOffSet[3];
+const msOffSet2 = bgRangeMsOffSet[bgRangeOscSync.length-4]
+console.log("msOffSet", msOffSet1, msOffSet2)
 
 //SCALE_MAKING (with help from https://www.guitarland.com/MusicTheoryWithToneJS/PlayModes.html)
 const majorFormula = [0, 2, 4, 5, 7, 9, 11];
@@ -246,8 +280,8 @@ export const playSquence = async () => {
   console.log(bgFreqs);
   Visuals.start();
   //Visuals.fx8(bgRange01, fftNorm);
-  Visuals.fx11(fftNorm, glucoseInterpolated);
-  
+  Visuals.fx11(fftNorm, glucoseInterpolated, glucoseInterpolated2, oscSync1, oscSync2, rota1, rota2, msMult1, msMult2, msOffSet1, msOffSet2, r1, g1, b1, r2, g2, b2);
+  //Visuals.fx12(fftNorm, glucoseInterpolated);
 
   //k is # of pulses, n is # of slots, c is notename as String (ex. "C3"); this is for creating rhythms from the data
   //bjorklund funtion source: https://codepen.io/teropa/pen/zPEYbY by Tero Parvaianen
