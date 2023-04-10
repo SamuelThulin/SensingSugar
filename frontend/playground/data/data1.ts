@@ -110,7 +110,7 @@ export const data = [
     {
         "#": 10,
         "timestamp": "23/01/2022 21:34:18",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -470,7 +470,7 @@ export const data = [
     {
         "#": 40,
         "timestamp": "28/01/2022 12:31:00",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -674,7 +674,7 @@ export const data = [
     {
         "#": 57,
         "timestamp": "31/01/2022 09:00:00",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -710,7 +710,7 @@ export const data = [
     {
         "#": 60,
         "timestamp": "31/01/2022 13:10:00",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -794,7 +794,7 @@ export const data = [
     {
         "#": 67,
         "timestamp": "01/02/2022 13:11:00",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -914,7 +914,7 @@ export const data = [
     {
         "#": 77,
         "timestamp": "02/02/2022 21:20:00",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": "Forgot long acting :(",
@@ -1046,7 +1046,7 @@ export const data = [
     {
         "#": 88,
         "timestamp": "04/02/2022 20:49:00",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -1130,7 +1130,7 @@ export const data = [
     {
         "#": 95,
         "timestamp": "05/02/2022 19:26:08",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -1394,7 +1394,7 @@ export const data = [
     {
         "#": 117,
         "timestamp": "09/02/2022 07:46:00",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -1466,7 +1466,7 @@ export const data = [
     {
         "#": 123,
         "timestamp": "10/02/2022 09:42:00",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -1538,7 +1538,7 @@ export const data = [
     {
         "#": 129,
         "timestamp": "10/02/2022 20:54:00",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -1646,7 +1646,7 @@ export const data = [
     {
         "#": 138,
         "timestamp": "11/02/2022 20:36:00",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": "Pizza at chris studio",
@@ -1754,7 +1754,7 @@ export const data = [
     {
         "#": 147,
         "timestamp": "12/02/2022 18:33:00",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": "Ski day!",
@@ -1838,7 +1838,7 @@ export const data = [
     {
         "#": 154,
         "timestamp": "13/02/2022 18:18:00",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -1958,7 +1958,7 @@ export const data = [
     {
         "#": 164,
         "timestamp": "14/02/2022 23:10:37",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -2102,7 +2102,7 @@ export const data = [
     {
         "#": 176,
         "timestamp": "16/02/2022 21:05:00",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -2162,7 +2162,7 @@ export const data = [
     {
         "#": 181,
         "timestamp": "17/02/2022 12:56:00",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -2606,7 +2606,7 @@ export const data = [
     {
         "#": 218,
         "timestamp": "22/02/2022 07:55:00",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -2618,7 +2618,7 @@ export const data = [
     {
         "#": 219,
         "timestamp": "22/02/2022 10:56:00",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -2870,7 +2870,7 @@ export const data = [
     {
         "#": 240,
         "timestamp": "24/02/2022 22:56:17",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -3194,7 +3194,7 @@ export const data = [
     {
         "#": 267,
         "timestamp": "28/02/2022 09:04:39",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -3290,7 +3290,7 @@ export const data = [
     {
         "#": 275,
         "timestamp": "01/03/2022 14:16:00",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -3326,7 +3326,7 @@ export const data = [
     {
         "#": 278,
         "timestamp": "01/03/2022 20:15:00",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -3518,7 +3518,7 @@ export const data = [
     {
         "#": 294,
         "timestamp": "03/03/2022 21:29:00",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -3926,7 +3926,7 @@ export const data = [
     {
         "#": 328,
         "timestamp": "08/03/2022 20:54:00",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -4118,7 +4118,7 @@ export const data = [
     {
         "#": 344,
         "timestamp": "10/03/2022 20:10:00",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -4346,7 +4346,7 @@ export const data = [
     {
         "#": 363,
         "timestamp": "12/03/2022 19:09:00",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -4454,7 +4454,7 @@ export const data = [
     {
         "#": 372,
         "timestamp": "14/03/2022 08:47:50",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -4562,7 +4562,7 @@ export const data = [
     {
         "#": 381,
         "timestamp": "15/03/2022 13:24:00",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -4742,7 +4742,7 @@ export const data = [
     {
         "#": 396,
         "timestamp": "17/03/2022 13:45:00",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -5150,7 +5150,7 @@ export const data = [
     {
         "#": 430,
         "timestamp": "20/03/2022 19:00:00",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -5534,7 +5534,7 @@ export const data = [
     {
         "#": 462,
         "timestamp": "24/03/2022 08:55:59",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -5582,7 +5582,7 @@ export const data = [
     {
         "#": 466,
         "timestamp": "24/03/2022 19:01:00",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -5630,7 +5630,7 @@ export const data = [
     {
         "#": 470,
         "timestamp": "25/03/2022 08:59:00",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -5666,7 +5666,7 @@ export const data = [
     {
         "#": 473,
         "timestamp": "25/03/2022 19:24:00",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -5714,7 +5714,7 @@ export const data = [
     {
         "#": 477,
         "timestamp": "26/03/2022 10:21:00",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -5738,7 +5738,7 @@ export const data = [
     {
         "#": 479,
         "timestamp": "26/03/2022 19:19:00",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -5798,7 +5798,7 @@ export const data = [
     {
         "#": 484,
         "timestamp": "27/03/2022 09:30:00",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -5858,7 +5858,7 @@ export const data = [
     {
         "#": 489,
         "timestamp": "27/03/2022 19:22:00",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -6050,7 +6050,7 @@ export const data = [
     {
         "#": 505,
         "timestamp": "29/03/2022 14:01:19",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -6218,7 +6218,7 @@ export const data = [
     {
         "#": 519,
         "timestamp": "30/03/2022 17:15:00",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -6374,7 +6374,7 @@ export const data = [
     {
         "#": 532,
         "timestamp": "31/03/2022 22:10:00",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -6566,7 +6566,7 @@ export const data = [
     {
         "#": 548,
         "timestamp": "02/04/2022 20:43:00",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -6674,7 +6674,7 @@ export const data = [
     {
         "#": 557,
         "timestamp": "03/04/2022 20:44:00",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -6686,7 +6686,7 @@ export const data = [
     {
         "#": 558,
         "timestamp": "03/04/2022 22:43:33",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -6914,7 +6914,7 @@ export const data = [
     {
         "#": 577,
         "timestamp": "06/04/2022 17:30:00",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -7214,7 +7214,7 @@ export const data = [
     {
         "#": 602,
         "timestamp": "09/04/2022 20:44:00",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -7226,7 +7226,7 @@ export const data = [
     {
         "#": 603,
         "timestamp": "09/04/2022 22:36:00",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -7238,7 +7238,7 @@ export const data = [
     {
         "#": 604,
         "timestamp": "09/04/2022 23:43:27",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -7346,7 +7346,7 @@ export const data = [
     {
         "#": 613,
         "timestamp": "11/04/2022 10:03:00",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -7550,7 +7550,7 @@ export const data = [
     {
         "#": 630,
         "timestamp": "13/04/2022 19:41:00",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -7694,7 +7694,7 @@ export const data = [
     {
         "#": 642,
         "timestamp": "15/04/2022 09:22:00",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -7766,7 +7766,7 @@ export const data = [
     {
         "#": 648,
         "timestamp": "15/04/2022 20:20:00",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -7814,7 +7814,7 @@ export const data = [
     {
         "#": 652,
         "timestamp": "16/04/2022 10:16:00",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -7874,7 +7874,7 @@ export const data = [
     {
         "#": 657,
         "timestamp": "16/04/2022 22:24:00",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -8006,7 +8006,7 @@ export const data = [
     {
         "#": 668,
         "timestamp": "18/04/2022 18:56:00",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -8270,7 +8270,7 @@ export const data = [
     {
         "#": 690,
         "timestamp": "21/04/2022 12:20:00",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -8342,7 +8342,7 @@ export const data = [
     {
         "#": 696,
         "timestamp": "21/04/2022 20:21:00",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -8426,7 +8426,7 @@ export const data = [
     {
         "#": 703,
         "timestamp": "22/04/2022 13:18:00",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -8474,7 +8474,7 @@ export const data = [
     {
         "#": 707,
         "timestamp": "22/04/2022 18:20:00",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -8654,7 +8654,7 @@ export const data = [
     {
         "#": 722,
         "timestamp": "24/04/2022 18:45:00",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -8666,7 +8666,7 @@ export const data = [
     {
         "#": 723,
         "timestamp": "24/04/2022 19:20:00",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -8726,7 +8726,7 @@ export const data = [
     {
         "#": 728,
         "timestamp": "25/04/2022 14:09:00",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -8762,7 +8762,7 @@ export const data = [
     {
         "#": 731,
         "timestamp": "25/04/2022 19:22:00",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -8786,7 +8786,7 @@ export const data = [
     {
         "#": 733,
         "timestamp": "25/04/2022 21:24:41",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -9218,7 +9218,7 @@ export const data = [
     {
         "#": 769,
         "timestamp": "30/04/2022 19:26:00",
-        "glucose": null,
+        "glucose": 0,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,

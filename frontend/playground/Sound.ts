@@ -2,7 +2,7 @@ import { ManTwoTone, Segment } from '@mui/icons-material';
 import * as Tone from 'tone';
 import * as Visuals from './Visuals';
 import { Envelope } from 'tone';
-import { data } from './data/CGMdata1'; //here is where I can load different data sets
+import { data } from './data/data2-short'; //here is where I can load different data sets
 import _, { now } from 'lodash';
 import { MidiNote } from 'tone/build/esm/core/type/NoteUnits';
 
@@ -69,7 +69,7 @@ console.log('bgRange01 = ', bgRange01);
 const bgRangeColour = glucoseValues.map((num) => convertRange(num, [minBG, maxBG], [0, 2.5]));
 const bgRangeScale = glucoseValues.map((num) => convertRange(num, [minBG, maxBG], [0.03, 2]));
 const bgRangeOscSync = glucoseValues.map((num) => convertRange(num, [minBG, maxBG], [0.05, 0.15]));
-const bgRangeRota = glucoseValues.map((num) => convertRange(num, [minBG, maxBG], [0.01, 0.2]));
+const bgRangeRota = glucoseValues.map((num) => convertRange(num, [minBG, maxBG], [-0.2, 0.2]));
 const bgRangeMsMult = glucoseValues.map((num) => convertRange(num, [minBG, maxBG], [1, 99]));
 const bgRangeMsOffSet = glucoseValues.map((num) => convertRange(num, [minBG, maxBG], [0.2, 5]));
 
@@ -119,7 +119,7 @@ console.log("oscSync", oscSync1, oscSync2)
 
 //generating values to drive the rotation speed of the visuals
 const rota1 = bgRangeRota[1];
-const rota2 = bgRangeRota[bgRangeOscSync.length-2]*-1
+const rota2 = bgRangeRota[bgRangeOscSync.length-2]
 console.log("rota", rota1, rota2)
 
 //generating values to drive the modulateScale multiple of the visuals
@@ -174,6 +174,7 @@ const panVolS1 = new Tone.PanVol(-0.7, 0).toDestination();
 const panVolS2 = new Tone.PanVol(0.7, 0).toDestination();
 const panVolS3 = new Tone.PanVol(0, 0).toDestination();
 const panVolK1 = new Tone.PanVol(0, -6).toDestination();
+//const autoPanner = new Tone.AutoPanner("1n").toDestination().start();
 
 const kickSynth = new Tone.MembraneSynth();
 
@@ -211,7 +212,7 @@ fmSynth2.chain(reverbA, Tone.Destination);
 fmSynth3.connect(panVolS3);
 fmSynth3.chain(reverbA, Tone.Destination);
 
-fmSwell.connect(panVolS1);
+fmSwell.toDestination();
 fmSwell.chain(reverbA, Tone.Destination);
 
 kickSynth.connect(panVolK1);
@@ -281,7 +282,8 @@ export const playSquence = async () => {
   Visuals.start();
   //Visuals.fx8(bgRange01, fftNorm);
   Visuals.fx11(fftNorm, glucoseInterpolated, glucoseInterpolated2, oscSync1, oscSync2, rota1, rota2, msMult1, msMult2, msOffSet1, msOffSet2, r1, g1, b1, r2, g2, b2);
-  //Visuals.fx12(fftNorm, glucoseInterpolated);
+  //Visuals.fx11bw(fftNorm, glucoseInterpolated, glucoseInterpolated2, oscSync1, oscSync2, rota1, rota2, msMult1, msMult2, msOffSet1, msOffSet2);
+
 
   //k is # of pulses, n is # of slots, c is notename as String (ex. "C3"); this is for creating rhythms from the data
   //bjorklund funtion source: https://codepen.io/teropa/pen/zPEYbY by Tero Parvaianen

@@ -179,21 +179,20 @@ osc(15, oscSync1)
   .out(o0)
 }
 
-/*
 //@ts-ignore
-export const fx12 = (r, s:number[]) => {
+export const fx11bw = (r, s:number[], s2:number[], oscSync1:number, oscSync2:number, rota1:number, rota2:number, msMult1:number, msMult2:number, msOffSet1:number, msOffSet2:number) => {
   const{osc, shape, src, o0} = h;
 var lfo = () => osc(1, 0.5, 0)
-osc(15, 0.1)
-.modulateScale(src(o0), 3.5, 2)
-.rotate(r, 0.02)
+osc(15, oscSync1)
+.modulateScale(src(o0), msMult1, msOffSet1)
+.rotate(r, rota1)
 .scale(s.fast(10).smooth())
-.color(0.2994011976047904, 0.404191616766467, 1.7664670658682629).mult(lfo())
-  .add(osc(15, 0.1)
-.modulateScale(src(o0), 3.5, 2)
-        .rotate(120, 0.01)
-.scale(0.5)//(s2.fast(10).smooth())
-.color(0.5838323353293412, 1.586826347305389, 0.5688622754491017)
+//.color(r1,g1,b1).mult(lfo())
+  .add(osc(15, oscSync2)
+.modulateScale(src(o0), msMult2, msOffSet2)
+        .rotate(120, rota2)
+.scale(s2.fast(10).smooth())
+//.color(r2, g2, b2)
 )
   .out(o0)
-}*/
+}
