@@ -2,7 +2,7 @@ import { ManTwoTone, Segment } from '@mui/icons-material';
 import * as Tone from 'tone';
 import * as Visuals from './Visuals';
 import { Envelope } from 'tone';
-import { data } from './data/same-short2'; //here is where I can load different data sets
+import { data } from './data/digitalbiomarker_data'; //here is where I can load different data sets
 import _, { now } from 'lodash';
 import { MidiNote } from 'tone/build/esm/core/type/NoteUnits';
 
@@ -73,7 +73,7 @@ const bgRangeRota = glucoseValues.map((num) => convertRange(num, [minBG, maxBG],
 const bgRangeMsMult = glucoseValues.map((num) => convertRange(num, [minBG, maxBG], [1, 99]));
 const bgRangeMsOffSet = glucoseValues.map((num) => convertRange(num, [minBG, maxBG], [0.2, 5]));
 
-//function to interpolate between values in an array (http://hevi.info/do-it-yourself/interpolating-and-array-to-fit-another-size/; https://stackoverflow.com/questions/26941168/javascript-interpolate-an-array-of-numbers)
+// for visuals; function to interpolate between values in an array (http://hevi.info/do-it-yourself/interpolating-and-array-to-fit-another-size/; https://stackoverflow.com/questions/26941168/javascript-interpolate-an-array-of-numbers)
 // modified to fix typescript errors
 function interpolateArray(data: number[], fitCount:number) {
 
@@ -95,7 +95,7 @@ function interpolateArray(data: number[], fitCount:number) {
   return newData;
 };
 
-//interpolating between selections from the glucose array; taking first value, quarter-way value, half-way value, three-quarter value, and back to first value
+//for visuals; interpolating between selections from the glucose array; taking first value, quarter-way value, half-way value, three-quarter value, and back to first value
 const glucoseSel = [bgRangeScale[0], bgRangeScale[Math.floor(bgRangeScale.length*0.25)], bgRangeScale[Math.floor(bgRangeScale.length*0.5)],bgRangeScale[Math.floor(bgRangeScale.length*0.75)], bgRangeScale[0]]
 const glucoseInterpolated: number[] = interpolateArray(glucoseSel, 1005)
 console.log(glucoseInterpolated)
@@ -250,16 +250,7 @@ export const playSimple = async () => {
   }
 };
 
-// * simple double
-export const playTimeControl = async () => {
-  await Tone.start();
-  const now = Tone.now();
-  // trigger the attack immediately
-  //!synth.triggerAttack('C4', now);
-  // wait one second before triggering the release
-  //! synth.triggerRelease(now + 3);
-  synth.triggerAttackRelease('G2', '1n', now + 1, 1);
-};
+
 
 // * Sequence
 
@@ -522,7 +513,7 @@ export const playSquence = async () => {
       console.log('high ', glucoseValues[i], bgTime, bgFreqs[i]);
       //do something here
       //swell event happens at the designated time and with the designated Frequecy value (multiplication by 0.5 would lower it by 1 octave)
-      swellFMEvent1(bgTime, bgFreqs[i] * 0.125, bgRange01[i], bgRange01[i] * 2);
+      swellFMEvent1(bgTime, bgFreqs[i] * 0.125, bgRange01[i], bgRange01[i] * 5);
       //bgEvents are the Euclidean rhythms, here we determine when they change (ex. bgTime), what rhythm they change to (ex. glucoseValues[i]), and what frequency/note is played (ex. bg Freqs[i])
       bgEvent(bgTime, glucoseValues[i], bgFreqs[i]);
       timbreShift(bgTime, fmSynth, 1.5, fmMIOffset * bgRange01[i]);
@@ -567,7 +558,7 @@ export const playSquence = async () => {
     } else if (bg < 4.0) {
       console.log('low ', glucoseValues[i], bgTime, bgFreqs[i]);
       //do something here
-      swellFMEvent1(bgTime, bgFreqs[i] * 0.125, bgRange01[i], bgRange01[i] * 2);
+      swellFMEvent1(bgTime, bgFreqs[i] * 0.125, bgRange01[i], bgRange01[i] * 5);
 
       bgEvent(bgTime, glucoseValues[i], bgFreqs[i]);
       timbreShift(bgTime, fmSynth, 1.5, fmMIOffset * bgRange01[i]);
