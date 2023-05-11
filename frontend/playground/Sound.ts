@@ -2,7 +2,7 @@ import { ManTwoTone, Segment } from '@mui/icons-material';
 import * as Tone from 'tone';
 import * as Visuals from './Visuals';
 import { Envelope } from 'tone';
-import { data } from './data/digitalbiomarker_data'; //here is where I can load different data sets
+import { data } from './data/data2-short'; //here is where I can load different data sets
 import _, { now } from 'lodash';
 import { MidiNote } from 'tone/build/esm/core/type/NoteUnits';
 
@@ -65,6 +65,7 @@ const minBG = Math.min(...glucoseValues);
 
 //arrays for use with visuals and audio (not dedicated, use as appropriate)
 const bgRange01 = glucoseValues.map((num) => convertRange(num, [minBG, maxBG], [0.0001, 1]));
+const bgVel = glucoseValues.map((num) => convertRange(num, [minBG, maxBG], [0.3, 1]));
 console.log('bgRange01 = ', bgRange01);
 const bgRangeColour = glucoseValues.map((num) => convertRange(num, [minBG, maxBG], [0, 2.5]));
 const bgRangeScale = glucoseValues.map((num) => convertRange(num, [minBG, maxBG], [0.03, 2]));
@@ -268,7 +269,11 @@ export const playSquence = async () => {
   let counterS2Vel = 0;
   let counterS3Vel = 0;
   const bgMIDI = convertBGtoNotes(myModeFormula, majorFormula.length * 3, 4);
+  const bgMIDI2 = convertBGtoNotes(myModeFormula, majorFormula.length * 4, 3);
+  const bgMIDI3 = convertBGtoNotes(myModeFormula, majorFormula.length * 2, 4);
   const bgFreqs = bgMIDI.map((num) => Tone.mtof(num as MidiNote));// this is weird, Tone.js says it wants a number... maybe because for all it knows it could be too high a number i.e above 127
+  const bgFreqs2 = bgMIDI2.map((num) => Tone.mtof(num as MidiNote));
+  const bgFreqs3 = bgMIDI3.map((num) => Tone.mtof(num as MidiNote));
   console.log(bgFreqs);
   Visuals.start();
   //Visuals.fx8(bgRange01, fftNorm);
@@ -303,7 +308,7 @@ export const playSquence = async () => {
   // create a new sequence with the synth - actual sequence undefined here, but defined by bgEvent function
   const synthPart = new Tone.Sequence(
     function (time, note) {
-      fmSynth.triggerAttackRelease(note, '64n', time, bgRange01[counterS1Vel % bgRange01.length]);
+      fmSynth.triggerAttackRelease(note, '64n', time, bgVel[counterS1Vel % bgVel.length]);
       console.log('synthPart1');
       //this is a way of inserting other variable changes on a per note basis
       //need to delete this if you want it to happen every bjorklund switch instead of note switch
@@ -326,9 +331,9 @@ export const playSquence = async () => {
   // create a new sequence with the synth - actual sequence undefined here, but defined by bgEvent function
   const synthPart2 = new Tone.Sequence(
     function (time, note) {
-      fmSynth2.triggerAttackRelease(note, '64n', time, bgRange01[counterS2Vel % bgRange01.length]);
+      fmSynth2.triggerAttackRelease(note, '64n', time, bgVel[counterS1Vel % bgVel.length]);
       console.log('synthPart2');
-      counterS2Vel++;
+      counterS1Vel++;
     },
     undefined,
     '8n'
@@ -337,9 +342,9 @@ export const playSquence = async () => {
   // create a new sequence with the synth - actual sequence undefined here, but defined by bgEvent function
   const synthPart3 = new Tone.Sequence(
     function (time, note) {
-      fmSynth3.triggerAttackRelease(note, '64n', time, bgRange01[counterS3Vel % bgRange01.length]);
+      fmSynth3.triggerAttackRelease(note, '64n', time, bgVel[counterS1Vel % bgVel.length]);
       console.log('synthPart3');
-      counterS3Vel++;
+      counterS1Vel++;
     },
     undefined,
     '8n'
@@ -508,8 +513,28 @@ export const playSquence = async () => {
   //FIGURE OUT HOW TO LOOP
   for (let i = 0; i < glucoseValues.length; i++) {
     let bg = glucoseValues[i];
+       //do something here
+      //swell event happens at the designated time and with the designated Frequecy value (multiplication by 0.5 would lower it by 1 octave)
+      swellFMEvent1(bgTime, bgFreqs[i] * 0.125, bgRange01[i], bgRange01[i] * 5);
+      //bgEvents are the Euclidean rhythms, here we determine when they change (ex. bgTime), what rhythm they change to (ex. glucoseValues[i]), and what frequency/note is played (ex. bg Freqs[i])
+      bgEvent(bgTime, glucoseValues[i], bgFreqs[i]);
+      timbreShift(bgTime, fmSynth, 1.5, fmMIOffset * bgRange01[i]);
+      bgEvent2(
+        bgTimeB,
+        glucoseValues[(i + 1) % glucoseValues.length],
+        bgFreqs2[(i + 1) % glucoseValues.length]
+      );
+      timbreShift(bgTimeB, fmSynth2, 1.5, fmMIOffset * bgRange01[(i + 1) % glucoseValues.length]);
+      bgEvent3(
+        bgTimeC,
+        glucoseValues[(i + 2) % glucoseValues.length],
+        bgFreqs3[(i + 2) % glucoseValues.length]
+      );
+      timbreShift(bgTimeC, fmSynth3, 1.5, fmMIOffset * bgRange01[(i + 2) % glucoseValues.length]);
+      bgEvent4(bgTime, glucoseValues[i], bgFreqs[i] * 0.0625);
+      //REMOVED CONDITIONAL LOGIC SINCE I WASN"T USING IT AND IT MAKES IT EASIER TO EDIT
     //conditional statements to allow the possibility of different things happening depending on whether the BG reading is high, on target, or low (could add more conditions and/or change existing thresholds)
-    if (bg >= 8.0) {
+    /*if (bg >= 8.0) {
       console.log('high ', glucoseValues[i], bgTime, bgFreqs[i]);
       //do something here
       //swell event happens at the designated time and with the designated Frequecy value (multiplication by 0.5 would lower it by 1 octave)
@@ -577,7 +602,7 @@ export const playSquence = async () => {
       bgEvent4(bgTime, glucoseValues[i], bgFreqs[i] * 0.0625);
       //bgVisEvent2(bgTime2, bgRange01[i], bgRange01[i+1], bgRange9[i+2], bgRange9[i+7], bgRange01[i+3], bgRange310[i+4], bgRange100[i+5], bgRange300[i+6])
       // bgVisEvent2(bgTime, bgRange01[i], bgRange01[i], bgRange9[i],bgRange9[i], bgRange01[i], bgRange310[i], bgRange100[i], bgRange300[i])
-    }
+    }*/
     //differences in timing for different streams of events
     //multiplication factor determines how long to wait before changing
     //addition in the bracket determines offset of BG value from dataset
