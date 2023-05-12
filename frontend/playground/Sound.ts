@@ -2,9 +2,15 @@ import { ManTwoTone, Segment } from '@mui/icons-material';
 import * as Tone from 'tone';
 import * as Visuals from './Visuals';
 import { Envelope } from 'tone';
-import { data } from './data/data2-short'; //here is where I can load different data sets
+import { data } from './data/glucose60(5.7r0.02)'; //here is where I can load different data sets
 import _, { now } from 'lodash';
 import { MidiNote } from 'tone/build/esm/core/type/NoteUnits';
+
+//test
+for (let i = 0; i < 14; i++) {
+  console.log((14 - i ) % 14)
+}
+ 
 
 //BG array - this works, but there might be a more elegant way, and I need to decide whether to actually remove the null values or not
 //from Luciano: const glucoseValues = data.filter((value) => value.glucose !== null)
@@ -274,7 +280,7 @@ export const playSquence = async () => {
   const bgFreqs = bgMIDI.map((num) => Tone.mtof(num as MidiNote));// this is weird, Tone.js says it wants a number... maybe because for all it knows it could be too high a number i.e above 127
   const bgFreqs2 = bgMIDI2.map((num) => Tone.mtof(num as MidiNote));
   const bgFreqs3 = bgMIDI3.map((num) => Tone.mtof(num as MidiNote));
-  console.log(bgFreqs);
+  console.log("freqs2 = " + bgFreqs2);
   Visuals.start();
   //Visuals.fx8(bgRange01, fftNorm);
   Visuals.fx11(fftNorm, glucoseInterpolated, glucoseInterpolated2, oscSync1, oscSync2, rota1, rota2, msMult1, msMult2, msOffSet1, msOffSet2, r1, g1, b1, r2, g2, b2);
@@ -518,19 +524,19 @@ export const playSquence = async () => {
       swellFMEvent1(bgTime, bgFreqs[i] * 0.125, bgRange01[i], bgRange01[i] * 5);
       //bgEvents are the Euclidean rhythms, here we determine when they change (ex. bgTime), what rhythm they change to (ex. glucoseValues[i]), and what frequency/note is played (ex. bg Freqs[i])
       bgEvent(bgTime, glucoseValues[i], bgFreqs[i]);
-      timbreShift(bgTime, fmSynth, 1.5, fmMIOffset * bgRange01[i]);
+      timbreShift(bgTime, fmSynth, 1.5, fmMIOffset * bgRange01[(bgRange01.length-i) % glucoseValues.length]);
       bgEvent2(
         bgTimeB,
         glucoseValues[(i + 1) % glucoseValues.length],
         bgFreqs2[(i + 1) % glucoseValues.length]
       );
-      timbreShift(bgTimeB, fmSynth2, 1.5, fmMIOffset * bgRange01[(i + 1) % glucoseValues.length]);
+      timbreShift(bgTimeB, fmSynth2, 1.5, fmMIOffset * bgRange01[(bgRange01.length -i + 1) % glucoseValues.length]);
       bgEvent3(
         bgTimeC,
         glucoseValues[(i + 2) % glucoseValues.length],
         bgFreqs3[(i + 2) % glucoseValues.length]
       );
-      timbreShift(bgTimeC, fmSynth3, 1.5, fmMIOffset * bgRange01[(i + 2) % glucoseValues.length]);
+      timbreShift(bgTimeC, fmSynth3, 1.5, fmMIOffset * bgRange01[(bgRange01.length -i + 2) % glucoseValues.length]);
       bgEvent4(bgTime, glucoseValues[i], bgFreqs[i] * 0.0625);
       //REMOVED CONDITIONAL LOGIC SINCE I WASN"T USING IT AND IT MAKES IT EASIER TO EDIT
     //conditional statements to allow the possibility of different things happening depending on whether the BG reading is high, on target, or low (could add more conditions and/or change existing thresholds)
