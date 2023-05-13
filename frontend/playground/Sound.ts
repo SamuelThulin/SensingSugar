@@ -2,7 +2,7 @@ import { ManTwoTone, Segment } from '@mui/icons-material';
 import * as Tone from 'tone';
 import * as Visuals from './Visuals';
 import { Envelope } from 'tone';
-import { data } from './data/glucose60(5.7r0.02)'; //here is where I can load different data sets
+import { data } from './data/dataClaude-glucoseonly24h'; //here is where I can load different data sets
 import _, { now } from 'lodash';
 import { MidiNote } from 'tone/build/esm/core/type/NoteUnits';
 
@@ -35,6 +35,7 @@ let calcMode = (Math.round((midGlucose % 1) * 10) + Math.floor(midGlucose)) % 7;
 let calcKey = (Math.round((avgGlucose % 1) * 10) + Math.floor(avgGlucose)) % 12;
 let bpmIndex = 0;
 let bpmRange:[number, number] = [120, 220];
+const timeFactor = 1;
 
 //@ts-ignore
 let calcBPM = convertRange(
@@ -66,13 +67,16 @@ console.log('BG = ', glucoseValues);
 function convertRange(value: number, r1: [number, number], r2: [number, number]) {
   return ((value - r1[0]) * (r2[1] - r2[0])) / (r1[1] - r1[0]) + r2[0];
 }
-const maxBG = Math.max(...glucoseValues);
+//addition of 0.00001 is to ensure that even if user submits dataset with only one glucose value it will not throw an error; added to maxBG it will select the lower of the output range - subtract from minBG to select higher ; 
+const maxBG = Math.max(...glucoseValues) + 0.00001;
 const minBG = Math.min(...glucoseValues);
 
 //arrays for use with visuals and audio (not dedicated, use as appropriate)
 const bgRange01 = glucoseValues.map((num) => convertRange(num, [minBG, maxBG], [0.0001, 1]));
+//example code for clipping at decimal - need to change bgRange01 from const to let
+//bgRange01 = bgRange01.map((num)=> Number(num.toFixed(4)))
+console.log("bgRange01 = " + bgRange01) 
 const bgVel = glucoseValues.map((num) => convertRange(num, [minBG, maxBG], [0.3, 1]));
-console.log('bgRange01 = ', bgRange01);
 const bgRangeColour = glucoseValues.map((num) => convertRange(num, [minBG, maxBG], [0, 2.5]));
 const bgRangeScale = glucoseValues.map((num) => convertRange(num, [minBG, maxBG], [0.03, 2]));
 const bgRangeOscSync = glucoseValues.map((num) => convertRange(num, [minBG, maxBG], [0.05, 0.15]));
@@ -168,7 +172,7 @@ function convertBGtoNotes(modeFormula: number[], upperLimit: number, baseOctave 
   let bgScaleDegs;
   let bgIntervals;
   bgScaleDegs = glucoseValues.map((num) =>
-    Math.round(convertRange(num, [minBG, maxBG], [0, upperLimit - 1]))
+    Math.round(convertRange(num, [minBG, maxBG+0.01], [0, upperLimit - 1]))
   );
   bgIntervals = bgScaleDegs.map((num) => modeFormula[num] + baseOctave * 12);
   return bgIntervals;
@@ -612,9 +616,9 @@ export const playSquence = async () => {
     //differences in timing for different streams of events
     //multiplication factor determines how long to wait before changing
     //addition in the bracket determines offset of BG value from dataset
-    bgTime = bgTime + glucoseValues[i] * 1;
-    bgTimeB = bgTimeB + glucoseValues[(i + 1) % glucoseValues.length] * 1; //need the modulo because of the offset (i+1), so it can wrap back around
-    bgTimeC = bgTimeC + glucoseValues[(i + 2) % glucoseValues.length] * 1; //need the modulo because of the offset (i+2), so it can wrap back around
+    bgTime = bgTime + glucoseValues[i] * timeFactor;
+    bgTimeB = bgTimeB + glucoseValues[(i + 1) % glucoseValues.length] * timeFactor; //need the modulo because of the offset (i+1), so it can wrap back around
+    bgTimeC = bgTimeC + glucoseValues[(i + 2) % glucoseValues.length] * timeFactor; //need the modulo because of the offset (i+2), so it can wrap back around
     bgTime2 = bgTime2 + glucoseValues[i] * 3;
     console.log('bgTimeB' + bgTimeB);
     console.log('bgTimeC' + bgTimeC);

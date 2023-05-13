@@ -14,7 +14,7 @@ export const data = [
     {
         "#": 2,
         "timestamp": "23/01/2022 00:57:27",
-        "glucose": 6.6,
+        "glucose": 6.8,
         "meal_marker": "No mark",
         "data_source": "Meter",
         "notes": null,
@@ -38,7 +38,7 @@ export const data = [
     {
         "#": 4,
         "timestamp": "23/01/2022 11:41:56",
-        "glucose": 6.5,
+        "glucose": 6.8,
         "meal_marker": "No mark",
         "data_source": "Meter",
         "notes": null,
@@ -110,7 +110,7 @@ export const data = [
     {
         "#": 10,
         "timestamp": "23/01/2022 21:34:18",
-        "glucose": 6.7,
+        "glucose": 6.8,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
@@ -134,7 +134,7 @@ export const data = [
     {
         "#": 12,
         "timestamp": "23/01/2022 00:57:27",
-        "glucose": 6.6,
+        "glucose": 6.8,
         "meal_marker": "No mark",
         "data_source": "Meter",
         "notes": null,
@@ -158,7 +158,7 @@ export const data = [
     {
         "#": 14,
         "timestamp": "23/01/2022 11:41:56",
-        "glucose": 6.5,
+        "glucose": 6.8,
         "meal_marker": "No mark",
         "data_source": "Meter",
         "notes": null,
@@ -230,7 +230,7 @@ export const data = [
     {
         "#": 20,
         "timestamp": "23/01/2022 21:34:18",
-        "glucose": 6.7,
+        "glucose": 6.8,
         "meal_marker": null,
         "data_source": "Manual",
         "notes": null,
