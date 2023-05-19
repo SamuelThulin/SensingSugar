@@ -2,7 +2,7 @@ import { ManTwoTone, Segment } from '@mui/icons-material';
 import * as Tone from 'tone';
 import * as Visuals from './Visuals';
 import { Envelope } from 'tone';
-import { data } from './data/dataClaude-glucoseonly24h'; //here is where I can load different data sets
+import { data } from './data/dataClaude-glucoseonly'; //here is where I can load different data sets
 import _, { now } from 'lodash';
 import { MidiNote } from 'tone/build/esm/core/type/NoteUnits';
 
@@ -15,6 +15,10 @@ for (let i = 0; i < 14; i++) {
 //BG array - this works, but there might be a more elegant way, and I need to decide whether to actually remove the null values or not
 //from Luciano: const glucoseValues = data.filter((value) => value.glucose !== null)
 let glucoseValues = data.filter((value) => value.glucose > 0).map((value) => value.glucose);
+console.log("length = " + glucoseValues.length)
+glucoseValues = glucoseValues.slice(1000, 1018)
+
+
 //glucoseValues = glucoseValues.filter(Number);
 // glucoseValues.forEach((item, index) => {
 //   console.log(item, index);
@@ -181,6 +185,9 @@ function convertBGtoNotes(modeFormula: number[], upperLimit: number, baseOctave 
 //create a synth and connect it to the main output (your speakers)
 const reverbA = new Tone.Reverb(5);
 
+const meter = new Tone.Meter();
+const compressor = new Tone.Compressor(-20, 3);
+
 const panVolS1 = new Tone.PanVol(-0.7, 0).toDestination();
 const panVolS2 = new Tone.PanVol(0.7, 0).toDestination();
 const panVolS3 = new Tone.PanVol(0, 0).toDestination();
@@ -227,6 +234,10 @@ fmSwell.toDestination();
 fmSwell.chain(reverbA, Tone.Destination);
 
 kickSynth.connect(panVolK1);
+
+Tone.Destination.chain(compressor);
+//used only to check vol levels - do not run except for diagnostics (and add "meter" to the Destination.chain):
+//setInterval(() => console.log(meter.getValue()), 100);
 
 // * simple
 export const playSimple = async () => {
