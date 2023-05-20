@@ -2,7 +2,7 @@ import { ManTwoTone, Segment } from '@mui/icons-material';
 import * as Tone from 'tone';
 import * as Visuals from './Visuals';
 import { Envelope } from 'tone';
-import { data } from './data/dataClaude-glucoseonly'; //here is where I can load different data sets
+import { data } from './data/digitalbiomarker_data'; //here is where I can load different data sets
 import _, { now } from 'lodash';
 import { MidiNote } from 'tone/build/esm/core/type/NoteUnits';
 
@@ -16,7 +16,7 @@ for (let i = 0; i < 14; i++) {
 //from Luciano: const glucoseValues = data.filter((value) => value.glucose !== null)
 let glucoseValues = data.filter((value) => value.glucose > 0).map((value) => value.glucose);
 console.log("length = " + glucoseValues.length)
-glucoseValues = glucoseValues.slice(1000, 1018)
+glucoseValues = glucoseValues.slice(10, 14)
 
 
 //glucoseValues = glucoseValues.filter(Number);
@@ -186,7 +186,8 @@ function convertBGtoNotes(modeFormula: number[], upperLimit: number, baseOctave 
 const reverbA = new Tone.Reverb(5);
 
 const meter = new Tone.Meter();
-const compressor = new Tone.Compressor(-20, 3);
+const compressor = new Tone.Compressor(-18, 3);
+const masterVol = new Tone.Volume(-1.5);
 
 const panVolS1 = new Tone.PanVol(-0.7, 0).toDestination();
 const panVolS2 = new Tone.PanVol(0.7, 0).toDestination();
@@ -235,44 +236,9 @@ fmSwell.chain(reverbA, Tone.Destination);
 
 kickSynth.connect(panVolK1);
 
-Tone.Destination.chain(compressor);
+Tone.Destination.chain(compressor, masterVol);
 //used only to check vol levels - do not run except for diagnostics (and add "meter" to the Destination.chain):
 //setInterval(() => console.log(meter.getValue()), 100);
-
-// * simple
-export const playSimple = async () => {
-  await Tone.start();
-  //debugging:
-  console.log(glucoseValues.map((x) => x * 10));
-  //console.log(Tone);
-  //play a middle 'C' for the duration of an 8th note
-  Visuals.start();
-  //Visuals.fx4(function(){return Math.random()*10});
-  // Visuals.fx3(20, 0.5)
-  Visuals.fx5(
-    glucoseValues.map((x) => x * 10),
-    glucoseValues,
-    0.6,
-    0.5
-  );
-  synth.triggerAttackRelease('C3', '8n');
-  //this works
-  for (let i = 0; i < data.length; i++) {
-    let bg = data[i].glucose;
-    if (bg >= 8.0) {
-      console.log('high ', i, data[i].glucose);
-      //do something here
-    } else if (bg <= 7.9 && bg >= 4.0) {
-      console.log('target ', i, data[i].glucose);
-      //do something here
-    } else if (bg < 4.0) {
-      console.log('low ', i, data[i].glucose);
-      //do something here
-    }
-  }
-};
-
-
 
 // * Sequence
 
@@ -652,6 +618,41 @@ export const playSquence = async () => {
   Tone.Transport.setLoopPoints(0, endLoop);
   Tone.Transport.loop = true;
 };
+
+
+// * simple
+export const playSimple = async () => {
+  await Tone.start();
+  //debugging:
+  console.log(glucoseValues.map((x) => x * 10));
+  //console.log(Tone);
+  //play a middle 'C' for the duration of an 8th note
+  Visuals.start();
+  //Visuals.fx4(function(){return Math.random()*10});
+  // Visuals.fx3(20, 0.5)
+  Visuals.fx5(
+    glucoseValues.map((x) => x * 10),
+    glucoseValues,
+    0.6,
+    0.5
+  );
+  synth.triggerAttackRelease('C3', '8n');
+  //this works
+  for (let i = 0; i < data.length; i++) {
+    let bg = data[i].glucose;
+    if (bg >= 8.0) {
+      console.log('high ', i, data[i].glucose);
+      //do something here
+    } else if (bg <= 7.9 && bg >= 4.0) {
+      console.log('target ', i, data[i].glucose);
+      //do something here
+    } else if (bg < 4.0) {
+      console.log('low ', i, data[i].glucose);
+      //do something here
+    }
+  }
+};
+
 
 // *  Scheduling
 export const playScheduling = async () => {

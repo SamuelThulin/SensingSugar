@@ -11,7 +11,7 @@ export const StaticBackground = ({ children }: PropsWithChildren) => (
 			backgroundSize: 'cover',
 			backgroundImage:
 				'linear-gradient(to bottom, rgb(49 78 255 / 52%), rgb(81 0 0 / 73%)), url(/home-placeholder.png)',
-			filter: 'hue-rotate(319deg)',
+			filter: 'hue-rotate(0deg)',
 		}}
 	>
 		{children}
