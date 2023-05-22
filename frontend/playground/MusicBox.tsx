@@ -20,21 +20,21 @@ export default function MusicBox() {
 
 	return (
 		<Stack alignItems="center" gap={4}>
-			<Stack justifyContent="center" gap={2}>
-				<Typography align="center" color="secondary" component="h2" variant="h4">
+			<Stack alignItems="flex-start" justifyContent="center" gap={2}>
+				{/* <Typography >
 					Tone JS
-				</Typography>
+				</Typography> */}
 				<ButtonGroup variant="outlined" aria-label="outlined button group">
-					<Button color="inherit" onClick={handlePlaySimple}>
+					{/* <Button color="inherit" onClick={handlePlaySimple}>
 						Simple
 					</Button>
 					<Button color="inherit" onClick={handlePlayTime}>
 						Time
-					</Button>
+					</Button> */}
 					<Button color="inherit" onClick={handlePlaySequence}>
 						Sequence
 					</Button>
-					<Button color="inherit" onClick={handlePlayScheduling}>
+					{/* <Button color="inherit" onClick={handlePlayScheduling}>
 						Scheduling
 					</Button>
 					<Button color="inherit" onClick={handlePlayInstrument}>
@@ -51,11 +51,11 @@ export default function MusicBox() {
 					</Button>
 					<Button color="inherit" onClick={handlePlaySignal}>
 						Signal
-					</Button>
+					</Button> */}
 				</ButtonGroup>
 			</Stack>
-			<Stack justifyContent="center" gap={2}>
-				<Typography align="center" color="secondary" component="h2" variant="h4">
+			 <Stack justifyContent="center" gap={2}>
+				{/* <Typography align="center" color="secondary" component="h2" variant="h4">
 					Hydra
 				</Typography>
 				<Box margin="auto">
@@ -72,14 +72,14 @@ export default function MusicBox() {
 							fx2
 						</Button>
 					</ButtonGroup>
-				</Box>
+				</Box> */}
 				<canvas
 					id="visuals"
 					width={1280}
 					height={1024}
 					style={{ position: 'absolute', top: 0, left: 0, height: '100vh', width: '100vw', zIndex: -1 }}
 				/>
-			</Stack>
+			</Stack> 
 		</Stack>
 	);
 }

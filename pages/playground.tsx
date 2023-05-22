@@ -8,22 +8,22 @@ import Head from 'next/head';
 export default function Playground(_props: InferGetStaticPropsType<typeof getStaticProps>) {
 	return (
 		<>
-			<Head>
+			{<Head>
 				<title>Sensing Sugar</title>
 				<meta name="description" content="Sensing Sugar" />
 				<meta name="viewport" content="width=device-width, initial-scale=1" />
 				<link rel="icon" href="/favicon.ico" />
-			</Head>
+			</Head> }
 
 			<Appbar left={<BackButton />} center={<Title color="inherit" size="subtitle1" />} />
 			<StaticBackground>
-				<Container sx={{ pt: 4 }}>
-					<Stack alignItems="center" spacing={7} pt={1} pb={1}>
-						<Typography align="center" color="secondary" component="h2" fontWeight={700} variant="h2">
+				<Container sx={{ pt: 2 }}>
+					{/* <Stack alignItems="center" spacing={7} pt={1} pb={1}>
+						 <Typography align="center" color="secondary" component="h2" fontWeight={700} variant="h2">
 							Sugar Playground
-						</Typography>
-					</Stack>
-					<Box mt={10}>
+						</Typography> 
+					</Stack> */}
+					<Box mt={0}>
 						<Sensing />
 					</Box>
 				</Container>
