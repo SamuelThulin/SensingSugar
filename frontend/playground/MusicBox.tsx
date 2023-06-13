@@ -1,11 +1,16 @@
-import { Box, Button, ButtonGroup, Stack, Typography } from '@mui/material';
+import {
+	// Box,
+	Button,
+	ButtonGroup,
+	Stack,
+	// Typography
+} from '@mui/material';
 import * as Sound from './Sound';
-//import * as Sound from './Sound_v1';
-import * as Visuals from './Visuals';
+// import * as Visuals from './Visuals';
 
 export default function MusicBox() {
 	const handlePlaySimple = () => Sound.playSimple();
-	const handlePlayTime = () => Sound.playTimeControl();
+	// const handlePlayTime = () => Sound.playTimeControl();
 	const handlePlaySequence = () => Sound.playSquence();
 	const handlePlayScheduling = () => Sound.playScheduling();
 	const handlePlayInstrument = () => Sound.playInstruments();
@@ -14,9 +19,9 @@ export default function MusicBox() {
 	const handlePlayEffects = () => Sound.playEffectts();
 	const handlePlaySignal = () => Sound.playSignal();
 
-	const handleStartHydra = () => Visuals.start();
-	const handlefx1 = () => Visuals.fx1();
-	const handlefx2 = () => Visuals.fx2();
+	// const handleStartHydra = () => Visuals.start();
+	// const handlefx1 = () => Visuals.fx1();
+	// const handlefx2 = () => Visuals.fx2();
 
 	return (
 		<Stack alignItems="center" gap={4}>

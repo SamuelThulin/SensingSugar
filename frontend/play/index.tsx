@@ -1,33 +1,47 @@
-import { Box, CircularProgress, Drawer } from '@mui/material';
-import { DataTable } from './DataTable';
+import { Box, Button, CircularProgress } from '@mui/material';
+import { useTranslation } from 'next-i18next';
+import { useState } from 'react';
+import * as Tone from 'tone';
 import { Sensing } from './sensing';
+import type { SensingSugar } from './sensing/Sound';
 import { useSugar } from './useSugar';
 
 type Props = {
-	showData: boolean;
-	toggleShowData: (value: boolean) => void;
+  setSensingSugar: (value: SensingSugar) => void;
 };
 
-export const PlayFrontend = ({ showData, toggleShowData }: Props) => {
-	const { data, loading } = useSugar();
+export const PlayFrontend = ({ setSensingSugar }: Props) => {
+  const { data, loading } = useSugar();
+  const { t } = useTranslation();
 
-	return (
-		<Box>
-			{loading && (
-				<Box display="flex" width="100vw" height="100vh" alignItems="center" justifyContent="center">
-					<CircularProgress size={200} sx={{ filter: 'blur(20px)' }} />
-				</Box>
-			)}
-			{data && !loading && (
-				<Box>
-					<Sensing data={data} />
-					{showData && (
-						<Drawer anchor="right" open={showData} onClose={() => toggleShowData(false)}>
-							<DataTable data={data} />
-						</Drawer>
-					)}
-				</Box>
-			)}
-		</Box>
-	);
+  const [audioReady, setAudioReady] = useState(Tone.immediate() > 0);
+
+  const handleClick = () => setAudioReady(true);
+
+  return (
+    <Box>
+      {(loading || !audioReady) && (
+        <Box
+          display="flex"
+          width="100vw"
+          height="100vh"
+          alignItems="center"
+          justifyContent="center"
+        >
+          {!audioReady && (
+            <Button onClick={handleClick} size="large" sx={{ position: 'absolute', zIndex: 1 }}>
+              {t('common:click_to_start')}
+            </Button>
+          )}
+          <CircularProgress size={200} sx={{ filter: 'blur(20px)' }} />
+        </Box>
+      )}
+
+      {data && !loading && audioReady && (
+        <Box>
+          <Sensing {...{ data, setSensingSugar }} />
+        </Box>
+      )}
+    </Box>
+  );
 };

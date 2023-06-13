@@ -1,1 +1,0 @@
-self.__REACT_LOADABLE_MANIFEST={"../frontend/playground/index.tsx -> ./MusicBox":{"id":"../frontend/playground/index.tsx -> ./MusicBox","files":["static/chunks/frontend_playground_MusicBox_tsx.js"]}}

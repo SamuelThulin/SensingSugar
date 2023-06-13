@@ -6,6 +6,8 @@ yarn-debug.log*
 yarn-error.log*
 .DS_STORE
 
+.next
+
 .env-cmdrc.js
 
 /dist

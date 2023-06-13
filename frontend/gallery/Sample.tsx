@@ -1,64 +1,90 @@
+import type { DataCollectionItem } from '@/@types';
 import { Box, Stack, Typography, useTheme } from '@mui/material';
-import { motion } from 'framer-motion';
+import { Variants, motion } from 'framer-motion';
+import Image from 'next/image';
 import { useRouter } from 'next/router';
+import { useState } from 'react';
 
-interface SampleProps {
-	filename: string;
-}
+export const Sample = ({ id, name, background }: DataCollectionItem) => {
+  const { palette } = useTheme();
+  const router = useRouter();
 
-export const Sample = ({ filename }: SampleProps) => {
-	const { palette } = useTheme();
-	const router = useRouter();
+  const [hover, setHover] = useState(false);
 
-	// const handleClick = () => router.push({ pathname: '/play', query: { q: filename } });
+  const handleMouseOver = () => setHover(true);
+  const handleMouseOut = () => setHover(false);
 
-	const handleClick = () => router.push({ pathname: `/play/${filename}`});
+  const handleClick = () => router.push({ pathname: `/play/${id}` });
 
-	return (
-		<Stack
-			alignItems="center"
-			component={motion.div}
-			onClick={handleClick}
-			spacing={1}
-			m={1}
-			whileHover={{ cursor: 'pointer' }}
-		>
-			<Box
-				display="flex"
-				alignItems="center"
-				width={40}
-				height={80}
-				p={1}
-				sx={{
-					borderWidth: 1,
-					borderStyle: 'solid',
-					borderRadius: 1,
-					borderColor: palette.secondary.dark,
-					bgcolor: palette.secondary.light,
-					color: palette.primary.dark,
-				}}
-				component={motion.div}
-				whileHover={{
-					y: -15,
-					width: 50,
-					height: 50,
-					color: 'rgb(255,255,255)',
-					backgroundColor: palette.secondary.dark,
-					borderTopRightRadius: '50%',
-					borderBottomLeftRadius: '50%',
-					borderBottomRightRadius: '50%',
-					borderColor: palette.secondary.light,
-					boxShadow: `0 0 8px 4px ${palette.primary.dark}`,
-					scale: 1.5,
-					// rotate: 1,
-					rotateZ: 45,
-					transition: { type: 'spring', duration: 1 },
-				}}
-			>
-				<Typography align="center" variant="h6">
-					#{filename}
-				</Typography>
-			</Box>
-		</Stack>
-	);
+  const stripVariant: Variants = {
+    initial: {
+      width: 60,
+      height: 120,
+      backgroundColor: palette.secondary.light,
+      borderWidth: 1,
+      borderStyle: 'solid',
+      borderRadius: 4,
+      borderColor: palette.secondary.dark,
+    },
+    hover: {
+      y: -5,
+      width: 60,
+      height: 60,
+      backgroundColor: palette.primary.light,
+      borderTopRightRadius: '50%',
+      borderBottomLeftRadius: '50%',
+      borderBottomRightRadius: '50%',
+      borderColor: palette.secondary.light,
+      boxShadow: `0 0 8px 4px ${palette.primary.dark}`,
+      rotateZ: 45,
+      transition: {
+        type: 'spring',
+        duration: 1,
+        y: { duration: 2, repeat: Infinity, repeatType: 'mirror' },
+      },
+    },
+  };
+
+  const labelVariant: Variants = {
+    initial: { height: 0, width: 0 },
+    hover: { height: 'auto', width: 'auto' },
+  };
+
+  return (
+    <Stack
+      direction="column"
+      alignItems="center"
+      maxWidth={150}
+      spacing={1}
+      m={1}
+      onMouseOver={handleMouseOver}
+      onMouseOut={handleMouseOut}
+      onClick={handleClick}
+      component={motion.div}
+      whileHover={{ cursor: 'pointer' }}
+    >
+      <Box
+        display="flex"
+        alignItems="center"
+        component={motion.div}
+        variants={stripVariant}
+        animate={hover ? 'hover' : 'initial'}
+        overflow="hidden"
+      >
+        {background && (
+          <Box sx={{ mixBlendMode: 'luminosity' }}>
+            <Image alt={name} src={background} width={200} height={200} />
+          </Box>
+        )}
+      </Box>
+      <Box
+        overflow="hidden"
+        component={motion.div}
+        variants={labelVariant}
+        animate={hover ? 'hover' : 'initial'}
+      >
+        <Typography align="center">{name}</Typography>
+      </Box>
+    </Stack>
+  );
 };

@@ -1,9 +1,8 @@
-import { ManTwoTone, Segment } from '@mui/icons-material';
+
 import * as Tone from 'tone';
 import * as Visuals from './Visuals';
-import { Envelope } from 'tone';
 import { data } from './data/data'; //here is where I can load different data sets
-import _, { now } from 'lodash';
+import _ from 'lodash';
 import { MidiNote } from 'tone/build/esm/core/type/NoteUnits';
 
 //test
