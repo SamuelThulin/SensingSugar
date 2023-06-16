@@ -1,14 +1,19 @@
 import { Box, Button, CircularProgress } from '@mui/material';
 import { useTranslation } from 'next-i18next';
-import { useState } from 'react';
+import dynamic from 'next/dynamic';
+import { ComponentType, useState } from 'react';
 import * as Tone from 'tone';
-import { Sensing } from './sensing';
+import type { MusicBoProps } from './sensing';
 import type { SensingSugar } from './sensing/Sound';
 import { useSugar } from './useSugar';
 
 type Props = {
   setSensingSugar: (value: SensingSugar) => void;
 };
+
+const MusicBox: ComponentType<MusicBoProps> = dynamic(() => import('./sensing/MusicBox'), {
+  ssr: false,
+});
 
 export const PlayFrontend = ({ setSensingSugar }: Props) => {
   const { data, loading } = useSugar();
@@ -39,7 +44,7 @@ export const PlayFrontend = ({ setSensingSugar }: Props) => {
 
       {data && !loading && audioReady && (
         <Box>
-          <Sensing {...{ data, setSensingSugar }} />
+          <MusicBox {...{ data, setSensingSugar }} />
         </Box>
       )}
     </Box>

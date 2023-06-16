@@ -3,12 +3,12 @@ import { useEffect } from 'react';
 import type { SensingSugar } from './Sound';
 import * as Sound from './Sound';
 
-type Props = {
+export type MusicBoProps = {
   data: Data[];
   setSensingSugar: (value: SensingSugar) => void;
 };
 
-export default function Sensing({ data, setSensingSugar }: Props) {
+export default function Sensing({ data, setSensingSugar }: MusicBoProps) {
   useEffect(() => {
     if (data) init();
   }, [data]);

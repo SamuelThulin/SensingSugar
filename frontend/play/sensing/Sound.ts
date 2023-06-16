@@ -5,15 +5,20 @@ import { MidiNote } from 'tone/build/esm/core/type/NoteUnits';
 import * as Visuals from './Visuals';
 
 export interface SensingSugar {
+  isPlaying: boolean;
   reset: () => void;
 }
+
+let initiated = false;
 
 // * Sequence
 
 export const playSquence = async (data: Data[]): Promise<SensingSugar> => {
   await Tone.start();
 
-  // // console.log(_data)
+  //* avoid calling repeateadly
+  if (initiated) return { isPlaying: true, reset };
+  initiated = true;
 
   //BG array - this works, but there might be a more elegant way, and I need to decide whether to actually remove the null values or not
   //from Luciano: const glucoseValues = data.filter((value) => value.glucose !== null)
@@ -676,28 +681,14 @@ export const playSquence = async (data: Data[]): Promise<SensingSugar> => {
   Tone.Transport.setLoopPoints(0, endLoop);
   Tone.Transport.loop = true;
 
-  const reset = async () => {
-    Tone.Transport.stop();
-    Tone.Transport.cancel();
-
-    synthPart.clear();
-    synthPart.cancel();
-
-    synthPart2.clear();
-    synthPart2.cancel();
-
-    synthPart3.clear();
-    synthPart3.cancel();
-
-    kickPart.clear();
-    kickPart.cancel();
-
-    // await Tone.context.dispose().resume();
-
-    // Tone.setContext(new AudioContext())
-  };
-
   return {
     reset,
+    isPlaying: true,
   };
+};
+
+const reset = async () => {
+  Tone.Transport.stop();
+  // Tone.Transport.cancel();
+  initiated = false;
 };
