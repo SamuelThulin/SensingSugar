@@ -11,21 +11,94 @@ export interface SensingSugar {
 
 let initiated = false;
 
+function run() {
+  if (Tone.context.state !== "running") {
+    Tone.start();
+    console.log("not running");
+  }
+}
+
+  //create a synth and connect it to the main output (your speakers)
+  const reverbA = new Tone.Reverb(5);
+
+  const meter = new Tone.Meter();
+  const compressor = new Tone.Compressor(-18, 3);
+  const masterVol = new Tone.Volume(-1.5);
+
+  const panVolS1 = new Tone.PanVol(-0.7, 0).toDestination();
+  const panVolS2 = new Tone.PanVol(0.7, 0).toDestination();
+  const panVolS3 = new Tone.PanVol(0, 0).toDestination();
+  const panVolK1 = new Tone.PanVol(0, -6).toDestination();
+  //const autoPanner = new Tone.AutoPanner("1n").toDestination().start();
+
+  const kickSynth = new Tone.MembraneSynth();
+
+  const synth = new Tone.PluckSynth();
+  const synth2 = new Tone.PluckSynth();
+  const synth3 = new Tone.PluckSynth();
+
+  const fmSynth = new Tone.FMSynth();
+  const fmSynth2 = new Tone.FMSynth();
+  const fmSynth3 = new Tone.FMSynth();
+
+  const fmMIOffset = 50;
+
+  const fmSwell = new Tone.FMSynth();
+  fmSwell.set({
+    harmonicity: 0.5,
+    modulationIndex: 5,
+    envelope: { attack: 0.01 },
+    modulationEnvelope: { attack: 0.1, decay: 1.5, sustain: 0.1 },
+    modulation: { type: 'triangle8' },
+    oscillator: { type: 'triangle13' },
+  });
+
+  synth.connect(panVolS1);
+  synth.chain(reverbA, Tone.Destination);
+  synth2.connect(panVolS2);
+  synth2.chain(reverbA, Tone.Destination);
+  synth3.connect(panVolS3);
+  synth3.chain(reverbA, Tone.Destination);
+
+  fmSynth.connect(panVolS1);
+  fmSynth.chain(reverbA, Tone.Destination);
+  fmSynth2.connect(panVolS2);
+  fmSynth2.chain(reverbA, Tone.Destination);
+  fmSynth3.connect(panVolS3);
+  fmSynth3.chain(reverbA, Tone.Destination);
+
+  fmSwell.toDestination();
+  fmSwell.chain(reverbA, Tone.Destination);
+
+  kickSynth.connect(panVolK1);
+
+  Tone.Destination.chain(compressor, masterVol);
+  //used only to check vol levels - do not run except for diagnostics (and add "meter" to the Destination.chain):
+  //setInterval(() => // console.log(meter.getValue()), 100);
+
+  // await Tone.start();
+
+  //FFT analyzes the audio output, can use the numbers it returns to do stuff to the visuals
+  const fft = new Tone.FFT(16);
+  fmSwell.connect(fft);
+  fft.set({
+    normalRange: true,
+    smoothing: 0.8,
+  });
+
 // * Sequence
 
 export const playSquence = async (data: Data[]): Promise<SensingSugar> => {
-  await Tone.start();
-
   //* avoid calling repeateadly
   if (initiated) return { isPlaying: true, reset };
   initiated = true;
-
+  //start Tone.js if not already started
+  run();
   //BG array - this works, but there might be a more elegant way, and I need to decide whether to actually remove the null values or not
   //from Luciano: const glucoseValues = data.filter((value) => value.glucose !== null)
   let glucoseValues = data.filter((value) => value.glucose > 0).map((value) => value.glucose);
   // console.log('length = ' + glucoseValues.length);
   glucoseValues = glucoseValues.slice(0, 1000);
-
   //glucoseValues = glucoseValues.filter(Number);
   // glucoseValues.forEach((item, index) => {
   //   // console.log(item, index);
@@ -206,73 +279,7 @@ export const playSquence = async (data: Data[]): Promise<SensingSugar> => {
     return bgIntervals;
   }
 
-  //create a synth and connect it to the main output (your speakers)
-  const reverbA = new Tone.Reverb(5);
 
-  const meter = new Tone.Meter();
-  const compressor = new Tone.Compressor(-18, 3);
-  const masterVol = new Tone.Volume(-1.5);
-
-  const panVolS1 = new Tone.PanVol(-0.7, 0).toDestination();
-  const panVolS2 = new Tone.PanVol(0.7, 0).toDestination();
-  const panVolS3 = new Tone.PanVol(0, 0).toDestination();
-  const panVolK1 = new Tone.PanVol(0, -6).toDestination();
-  //const autoPanner = new Tone.AutoPanner("1n").toDestination().start();
-
-  const kickSynth = new Tone.MembraneSynth();
-
-  const synth = new Tone.PluckSynth();
-  const synth2 = new Tone.PluckSynth();
-  const synth3 = new Tone.PluckSynth();
-
-  const fmSynth = new Tone.FMSynth();
-  const fmSynth2 = new Tone.FMSynth();
-  const fmSynth3 = new Tone.FMSynth();
-
-  const fmMIOffset = 50;
-
-  const fmSwell = new Tone.FMSynth();
-  fmSwell.set({
-    harmonicity: 0.5,
-    modulationIndex: 5,
-    envelope: { attack: 0.01 },
-    modulationEnvelope: { attack: 0.1, decay: 1.5, sustain: 0.1 },
-    modulation: { type: 'triangle8' },
-    oscillator: { type: 'triangle13' },
-  });
-
-  synth.connect(panVolS1);
-  synth.chain(reverbA, Tone.Destination);
-  synth2.connect(panVolS2);
-  synth2.chain(reverbA, Tone.Destination);
-  synth3.connect(panVolS3);
-  synth3.chain(reverbA, Tone.Destination);
-
-  fmSynth.connect(panVolS1);
-  fmSynth.chain(reverbA, Tone.Destination);
-  fmSynth2.connect(panVolS2);
-  fmSynth2.chain(reverbA, Tone.Destination);
-  fmSynth3.connect(panVolS3);
-  fmSynth3.chain(reverbA, Tone.Destination);
-
-  fmSwell.toDestination();
-  fmSwell.chain(reverbA, Tone.Destination);
-
-  kickSynth.connect(panVolK1);
-
-  Tone.Destination.chain(compressor, masterVol);
-  //used only to check vol levels - do not run except for diagnostics (and add "meter" to the Destination.chain):
-  //setInterval(() => // console.log(meter.getValue()), 100);
-
-  // await Tone.start();
-
-  //FFT analyzes the audio output, can use the numbers it returns to do stuff to the visuals
-  const fft = new Tone.FFT(16);
-  fmSwell.connect(fft);
-  fft.set({
-    normalRange: true,
-    smoothing: 0.8,
-  });
   let counterS1Vel = 0;
   let counterS2Vel = 0;
   let counterS3Vel = 0;
@@ -689,6 +696,7 @@ export const playSquence = async (data: Data[]): Promise<SensingSugar> => {
 
 const reset = async () => {
   Tone.Transport.stop();
-  // Tone.Transport.cancel();
+  Tone.Transport.cancel();
   initiated = false;
+ 
 };
