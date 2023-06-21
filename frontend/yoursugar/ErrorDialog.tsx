@@ -1,4 +1,11 @@
-import { Dialog, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from '@mui/material';
 import { useTranslation } from 'next-i18next';
 
 type Props = {
@@ -22,6 +29,9 @@ export const ErrorDialog = ({ message, closeDialog }: Props) => {
       <DialogContent>
         <DialogContentText id="error-dialog-description">{message}</DialogContentText>
       </DialogContent>
+      <DialogActions>
+        <Button onClick={closeDialog}>{t('common:close')}</Button>
+      </DialogActions>
     </Dialog>
   );
 };
