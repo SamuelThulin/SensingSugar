@@ -1,5 +1,5 @@
 import { Data } from '@/@types';
-import Papa, { ParseError, ParseMeta, ParseResult } from 'papaparse';
+import csv from 'csvtojson';
 
 interface rawDataObject {
   [x: string]: any;
@@ -60,9 +60,7 @@ export const parseData = async (rawdata: string) => {
     rawDataObject = JSON.parse(rawdata);
   } catch {
     const response = await parse(rawdata);
-    //Errors
-    if (response.errors.length > 0) return response.errors[0].message;
-    rawDataObject = response.data as rawDataObject[];
+    rawDataObject = response as rawDataObject[];
   }
 
   if (rawDataObject === undefined) return 'no glucose';
@@ -102,29 +100,16 @@ export const parseData = async (rawdata: string) => {
   return data;
 };
 
-type ParseResponse = ParseResult<{ data: unknown[]; errors: ParseError[]; meta: ParseMeta }>;
-
 /**
- * This is a TypeScript function that parses a string of data using the Papa library and returns a
- * Promise that resolves with the parsed data or rejects with an error.
- * @param {string} rawdata - The rawdata parameter is a string that represents the data that needs to
- * be parsed. It could be a CSV file, a string of comma-separated values, or any other format that can
- * be parsed by the Papa.parse library.
- * @returns The `parse` function is returning a Promise that resolves to a `ParseResponse` object. The
- * `ParseResponse` object is the result of parsing the `rawdata` string using the Papa Parse library.
- * The `ParseResponse` object contains the parsed data in a structured format, as well as any errors
- * that occurred during parsing.
+ * The function `parse` takes a string of raw data in CSV format and returns a Promise that resolves
+ * to an array of objects parsed from the CSV data.
+ * @param {string} rawdata - The rawdata parameter is a string that contains the CSV data that needs to be parsed.
+ * @returns An array of objects. The objects in the array are created by parsing the input `rawdata`
+ * string using the `csv` library with options to ignore empty values and return null for missing values.
  */
-export const parse = async (rawdata: string): Promise<ParseResponse> => {
-  return new Promise((resolve, reject) => {
-    Papa.parse(rawdata, {
-      complete: (results: ParseResponse) => resolve(results),
-      dynamicTyping: true,
-      error: (error: unknown) => reject(error),
-      header: true,
-      skipEmptyLines: true,
-    });
-  });
+export const parse = async (rawdata: string): Promise<any[]> => {
+  const result = await csv({ ignoreEmpty: true, nullObject: true }).fromString(rawdata);
+  return result;
 };
 
 /**

@@ -48,9 +48,13 @@ export const useSugar = () => {
   const loadUserData = async () => {
     const userData = getUserData();
     if (!userData) return returnHome();
+    
 
     setLoading(false);
-    setData(userData);
+    setData(() => {
+      clearData();
+      return userData
+    });
   };
 
   const returnHome = () => router.push('/');
