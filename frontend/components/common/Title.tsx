@@ -28,15 +28,13 @@ export const Title = ({ color = 'primary', size = 'h1' }: Props) => {
       case 'h3':
         return 6 * shadowConstant;
       case 'h4':
-        return 5 * shadowConstant;
+        return 4 * shadowConstant;
       case 'h5':
-        return 4 * shadowConstant;
-      case 'h6':
-        return 4 * shadowConstant;
-      case 'subtitle1':
         return 2 * shadowConstant;
-      default:
+      case 'h6':
         return 1 * shadowConstant;
+      default:
+        return 0 * shadowConstant;
     }
   };
 
