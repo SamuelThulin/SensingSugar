@@ -9,11 +9,12 @@ import {
   Title,
 } from '@/frontend/components';
 import { Sample } from '@/frontend/gallery';
-import { Box, Button, Container, Divider, Stack, Typography, useTheme } from '@mui/material';
+  Link as MuiLink,
 import type { GetStaticProps, InferGetStaticPropsType } from 'next';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 type Props = {
   collection: DataCollectionItem[];
@@ -25,13 +26,26 @@ export default function Gallery({
   contribute,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const { t } = useTranslation();
-  const { palette } = useTheme();
+  const router = useRouter();
+  const handleOnTitleClick = () => router.push('/');
 
   return (
     <>
       <PageHead />
-      
-      <Appbar left={<BackButton />} center={<Title color="inherit" size="subtitle1" />} />
+
+      <Appbar
+        left={<BackButton />}
+        center={
+          <MuiLink
+            color="inherit"
+            onClick={handleOnTitleClick}
+            underline="none"
+            sx={{ cursor: 'pointer' }}
+          >
+            <Title color="inherit" size="subtitle1" />
+          </MuiLink>
+        }
+      />
       <StaticBackground>
         <Container sx={{ pt: 8 }}>
           <Stack alignItems="center" spacing={7} pt={1} pb={1}>

@@ -14,6 +14,7 @@ import {
   Container,
   Divider,
   FormControlLabel,
+  Link as MuiLink,
   Stack,
   Typography,
   useTheme,
@@ -22,6 +23,7 @@ import type { GetStaticProps, InferGetStaticPropsType } from 'next';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useState, type ChangeEvent } from 'react';
 
 type Props = {
@@ -34,7 +36,7 @@ export default function YourSugar({
   howToStructure,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const { t } = useTranslation();
-  const { palette } = useTheme();
+  const router = useRouter();
 
   const [termsAccepted, setTermsAccepted] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -46,11 +48,25 @@ export default function YourSugar({
     setTermsAccepted(event.target.checked);
   };
 
+  const handleOnTitleClick = () => router.push('/');
+
   return (
     <>
       <PageHead />
 
-      <Appbar left={<BackButton />} center={<Title color="inherit" size="subtitle1" />} />
+      <Appbar
+        left={<BackButton />}
+        center={
+          <MuiLink
+            color="inherit"
+            onClick={handleOnTitleClick}
+            underline="none"
+            sx={{ cursor: 'pointer' }}
+          >
+            <Title color="inherit" size="subtitle1" />
+          </MuiLink>
+        }
+      />
       <StaticBackground>
         <Container sx={{ pt: 8 }}>
           <Typography align="center" color="secondary" component="h2" fontWeight={700} variant="h2">

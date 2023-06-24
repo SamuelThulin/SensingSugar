@@ -1,9 +1,9 @@
-import { Appbar, BackButton, Title, PageHead } from '@/frontend/components';
+import { Appbar, BackButton, PageHead, Title } from '@/frontend/components';
 import { PlayFrontend } from '@/frontend/play';
 import { SensingSugar } from '@/frontend/play/sensing/Sound';
+import { Link as MuiLink } from '@mui/material';
 import type { GetStaticProps, InferGetStaticPropsType } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
@@ -34,13 +34,24 @@ export default function Play(_props: InferGetStaticPropsType<typeof getStaticPro
   //Stop all sounds
   const resetSounds = () => sensingSugar?.reset();
 
+  const handleOnTitleClick = () => router.push('/');
+
   return (
     <>
       <PageHead />
 
       <Appbar
         left={<BackButton onClick={resetSounds} />}
-        center={<Title color="inherit" size="subtitle1" />}
+        center={
+          <MuiLink
+            color="inherit"
+            onClick={handleOnTitleClick}
+            underline="none"
+            sx={{ cursor: 'pointer' }}
+          >
+            <Title color="inherit" size="subtitle1" />
+          </MuiLink>
+        }
       />
       <PlayFrontend setSensingSugar={handleSetSensingSugar} />
     </>
