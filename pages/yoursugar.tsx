@@ -17,6 +17,7 @@ import {
   Link as MuiLink,
   Stack,
   Typography,
+  useMediaQuery,
   useTheme,
 } from '@mui/material';
 import type { GetStaticProps, InferGetStaticPropsType } from 'next';
@@ -36,7 +37,10 @@ export default function YourSugar({
   howToStructure,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const { t } = useTranslation();
+  const { breakpoints, palette } = useTheme();
   const router = useRouter();
+
+  const isMobile = useMediaQuery(breakpoints.down('sm'));
 
   const [termsAccepted, setTermsAccepted] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -68,14 +72,20 @@ export default function YourSugar({
         }
       />
       <StaticBackground>
-        <Container sx={{ pt: 8 }}>
-          <Typography align="center" color="secondary" component="h2" fontWeight={700} variant="h2">
+        <Container sx={{ pt: 8, maxWidth: 800 }}>
+          <Typography
+            align="center"
+            color="secondary"
+            component="h2"
+            fontWeight={700}
+            variant={isMobile ? 'h4' : 'h2'}
+          >
             {t('common:sensing_your_sugar')}
           </Typography>
           <Stack width="100%" alignItems="center" spacing={5}>
             <Stack alignItems="center" mt={8} spacing={6}>
               <DataDnD setErrorMessage={setErrorMessage} termsAccepted={termsAccepted} />
-              <Stack mb={2} width={600}>
+              <Stack mb={2}>
                 <Stack direction="row" justifyContent="center">
                   <FormControlLabel
                     control={
@@ -103,7 +113,7 @@ export default function YourSugar({
               {t('common:experience_someone_else_sugar')}
             </Button>
             <Divider sx={{ width: '100%' }} />
-            <Stack width={600} pb={6} spacing={2}>
+            <Stack pb={6} spacing={2}>
               <MarkdownTemplate content={howToStructure} />
               <MarkdownTemplate content={howItWorksContent} />
             </Stack>

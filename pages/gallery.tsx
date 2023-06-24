@@ -9,7 +9,17 @@ import {
   Title,
 } from '@/frontend/components';
 import { Sample } from '@/frontend/gallery';
+import {
+  Box,
+  Button,
+  Container,
+  Divider,
   Link as MuiLink,
+  Stack,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
 import type { GetStaticProps, InferGetStaticPropsType } from 'next';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -26,7 +36,11 @@ export default function Gallery({
   contribute,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const { t } = useTranslation();
+  const { breakpoints, palette } = useTheme();
   const router = useRouter();
+
+  const isMobile = useMediaQuery(breakpoints.down('sm'));
+
   const handleOnTitleClick = () => router.push('/');
 
   return (
@@ -47,18 +61,18 @@ export default function Gallery({
         }
       />
       <StaticBackground>
-        <Container sx={{ pt: 8 }}>
+        <Container sx={{ pt: 8, maxWidth: 800 }}>
           <Stack alignItems="center" spacing={7} pt={1} pb={1}>
             <Typography
               align="center"
               color="secondary"
               component="h2"
               fontWeight={700}
-              variant="h2"
+              variant={isMobile ? 'h4' : 'h2'}
             >
               {t('common:sugar_gallery')}
             </Typography>
-            <Box maxWidth={600} px={2}>
+            <Box px={2}>
               <Typography paragraph sx={{ '::selection': { bgcolor: palette.secondary.dark } }}>
                 {t('common:gallery_text_1')}
               </Typography>
@@ -94,7 +108,7 @@ export default function Gallery({
               {t('common:try_with_your_sugar')}
             </Button>
             <Divider sx={{ width: '100%' }} />
-            <Box width={600} px={2} pb={6}>
+            <Box px={2} pb={6}>
               <MarkdownTemplate content={contribute} />
             </Box>
           </Stack>

@@ -10,7 +10,7 @@ import {
   StaticBackground,
   Title,
 } from '@/frontend/components';
-import { Box, Button, Container, Divider, Stack } from '@mui/material';
+import { Box, Button, Container, Divider, Stack, useMediaQuery, useTheme } from '@mui/material';
 import type { GetStaticProps, InferGetStaticPropsType } from 'next';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -22,6 +22,9 @@ type Props = {
 
 export default function Home({ introContent }: InferGetStaticPropsType<typeof getStaticProps>) {
   const { t } = useTranslation();
+  const { breakpoints } = useTheme();
+
+  const isMobile = useMediaQuery(breakpoints.down('sm'));
 
   return (
     <>
@@ -30,9 +33,9 @@ export default function Home({ introContent }: InferGetStaticPropsType<typeof ge
       <Appbar center={<LanguageMenu />} />
       <StaticBackground>
         <Container sx={{ pt: 4 }}>
-          <Stack height="75vh">
+          <Stack>
             <Stack alignItems="center" py={1} spacing={7}>
-              <Title />
+              <Title size={isMobile ? 'h3' : 'h1'} />
               <Box maxWidth={800} px={2}>
                 <MarkdownTemplate content={introContent} />
               </Box>
