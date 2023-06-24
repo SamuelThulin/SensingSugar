@@ -61,11 +61,11 @@ export default function Home({ introContent }: InferGetStaticPropsType<typeof ge
               </Stack>
             </Stack>
           </Stack>
-          <Stack py={5} spacing={7}>
+          <Stack py={5} spacing={2}>
             <Credits />
             <Sponsors />
           </Stack>
-          <Divider sx={{ py: 7 }} />
+          <Divider sx={{ py: 1 }} />
           <CodeRepo />
         </Container>
       </StaticBackground>

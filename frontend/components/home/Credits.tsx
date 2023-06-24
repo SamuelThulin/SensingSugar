@@ -22,7 +22,7 @@ export const Credits = () => {
 
   return (
     <Stack alignItems="center" spacing={2}>
-      <Divider sx={{ width: '50%' }}>
+      <Divider sx={{ width: '60%' }}>
         <Typography align="center" variant="h5">
           {t('common:credits')}
         </Typography>

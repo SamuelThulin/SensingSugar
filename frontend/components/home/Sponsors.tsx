@@ -8,12 +8,7 @@ export const Sponsors = () => {
 
   return (
     <Stack alignItems="center" spacing={2}>
-      <Divider sx={{ width: '50%' }}>
-        <Typography align="center" variant="h5">
-          {t('common:sponsor')}
-        </Typography>
-      </Divider>
-
+      <Divider sx={{ width: '40%', mb: 2 }} />
       <Typography align="center" fontStyle="italic" variant="overline">
         {t('common:sponsor_text')}
       </Typography>
