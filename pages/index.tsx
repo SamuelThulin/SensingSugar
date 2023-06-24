@@ -53,7 +53,8 @@ export default function Home({ introContent }: InferGetStaticPropsType<typeof ge
                   color="secondary"
                   LinkComponent={Link}
                   href="/gallery"
-                  sx={{ px: 2, borderRadius: 4 }}
+                  sx={{ borderRadius: 4 }}
+                  variant="outlined"
                 >
                   {t('common:experience_someone_else_sugar')}
                 </Button>
