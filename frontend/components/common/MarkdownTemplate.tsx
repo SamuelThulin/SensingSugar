@@ -81,7 +81,7 @@ export const MarkdownTemplate = ({ content }: Props) => {
           <Typography
             my={1}
             sx={{ '::selection': { bgcolor: palette.secondary.dark } }}
-            variant="body2"
+            variant="body1"
             {...props}
           />
         ),
