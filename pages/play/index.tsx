@@ -34,7 +34,10 @@ export default function Play(_props: InferGetStaticPropsType<typeof getStaticPro
   //Stop all sounds
   const resetSounds = () => sensingSugar?.reset();
 
-  const handleOnTitleClick = () => router.push('/');
+  const handleOnTitleClick = () => {
+    sensingSugar?.reset();
+    router.push('/')
+  };
 
   return (
     <>
