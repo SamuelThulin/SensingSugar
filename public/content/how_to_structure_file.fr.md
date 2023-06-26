@@ -1,9 +1,9 @@
-### How to structure your file
+### Comment structurer votre fichier
 
-You can submit data as a CSV or JSON file from a blood glucose monitor (BGM), a continuous glucose monitor (CGM), or manually recorded results. The values of the blood sugar can be in either mmol/L or mg/dl.  
+Vous pouvez soumettre vos données sous la forme d'un fichier CSV ou JSON à partir d'un glucomètre, la surveillance du glucose en continu (SGC), ou de résultats enregistrés manuellement. Les valeurs de la glycémie peuvent être exprimées en mmol/L ou en mg/dl.
 
-The CSV file must contain at least one column named `glucose`.
+Le fichier CSV doit contenir au moins une colonne nommée **glucose**, et porter l'extension de fichier **« .csv »**.
 
-The JSON file should be an array of objects containing the property `glucose`.
+Le fichier JSON doit être un tableau d'objets contenant la propriété **glucose**, et porter l'extension de fichier **« .json »**.
 
-See the [Guide](https://docs.google.com/document/d/1jB-FDJTeDryi3EqsKoduaYKC28WoE8MpHQro7-ltAkI/edit#heading=h.70v24mh7ugj) for how to create a CSV file.
+Voir le [Guide](https://docs.google.com/document/d/1VE5JmlrB2MPTYNuiO1rN6_idoGAQMh44Cqja982c6d8/edit?usp=sharing)  pour savoir comment créer un fichier CSV.
