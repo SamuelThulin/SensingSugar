@@ -1,0 +1,9 @@
+﻿#,Date and Time,BGValue[mmol/L],Meal Marker,Data Source,Notes,Activity,Meal[g],Medication,Location
+705,2023-04-27 7:14,12.7,No mark,Meter,,,45,"Long-acting Insulin (Basal): 8 U,Fast-acting Insulin (Bolus): 7 U",
+706,2023-04-27 12:11,9.3,Pre-meal,Meter,,,,,
+707,2023-04-27 19:31,7.5,Pre-meal,Meter,,,60,Fast-acting Insulin (Bolus): 7 U,
+708,2023-04-27 21:11,5.2,No mark,Meter,,,,Long-acting Insulin (Basal): 8 U,
+709,2023-04-28 7:25,4.7,Fasting,Meter,,,,"Long-acting Insulin (Basal): 8 U,Fast-acting Insulin (Bolus): 4 U",
+710,2023-04-28 12:06,10.2,Post-meal,Meter,,,,,
+711,2023-04-28 13:13,6.9,Pre-meal,Meter,,,,,
+712,2023-04-28 14:22,4.9,No mark,Meter,,,,,
