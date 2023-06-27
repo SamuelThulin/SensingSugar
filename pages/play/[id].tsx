@@ -74,6 +74,6 @@ export async function getStaticPaths() {
 
   return {
     paths,
-    fallback: false, // can also be true or 'blocking'
+    fallback: true, // TRUE: allow to build dynamic static pages on the fly
   };
 }
