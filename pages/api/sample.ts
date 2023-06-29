@@ -25,12 +25,15 @@ const regexFileType = /\.[0-9a-z]+$/i; //Match the end of a string after the . (
  * and file contents. If any of these checks fail, the function returns a 404 status code and no
  * content.
  */
-export default async function handler(req: NextApiRequest, res: NextApiResponse<Data | void>) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse<Data | string | void>
+) {
   const id = req.query.id;
 
   // No ID
   if (!id) {
-    res.status(404).send();
+    res.status(400).send('Missing `id` property');
     return;
   }
 
@@ -39,7 +42,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
   // No item found
   if (!item) {
-    res.status(404).send();
+    res.status(404).send('Item not found');
     return;
   }
 
@@ -47,7 +50,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
   // No file type not allowed
   if (!allowedFileTypes.includes(fileType)) {
-    res.status(404).send();
+    res.status(404).send('File extension not allowed');
     return;
   }
 
@@ -55,9 +58,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     .readFile(path.join('data', 'files', item.dataFile), 'utf8')
     .catch(() => null);
 
-  // No content
+  // File not foound
   if (!fileContents) {
-    res.status(404).send();
+    res.status(404).send('File not found');
     return;
   }
 
