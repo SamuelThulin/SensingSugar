@@ -76,8 +76,6 @@ function run() {
   //used only to check vol levels - do not run except for diagnostics (and add "meter" to the Destination.chain):
   //setInterval(() => // console.log(meter.getValue()), 100);
 
-  // await Tone.start();
-
   //FFT analyzes the audio output, can use the numbers it returns to do stuff to the visuals
   const fft = new Tone.FFT(16);
   fmSwell.connect(fft);
