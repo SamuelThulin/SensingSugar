@@ -1,0 +1,9 @@
+### Contribuer à la Galerie du sucre
+
+Sensing Sugar vous invite à contribuer à la Galerie du sucre. C'est là que vous pouvez partager la musique et les images produites par vos données de glycémie avec d'autres visiteur·euse·s du site internet. Si vous souhaitez le faire, veuillez nous contacter à l'adresse  [sensingsugar@gmail.com](mailto:sensingsugar@gmail.com).
+
+Lorsque votre glycémie est incluse dans la Galerie du sucre, les autres visiteur·euse·s du site internet pourront découvrir la musique et les images qu'elle produit. Les éléments inclus dans la Galerie du sucre peuvent être nommés comme vous le souhaitez. Certaines informations peuvent être incluses : la date et l'heure des relevés de glycémie, le type de relevés (glucomètre ou SGC) et votre nom. Vous pouvez également choisir de nommer votre fichier de manière totalement différente et ainsi de rester anonyme. Faites-nous savoir ce que vous préférez dans votre courriel d’envoi.
+
+Afin d'inclure votre glycémie dans la galerie, vous devrez envoyer vos données à l'adresse courriel ci-dessus sous la forme d'un fichier CSV ou JSON ou d'une feuille de calcul (voir le [Guide](https://docs.google.com/document/d/1VE5JmlrB2MPTYNuiO1rN6_idoGAQMh44Cqja982c6d8/edit?usp=sharing) pour savoir comment créer un fichier CSV). Avant d'envoyer le fichier, nous vous recommandons de supprimer toutes les données, à l'exception des valeurs de glycémie et de la date/heure à laquelle elles ont été prises. Nous supprimerons toutes les données superflues avant d'inclure la musique et les images produites par vos données de glycémie dans la galerie. 
+
+**Avertissement** : Sensing Sugar est un projet artistique de petite envergure. Nous ne pouvons pas garantir la confidentialité des données contenues dans la Galerie du sucre. Veuillez ne pas partager de données que vous ne seriez pas à l'aise de partager publiquement.
