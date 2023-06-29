@@ -1,31 +1,31 @@
 [
   {
     "background": "/images/gallery/1a_bg.png",
-    "dataFile": "SamuelThulin_Nov20,2021-Feb2022_BGM.csv",
+    "dataFile": "SamuelThulin_Nov202021-Feb2022_BGM.csv",
     "id": "1",
     "name": "SamuelThulin Nov20,2021-Feb2022 BGM"
   },
   {
     "background": "/images/gallery/2a_bg.png",
-    "dataFile": "SamuelThulin_27avril2023-28avril2023_glucomètre.csv",
+    "dataFile": "SamuelThulin_27avril2023-28avril2023_glucometre.csv",
     "id": "2",
     "name": "Sam 27avril2023-28avril2023 glucomètre"
   },
   {
     "background": "/images/gallery/3_bg.png",
-    "dataFile": "SamuelThulin_June13,2023-June26-2023_CGM.csv",
+    "dataFile": "SamuelThulin_June132023-June26-2023_CGM.csv",
     "id": "3",
     "name": "SamuelThulin June13,2023-June26-2023 CGM.csv"
   },
   {
     "background": "/images/gallery/4_bg.png",
-    "dataFile": "Anonymous_June25,2023-scannedglucose.csv",
+    "dataFile": "Anonymous_June252023-scannedglucose.csv",
     "id": "4",
     "name": "Anonymous June25,2023 scanned glucose"
   },
   {
     "background": "/images/gallery/5_bg.png",
-    "dataFile": "SamuelThulin_24juin2023-glucosescanné.csv",
+    "dataFile": "SamuelThulin_24juin2023-glucosescanne.csv",
     "id": "5",
     "name": "SamuelThulin 24juin2023 glucose scanné.csv"
   },
