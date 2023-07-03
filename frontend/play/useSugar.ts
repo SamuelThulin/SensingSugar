@@ -35,11 +35,7 @@ export const useSugar = () => {
     
     const res = await fetch(`/api/sample?id=${id}`);
 
-    if (res.status >= 400) {
-      const error = await res.text()
-      console.log(error)
-      return router.push('/404');
-    }
+    if (res.status >= 400) return router.push('/404');
 
     const sampleData = await res.json();
 
