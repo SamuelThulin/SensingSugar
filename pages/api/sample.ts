@@ -54,9 +54,15 @@ export default async function handler(
     return;
   }
 
-  const fileContents = await fs
-    .readFile(path.join('data', 'files', item.dataFile), 'utf8')
-    .catch(() => null);
+  const filePath = path.join('data', 'files', item.dataFile);
+  console.log(__dirname);
+  console.log(filePath);
+
+  
+  const fileContents = await fs.readFile(filePath, 'utf8').catch((error) => {
+    console.log(error);
+    return null;
+  });
 
   // File not foound
   if (!fileContents) {
