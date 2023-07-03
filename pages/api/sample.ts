@@ -55,21 +55,11 @@ export default async function handler(
   }
 
   const filePath = path.join(process.cwd(), 'data', 'files', item.dataFile);
-  console.log(__dirname);
-  console.log(filePath);
-
-  const fileContents = await fs.readFile(filePath, 'utf8').catch((error) => {
-    console.log(error);
-    return null;
-  });
+  const fileContents = await fs.readFile(filePath, 'utf8').catch(() => null);
 
   // File not foound
   if (!fileContents) {
-    res
-      .status(404)
-      .send(
-        `File not found. processPWD: ${process.cwd()}. dir: ${__dirname}. filePath: ${filePath}`
-      );
+    res.status(404).send(`File not found.`);
     return;
   }
 

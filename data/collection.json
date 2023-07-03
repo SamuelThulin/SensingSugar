@@ -34,17 +34,5 @@
     "dataFile": "anonyme_26-27juin2023-SGC.csv",
     "id": "6",
     "name": "anonyme 26-27juin2023 SGC"
-  },
-  {
-    "background": "/images/gallery/6a_bg.png",
-    "dataFile": "test.csv",
-    "id": "7",
-    "name": "test"
-  },
-  {
-    "background": "/images/gallery/6a_bg.png",
-    "dataFile": "error.csv",
-    "id": "8",
-    "name": "error"
   }
 ]
