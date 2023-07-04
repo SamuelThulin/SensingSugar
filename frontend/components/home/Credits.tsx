@@ -9,7 +9,7 @@ type Person = {
 };
 
 export const Credits = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const creditData: Person[] = [
     { name: 'Samuel Thulin', role: t('common:artist'), url: 'https://samuelthulin.com' },
@@ -46,7 +46,11 @@ export const Credits = () => {
       <Box py={4}>
         <Button
           color="secondary"
-          href="https://samuelthulin.com"
+          href={
+            i18n.language === 'fr'
+              ? 'https://samuelthulin.com/fr/projects/sensing-sugar/'
+              : 'https://samuelthulin.com/projects/sensing-sugar/'
+          }
           LinkComponent={Link}
           sx={{ px: 2, borderRadius: 4 }}
           target="_blank"
