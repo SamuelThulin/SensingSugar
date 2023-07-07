@@ -32,14 +32,15 @@ export const useSugar = () => {
   }, []);
 
   const loadGalleryData = async (id: string) => {
+    
     const res = await fetch(`/api/sample?id=${id}`);
 
-    if (res.status >= 400) return returnHome();
+    if (res.status >= 400) return router.push('/404');
 
     const sampleData = await res.json();
 
     const parsedData = await parseData(sampleData.sugar);
-    if (typeof parsedData === 'string') return returnHome();
+    if (typeof parsedData === 'string') return router.push('/404');;
 
     setLoading(false);
     setData(parsedData);
@@ -48,12 +49,11 @@ export const useSugar = () => {
   const loadUserData = async () => {
     const userData = getUserData();
     if (!userData) return returnHome();
-    
 
     setLoading(false);
     setData(() => {
       clearData();
-      return userData
+      return userData;
     });
   };
 
