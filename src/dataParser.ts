@@ -79,8 +79,8 @@ export const parseData = async (rawdata: string) => {
     //check glucose
     for (const glucoseColumn of glucoseColumnNamesSupported) {
       if (item.hasOwnProperty(glucoseColumn)) {
-        if (item[glucoseColumn] === '') glucose = "0";
-        glucose = Number(item[glucoseColumn].replace(',','.'));
+        if (item[glucoseColumn] === '') glucose = '0';
+        glucose = Number(item[glucoseColumn].replace(',', '.'));
         break;
       }
     }
