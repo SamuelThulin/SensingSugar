@@ -39,7 +39,13 @@ export const useLocalstorage = () => {
   };
 };
 
-const glucoseColumnNamesSupported = ['glucose', 'BGValue[mmol/L]', 'mmol/L', 'Value'];
+const glucoseColumnNamesSupported = [
+  'glucose',
+  'BGValue[mmol/L]',
+  'mmol/L',
+  'Value',
+  'Valeur du glucose (mmol/L)',
+];
 const dateColumnNamesSupported = ['Date and Time', 'Time', 'Local Time'];
 
 /**
