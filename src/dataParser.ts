@@ -92,9 +92,6 @@ export const parseData = async (rawdata: string) => {
     return { ...item, timestamp, glucose } as Data;
   });
 
-  //Errors: No glucose
-  if (!('glucose' in data[0]) || data[0].glucose === undefined) return 'no glucose';
-
   //Convert unit
   if (!isMmol(data)) data = convertGrToMmol(data);
 
