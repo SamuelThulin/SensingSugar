@@ -39,7 +39,42 @@ export const useLocalstorage = () => {
   };
 };
 
-const glucoseColumnNamesSupported = ['glucose', 'BGValue[mmol/L]', 'mmol/L', 'Value'];
+const glucoseColumnNamesSupported = [
+  'glucose',
+  'BGValue[mmol/L]',
+  'BGValue[mg/dL]',
+  'mmol/L',
+  'Value',
+  'Glucose Value (mmol/L)',
+  'Glucose Value (mg/dL)',
+  'Glucose Value (mg/dl)',
+  'Valeur du glucose (mmol/L)',
+  'Valeur du glucose (mg/dL)',
+  'Valeur du glucose (mg/dl)',
+  'Historique de la glycémie mmol/L',
+  'Historique de la glycémie mg/dL',
+  'Historique de la glycémie mg/dl',
+  'Numérisation de la glycémie mmol/L',
+  'Numérisation de la glycémie mg/dL',
+  'Numérisation de la glycémie mg/dl',
+  'Historic Glucose mmol/L',
+  'Historic Glucose mg/dL',
+  'Historic Glucose mg/dl',
+  'Scan Glucose mmol/L',
+  'Scan Glucose mg/dL',
+  'Scan Glucose mg/dl',
+  'Glucose Value (mmol/l)',
+  'Glucose Value (mg/dl)',
+  'CGM Glucose Value (mmol/l)',
+  'CGM Glucose Value (mg/dL)',
+  'CGM Glucose Value (mg/dl)',
+  'Valeur de glycémie (mmol/L)',
+  'Valeur de glycémie (mg/dL)',
+  'Valeur de glycémie (mg/dl)',
+  'Valeur de glycémie SCG (mmol/L)',
+  'Valeur de glycémie SCG (mg/dL)',
+  'Valeur de glycémie SCG (mg/dl)',
+];
 const dateColumnNamesSupported = ['Date and Time', 'Time', 'Local Time'];
 
 /**
@@ -73,7 +108,8 @@ export const parseData = async (rawdata: string) => {
     //check glucose
     for (const glucoseColumn of glucoseColumnNamesSupported) {
       if (item.hasOwnProperty(glucoseColumn)) {
-        glucose = Number(item[glucoseColumn]);
+        if (item[glucoseColumn] === '') glucose = '0';
+        glucose = Number(item[glucoseColumn].replace(',', '.'));
         break;
       }
     }
@@ -91,9 +127,6 @@ export const parseData = async (rawdata: string) => {
     return { ...item, timestamp, glucose } as Data;
   });
 
-  //Errors: No glucose
-  if (!('glucose' in data[0]) || data[0].glucose === undefined) return 'no glucose';
-
   //Convert unit
   if (!isMmol(data)) data = convertGrToMmol(data);
 
@@ -108,7 +141,10 @@ export const parseData = async (rawdata: string) => {
  * string using the `csv` library with options to ignore empty values and return null for missing values.
  */
 export const parse = async (rawdata: string): Promise<any[]> => {
-  const result = await csv({ ignoreEmpty: true, nullObject: true }).fromString(rawdata);
+  const result = await csv({
+    nullObject: true,
+    delimiter: 'auto',
+  }).fromString(rawdata);
   return result;
 };
 
