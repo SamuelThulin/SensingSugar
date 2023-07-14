@@ -108,7 +108,10 @@ export const parseData = async (rawdata: string) => {
  * string using the `csv` library with options to ignore empty values and return null for missing values.
  */
 export const parse = async (rawdata: string): Promise<any[]> => {
-  const result = await csv({ ignoreEmpty: true, nullObject: true }).fromString(rawdata);
+  const result = await csv({
+    nullObject: true,
+    delimiter: 'auto',
+  }).fromString(rawdata);
   return result;
 };
 
