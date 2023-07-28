@@ -34,5 +34,29 @@
     "dataFile": "anonyme_26-27juin2023-SGC.csv",
     "id": "6",
     "name": "anonyme 26-27juin2023 SGC"
+  },
+  {
+    "background": "/images/gallery/7_bg.png",
+    "dataFile": "ClaudeLaforest_23-09-2022_SGC-CGM.csv",
+    "id": "7",
+    "name": "Claude Laforest 23-09-2022 SGC-CGM"
+  },
+  {
+    "background": "/images/gallery/8_bg.png",
+    "dataFile": "ClaudeLaforest_24-09-2022_SGC-CGM.csv",
+    "id": "8",
+    "name": "Claude Laforest 24-09-2022 SGC-CGM"
+  },
+  {
+    "background": "/images/gallery/9_bg.png",
+    "dataFile": "ClaudeLaforest_25-09-2022_SGC-CGM.csv",
+    "id": "9",
+    "name": "Claude Laforest 25-09-2022 SGC-CGM"
+  },
+  {
+    "background": "/images/gallery/10_bg.png",
+    "dataFile": "ClaudeLaforest_26-09-2022_SGC-CGM.csv",
+    "id": "10",
+    "name": "Claude Laforest 26-09-2022 SGC-CGM"
   }
 ]

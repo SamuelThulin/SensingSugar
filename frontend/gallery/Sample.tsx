@@ -30,6 +30,8 @@ export const Sample = ({ id, name, background }: DataCollectionItem) => {
       y: -5,
       width: 60,
       height: 60,
+      marginLeft: 10,
+      marginRight: 10,
       backgroundColor: palette.primary.light,
       borderTopRightRadius: '50%',
       borderBottomLeftRadius: '50%',
@@ -46,8 +48,8 @@ export const Sample = ({ id, name, background }: DataCollectionItem) => {
   };
 
   const labelVariant: Variants = {
-    initial: { height: 0, width: 0 },
-    hover: { height: 'auto', width: 'auto' },
+    initial: { y: -45, opacity: 0 },
+    hover: { y: -55, opacity: 1 },
   };
 
   return (
@@ -55,6 +57,7 @@ export const Sample = ({ id, name, background }: DataCollectionItem) => {
       direction="column"
       alignItems="center"
       maxWidth={150}
+      height={170}
       spacing={1}
       m={1}
       onMouseOver={handleMouseOver}
@@ -78,10 +81,10 @@ export const Sample = ({ id, name, background }: DataCollectionItem) => {
         )}
       </Box>
       <Box
-        overflow="hidden"
         component={motion.div}
         variants={labelVariant}
         animate={hover ? 'hover' : 'initial'}
+        sx={{ position: 'absolute', zIndex: 1, pointerEvents: 'none', textOverflow: 'clip' }}
       >
         <Typography align="center">{name}</Typography>
       </Box>
