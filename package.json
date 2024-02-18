@@ -27,6 +27,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "format": "prettier --write .",
     "cm": "git-cz"
   },
   "dependencies": {
