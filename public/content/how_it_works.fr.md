@@ -2,7 +2,7 @@
 
 Les valeurs de glucose déterminent les notes, les timbres, les rythmes, le tempo, la synchronisation, les couleurs, les textures et les motifs. Toutes les autres données ne sont pas prises en compte.
 
-En règle générale, les ensembles de données présentant davantage de changements dans les valeurs de glucose produisent des résultats plus dynamiques.   
+En règle générale, les ensembles de données présentant davantage de changements dans les valeurs de glucose produisent des résultats plus dynamiques.
 
 Les petits ensembles de données (de 5 à 300 valeurs de glucose) tendent à produire des résultats plus intéressants que les grands ensembles. Chaque lecture de glycémie dans un ensemble de données est jouée pendant un nombre de secondes égal à sa valeur en mmol/L (ex. 120 mg/dl = 6,7mmol/L = 6,7 secondes). Cela signifie que 288 relevés (un jour de relevés SGC toutes les 5 minutes) avec une moyenne de 8,0 mmol/L prennent environ 35-40 minutes à jouer du début à la fin. Étant donné qu'il y a beaucoup moins de lectures avec un glucomètre qu'avec un SGC, la lecture d'une journée de lectures d'un glucomètre prendra beaucoup moins de temps que celle d'une journée de lectures d'un SGC.
 

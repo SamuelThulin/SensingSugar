@@ -12,77 +12,77 @@ export interface SensingSugar {
 let initiated = false;
 
 function run() {
-  if (Tone.context.state !== "running") {
+  if (Tone.context.state !== 'running') {
     Tone.start();
-    console.log("not running");
+    console.log('not running');
   }
 }
 
-  //create a synth and connect it to the main output (your speakers)
-  const reverbA = new Tone.Reverb(5);
+//create a synth and connect it to the main output (your speakers)
+const reverbA = new Tone.Reverb(5);
 
-  const meter = new Tone.Meter();
-  const compressor = new Tone.Compressor(-18, 3);
-  const masterVol = new Tone.Volume(-1.5);
+const meter = new Tone.Meter();
+const compressor = new Tone.Compressor(-18, 3);
+const masterVol = new Tone.Volume(-1.5);
 
-  const panVolS1 = new Tone.PanVol(-0.7, 0).toDestination();
-  const panVolS2 = new Tone.PanVol(0.7, 0).toDestination();
-  const panVolS3 = new Tone.PanVol(0, 0).toDestination();
-  const panVolK1 = new Tone.PanVol(0, -6).toDestination();
-  //const autoPanner = new Tone.AutoPanner("1n").toDestination().start();
+const panVolS1 = new Tone.PanVol(-0.7, 0).toDestination();
+const panVolS2 = new Tone.PanVol(0.7, 0).toDestination();
+const panVolS3 = new Tone.PanVol(0, 0).toDestination();
+const panVolK1 = new Tone.PanVol(0, -6).toDestination();
+//const autoPanner = new Tone.AutoPanner("1n").toDestination().start();
 
-  const kickSynth = new Tone.MembraneSynth();
+const kickSynth = new Tone.MembraneSynth();
 
-  const synth = new Tone.PluckSynth();
-  const synth2 = new Tone.PluckSynth();
-  const synth3 = new Tone.PluckSynth();
+const synth = new Tone.PluckSynth();
+const synth2 = new Tone.PluckSynth();
+const synth3 = new Tone.PluckSynth();
 
-  const fmSynth = new Tone.FMSynth();
-  const fmSynth2 = new Tone.FMSynth();
-  const fmSynth3 = new Tone.FMSynth();
+const fmSynth = new Tone.FMSynth();
+const fmSynth2 = new Tone.FMSynth();
+const fmSynth3 = new Tone.FMSynth();
 
-  const fmMIOffset = 50;
+const fmMIOffset = 50;
 
-  const fmSwell = new Tone.FMSynth();
-  fmSwell.set({
-    harmonicity: 0.5,
-    modulationIndex: 5,
-    envelope: { attack: 0.01 },
-    modulationEnvelope: { attack: 0.1, decay: 1.5, sustain: 0.1 },
-    modulation: { type: 'triangle8' },
-    oscillator: { type: 'triangle13' },
-  });
+const fmSwell = new Tone.FMSynth();
+fmSwell.set({
+  harmonicity: 0.5,
+  modulationIndex: 5,
+  envelope: { attack: 0.01 },
+  modulationEnvelope: { attack: 0.1, decay: 1.5, sustain: 0.1 },
+  modulation: { type: 'triangle8' },
+  oscillator: { type: 'triangle13' },
+});
 
-  synth.connect(panVolS1);
-  synth.chain(reverbA, Tone.Destination);
-  synth2.connect(panVolS2);
-  synth2.chain(reverbA, Tone.Destination);
-  synth3.connect(panVolS3);
-  synth3.chain(reverbA, Tone.Destination);
+synth.connect(panVolS1);
+synth.chain(reverbA, Tone.Destination);
+synth2.connect(panVolS2);
+synth2.chain(reverbA, Tone.Destination);
+synth3.connect(panVolS3);
+synth3.chain(reverbA, Tone.Destination);
 
-  fmSynth.connect(panVolS1);
-  fmSynth.chain(reverbA, Tone.Destination);
-  fmSynth2.connect(panVolS2);
-  fmSynth2.chain(reverbA, Tone.Destination);
-  fmSynth3.connect(panVolS3);
-  fmSynth3.chain(reverbA, Tone.Destination);
+fmSynth.connect(panVolS1);
+fmSynth.chain(reverbA, Tone.Destination);
+fmSynth2.connect(panVolS2);
+fmSynth2.chain(reverbA, Tone.Destination);
+fmSynth3.connect(panVolS3);
+fmSynth3.chain(reverbA, Tone.Destination);
 
-  fmSwell.toDestination();
-  fmSwell.chain(reverbA, Tone.Destination);
+fmSwell.toDestination();
+fmSwell.chain(reverbA, Tone.Destination);
 
-  kickSynth.connect(panVolK1);
+kickSynth.connect(panVolK1);
 
-  Tone.Destination.chain(compressor, masterVol);
-  //used only to check vol levels - do not run except for diagnostics (and add "meter" to the Destination.chain):
-  //setInterval(() => // console.log(meter.getValue()), 100);
+Tone.Destination.chain(compressor, masterVol);
+//used only to check vol levels - do not run except for diagnostics (and add "meter" to the Destination.chain):
+//setInterval(() => // console.log(meter.getValue()), 100);
 
-  //FFT analyzes the audio output, can use the numbers it returns to do stuff to the visuals
-  const fft = new Tone.FFT(16);
-  fmSwell.connect(fft);
-  fft.set({
-    normalRange: true,
-    smoothing: 0.8,
-  });
+//FFT analyzes the audio output, can use the numbers it returns to do stuff to the visuals
+const fft = new Tone.FFT(16);
+fmSwell.connect(fft);
+fft.set({
+  normalRange: true,
+  smoothing: 0.8,
+});
 
 // * Sequence
 
@@ -109,7 +109,7 @@ export const playSquence = async (data: Data[]): Promise<SensingSugar> => {
   let avgGlucose =
     (glucoseValues.reduce(
       (previousValue, currentValue) => (previousValue ?? 0) + (currentValue ?? 0),
-      0
+      0,
     ) ?? 1) / glucoseValues.length;
 
   //@ts-ignore
@@ -124,7 +124,7 @@ export const playSquence = async (data: Data[]): Promise<SensingSugar> => {
     //calculates a number between 0 and 20 based on the bgValue at a selected index (bpmIndex) and normalizes it to the bpmRange
     (Math.round((glucoseValues[bpmIndex] % 1) * 10) + Math.floor(glucoseValues[bpmIndex])) % 20,
     [0, 20],
-    bpmRange
+    bpmRange,
   );
   // console.log('Mode # = ' + calcMode);
   // console.log('Key # = ' + calcKey);
@@ -161,7 +161,7 @@ export const playSquence = async (data: Data[]): Promise<SensingSugar> => {
   const bgRangeColour = glucoseValues.map((num) => convertRange(num, [minBG, maxBG], [0, 2.5]));
   const bgRangeScale = glucoseValues.map((num) => convertRange(num, [minBG, maxBG], [0.03, 2]));
   const bgRangeOscSync = glucoseValues.map((num) =>
-    convertRange(num, [minBG, maxBG], [0.05, 0.15])
+    convertRange(num, [minBG, maxBG], [0.05, 0.15]),
   );
   const bgRangeRota = glucoseValues.map((num) => convertRange(num, [minBG, maxBG], [-0.2, 0.2]));
   const bgRangeMsMult = glucoseValues.map((num) => convertRange(num, [minBG, maxBG], [1, 99]));
@@ -249,7 +249,7 @@ export const playSquence = async (data: Data[]): Promise<SensingSugar> => {
     parentScaleFormula: number[],
     modeNum: number,
     root = 0,
-    formulaLength = 9
+    formulaLength = 9,
   ) {
     let scaleIndex = 0;
     let modeFormula = [];
@@ -271,12 +271,11 @@ export const playSquence = async (data: Data[]): Promise<SensingSugar> => {
     let bgScaleDegs;
     let bgIntervals;
     bgScaleDegs = glucoseValues.map((num) =>
-      Math.round(convertRange(num, [minBG, maxBG + 0.01], [0, upperLimit - 1]))
+      Math.round(convertRange(num, [minBG, maxBG + 0.01], [0, upperLimit - 1])),
     );
     bgIntervals = bgScaleDegs.map((num) => modeFormula[num] + baseOctave * 12);
     return bgIntervals;
   }
-
 
   let counterS1Vel = 0;
   let counterS2Vel = 0;
@@ -307,7 +306,7 @@ export const playSquence = async (data: Data[]): Promise<SensingSugar> => {
     b1,
     r2,
     g2,
-    b2
+    b2,
   );
   //Visuals.fx11bw(fftNorm, glucoseInterpolated, glucoseInterpolated2, oscSync1, oscSync2, rota1, rota2, msMult1, msMult2, msOffSet1, msOffSet2);
 
@@ -355,7 +354,7 @@ export const playSquence = async (data: Data[]): Promise<SensingSugar> => {
       counterS1Vel++;
     },
     undefined,
-    '8n'
+    '8n',
   );
 
   // create a new sequence with the synth - actual sequence undefined here, but defined by bgEvent function
@@ -366,7 +365,7 @@ export const playSquence = async (data: Data[]): Promise<SensingSugar> => {
       counterS1Vel++;
     },
     undefined,
-    '8n'
+    '8n',
   );
 
   // create a new sequence with the synth - actual sequence undefined here, but defined by bgEvent function
@@ -377,7 +376,7 @@ export const playSquence = async (data: Data[]): Promise<SensingSugar> => {
       counterS1Vel++;
     },
     undefined,
-    '8n'
+    '8n',
   );
 
   // create a new sequence with the synth - actual sequence undefined here, but defined by bgEvent function
@@ -386,7 +385,7 @@ export const playSquence = async (data: Data[]): Promise<SensingSugar> => {
       kickSynth.triggerAttackRelease(note, '16n', time);
     },
     undefined,
-    '2n'
+    '2n',
   );
 
   // Setup the synth to be ready to play on beat 1
@@ -529,7 +528,7 @@ export const playSquence = async (data: Data[]): Promise<SensingSugar> => {
     ns: number,
     rot: number,
     lthrsh: number,
-    ltol: number
+    ltol: number,
   ) {
     Tone.Transport.schedule((time) => {
       Tone.Draw.schedule(() => {
@@ -562,29 +561,29 @@ export const playSquence = async (data: Data[]): Promise<SensingSugar> => {
       bgTime,
       fmSynth,
       1.5,
-      fmMIOffset * bgRange01[(bgRange01.length - i) % glucoseValues.length]
+      fmMIOffset * bgRange01[(bgRange01.length - i) % glucoseValues.length],
     );
     bgEvent2(
       bgTimeB,
       glucoseValues[(i + 1) % glucoseValues.length],
-      bgFreqs2[(i + 1) % glucoseValues.length]
+      bgFreqs2[(i + 1) % glucoseValues.length],
     );
     timbreShift(
       bgTimeB,
       fmSynth2,
       1.5,
-      fmMIOffset * bgRange01[(bgRange01.length - i + 1) % glucoseValues.length]
+      fmMIOffset * bgRange01[(bgRange01.length - i + 1) % glucoseValues.length],
     );
     bgEvent3(
       bgTimeC,
       glucoseValues[(i + 2) % glucoseValues.length],
-      bgFreqs3[(i + 2) % glucoseValues.length]
+      bgFreqs3[(i + 2) % glucoseValues.length],
     );
     timbreShift(
       bgTimeC,
       fmSynth3,
       1.5,
-      fmMIOffset * bgRange01[(bgRange01.length - i + 2) % glucoseValues.length]
+      fmMIOffset * bgRange01[(bgRange01.length - i + 2) % glucoseValues.length],
     );
     bgEvent4(bgTime, glucoseValues[i], bgFreqs[i] * 0.0625);
     //REMOVED CONDITIONAL LOGIC SINCE I WASN"T USING IT AND IT MAKES IT EASIER TO EDIT
@@ -675,7 +674,7 @@ export const playSquence = async (data: Data[]): Promise<SensingSugar> => {
   //// console.log(calcBPM*bgTime*0.01667*0.25%Math.floor(calcBPM*bgTime*0.01667*0.25))
   const bars = Math.floor(calcBPM * bgTime * 0.01667 * 0.25);
   const beats = Math.floor(
-    ((calcBPM * bgTime * 0.01667 * 0.25) % Math.floor(calcBPM * bgTime * 0.01667 * 0.25)) * 4
+    ((calcBPM * bgTime * 0.01667 * 0.25) % Math.floor(calcBPM * bgTime * 0.01667 * 0.25)) * 4,
   );
   // console.log(bars);
   // console.log(beats);
@@ -696,5 +695,4 @@ const reset = async () => {
   Tone.Transport.stop();
   Tone.Transport.cancel();
   initiated = false;
- 
 };

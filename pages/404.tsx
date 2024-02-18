@@ -5,10 +5,12 @@ import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Link from 'next/link';
 
-type Props = {
+// eslint-disable-next-line @typescript-eslint/no-empty-interface, @typescript-eslint/no-unused-vars
+interface Props {
   // add custom document props
-};
+}
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function Custom404(Props: InferGetStaticPropsType<typeof getStaticProps>) {
   const { t } = useTranslation();
 

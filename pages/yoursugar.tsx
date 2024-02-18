@@ -27,10 +27,10 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState, type ChangeEvent } from 'react';
 
-type Props = {
+interface Props {
   howItWorksContent: string;
   howToStructure: string;
-};
+}
 
 export default function YourSugar({
   howItWorksContent,

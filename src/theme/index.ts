@@ -29,7 +29,7 @@ const theme = (darkMode?: boolean) =>
           font-family: '${syneMono.style.fontFamily}';
           font-style: ${syneMono.style.fontStyle};
           font-weight: ${syneMono.style.fontWeight};
-          src: "local('Syne Mono'), local('Syne Mono'), url(${syneMono})";
+          src: "local('Syne Mono'), local('Syne Mono'), url(${syneMono.style.fontFamily})";
         }
       `,
       },

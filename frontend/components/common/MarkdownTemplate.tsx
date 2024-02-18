@@ -1,9 +1,9 @@
 import { Link, Typography, useTheme } from '@mui/material';
 import ReactMarkdown from 'react-markdown';
 
-type Props = {
+interface Props {
   content: string;
-};
+}
 
 export const MarkdownTemplate = ({ content }: Props) => {
   const { palette } = useTheme();
@@ -11,7 +11,8 @@ export const MarkdownTemplate = ({ content }: Props) => {
   return (
     <ReactMarkdown
       components={{
-        h1: ({ node, ...props }) => (
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        h1: ({ node, ref, ...props }) => (
           <Typography
             align="center"
             color={palette.secondary.main}
@@ -22,7 +23,8 @@ export const MarkdownTemplate = ({ content }: Props) => {
             {...props}
           />
         ),
-        h2: ({ node, ...props }) => (
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        h2: ({ node, ref, ...props }) => (
           <Typography
             align="center"
             color={palette.secondary.main}
@@ -33,7 +35,8 @@ export const MarkdownTemplate = ({ content }: Props) => {
             {...props}
           />
         ),
-        h3: ({ node, ...props }) => (
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        h3: ({ node, ref, ...props }) => (
           <Typography
             align="center"
             color={palette.secondary.main}
@@ -44,7 +47,8 @@ export const MarkdownTemplate = ({ content }: Props) => {
             {...props}
           />
         ),
-        h4: ({ node, ...props }) => (
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        h4: ({ node, ref, ...props }) => (
           <Typography
             align="center"
             color={palette.secondary.main}
@@ -55,7 +59,8 @@ export const MarkdownTemplate = ({ content }: Props) => {
             {...props}
           />
         ),
-        h5: ({ node, ...props }) => (
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        h5: ({ node, ref, ...props }) => (
           <Typography
             align="center"
             color={palette.secondary.main}
@@ -66,7 +71,8 @@ export const MarkdownTemplate = ({ content }: Props) => {
             {...props}
           />
         ),
-        h6: ({ node, ...props }) => (
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        h6: ({ node, ref, ...props }) => (
           <Typography
             align="center"
             color={palette.secondary.main}
@@ -77,7 +83,8 @@ export const MarkdownTemplate = ({ content }: Props) => {
             {...props}
           />
         ),
-        p: ({ node, ...props }) => (
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        p: ({ node, ref, ...props }) => (
           <Typography
             my={1}
             sx={{ '::selection': { bgcolor: palette.secondary.dark } }}
@@ -85,7 +92,8 @@ export const MarkdownTemplate = ({ content }: Props) => {
             {...props}
           />
         ),
-        a: ({ node, ...props }) => (
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        a: ({ node, ref, ...props }) => (
           <Link underline="hover" target="_blank" rel="noopener noreferrer" {...props} />
         ),
       }}

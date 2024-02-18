@@ -1,9 +1,7 @@
 import { Data } from '@/@types';
 import csv from 'csvtojson';
 
-interface rawDataObject {
-  [x: string]: any;
-}
+type rawDataObject = Record<string, any>;
 
 /**
  * This function provides a set of methods to interact with the browser's local storage for storing and

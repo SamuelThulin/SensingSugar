@@ -1,4 +1,3 @@
-
 import * as Tone from 'tone';
 import * as Visuals from './Visuals';
 import { data } from './data/data'; //here is where I can load different data sets
@@ -7,16 +6,14 @@ import { MidiNote } from 'tone/build/esm/core/type/NoteUnits';
 
 //test
 for (let i = 0; i < 14; i++) {
-  console.log((14 - i ) % 14)
+  console.log((14 - i) % 14);
 }
- 
 
 //BG array - this works, but there might be a more elegant way, and I need to decide whether to actually remove the null values or not
 //from Luciano: const glucoseValues = data.filter((value) => value.glucose !== null)
 let glucoseValues = data.filter((value) => value.glucose > 0).map((value) => value.glucose);
-console.log("length = " + glucoseValues.length)
-glucoseValues = glucoseValues.slice(0, 288)
-
+console.log('length = ' + glucoseValues.length);
+glucoseValues = glucoseValues.slice(0, 288);
 
 //glucoseValues = glucoseValues.filter(Number);
 // glucoseValues.forEach((item, index) => {
@@ -30,14 +27,14 @@ let midGlucose = glucoseValues.at(Math.floor(glucoseValues.length / 2));
 let avgGlucose =
   (glucoseValues.reduce(
     (previousValue, currentValue) => (previousValue ?? 0) + (currentValue ?? 0),
-    0
+    0,
   ) ?? 1) / glucoseValues.length;
 
 //@ts-ignore
 let calcMode = (Math.round((midGlucose % 1) * 10) + Math.floor(midGlucose)) % 7;
 let calcKey = (Math.round((avgGlucose % 1) * 10) + Math.floor(avgGlucose)) % 12;
 let bpmIndex = 0;
-let bpmRange:[number, number] = [120, 220];
+let bpmRange: [number, number] = [120, 220];
 const timeFactor = 1;
 
 //@ts-ignore
@@ -45,12 +42,11 @@ let calcBPM = convertRange(
   //calculates a number between 0 and 20 based on the bgValue at a selected index (bpmIndex) and normalizes it to the bpmRange
   (Math.round((glucoseValues[bpmIndex] % 1) * 10) + Math.floor(glucoseValues[bpmIndex])) % 20,
   [0, 20],
-  bpmRange
+  bpmRange,
 );
 console.log('Mode # = ' + calcMode);
 console.log('Key # = ' + calcKey);
 console.log('BPM = ' + calcBPM);
-
 
 //create a reordered array for CGM data playback, intersperses groups of 3
 let interBGArray = [];
@@ -70,7 +66,7 @@ console.log('BG = ', glucoseValues);
 function convertRange(value: number, r1: [number, number], r2: [number, number]) {
   return ((value - r1[0]) * (r2[1] - r2[0])) / (r1[1] - r1[0]) + r2[0];
 }
-//addition of 0.00001 is to ensure that even if user submits dataset with only one glucose value it will not throw an error; added to maxBG it will select the lower of the output range - subtract from minBG to select higher ; 
+//addition of 0.00001 is to ensure that even if user submits dataset with only one glucose value it will not throw an error; added to maxBG it will select the lower of the output range - subtract from minBG to select higher ;
 const maxBG = Math.max(...glucoseValues) + 0.00001;
 const minBG = Math.min(...glucoseValues);
 
@@ -78,7 +74,7 @@ const minBG = Math.min(...glucoseValues);
 const bgRange01 = glucoseValues.map((num) => convertRange(num, [minBG, maxBG], [0.0001, 1]));
 //example code for clipping at decimal - need to change bgRange01 from const to let
 //bgRange01 = bgRange01.map((num)=> Number(num.toFixed(4)))
-console.log("bgRange01 = " + bgRange01) 
+console.log('bgRange01 = ' + bgRange01);
 const bgVel = glucoseValues.map((num) => convertRange(num, [minBG, maxBG], [0.3, 1]));
 const bgRangeColour = glucoseValues.map((num) => convertRange(num, [minBG, maxBG], [0, 2.5]));
 const bgRangeScale = glucoseValues.map((num) => convertRange(num, [minBG, maxBG], [0.03, 2]));
@@ -89,62 +85,73 @@ const bgRangeMsOffSet = glucoseValues.map((num) => convertRange(num, [minBG, max
 
 // for visuals; function to interpolate between values in an array (http://hevi.info/do-it-yourself/interpolating-and-array-to-fit-another-size/; https://stackoverflow.com/questions/26941168/javascript-interpolate-an-array-of-numbers)
 // modified to fix typescript errors
-function interpolateArray(data: number[], fitCount:number) {
-
-  var linearInterpolate = function (before:number, after:number, atPoint:number) {
-      return before + (after - before) * atPoint;
+function interpolateArray(data: number[], fitCount: number) {
+  var linearInterpolate = function (before: number, after: number, atPoint: number) {
+    return before + (after - before) * atPoint;
   };
 
   var newData = new Array();
   var springFactor = (data.length - 1) / (fitCount - 1);
   newData[0] = data[0]; // for new allocation
-  for ( var i = 1; i < fitCount - 1; i++) {
-      var tmp = i * springFactor;
-      var before:number = Math.floor(tmp);
-      var after:number = Math.ceil(tmp);
-      var atPoint = tmp - before;
-      newData[i] = linearInterpolate(data[before], data[after], atPoint);
+  for (var i = 1; i < fitCount - 1; i++) {
+    var tmp = i * springFactor;
+    var before: number = Math.floor(tmp);
+    var after: number = Math.ceil(tmp);
+    var atPoint = tmp - before;
+    newData[i] = linearInterpolate(data[before], data[after], atPoint);
   }
   newData[fitCount - 1] = data[data.length - 1]; // for new allocation
   return newData;
-};
+}
 
 //for visuals; interpolating between selections from the glucose array; taking first value, quarter-way value, half-way value, three-quarter value, and back to first value
-const glucoseSel = [bgRangeScale[0], bgRangeScale[Math.floor(bgRangeScale.length*0.25)], bgRangeScale[Math.floor(bgRangeScale.length*0.5)],bgRangeScale[Math.floor(bgRangeScale.length*0.75)], bgRangeScale[0]]
-const glucoseInterpolated: number[] = interpolateArray(glucoseSel, 1005)
-console.log(glucoseInterpolated)
-const scaleOff = Math.floor(bgRangeScale.length*0.125)
-const glucoseSel2 = [bgRangeScale[0+scaleOff], bgRangeScale[Math.floor(bgRangeScale.length*0.25)+scaleOff], bgRangeScale[Math.floor(bgRangeScale.length*0.5)+scaleOff],bgRangeScale[Math.floor(bgRangeScale.length*0.75)+scaleOff], bgRangeScale[0+scaleOff]]
-const glucoseInterpolated2: number[] = interpolateArray(glucoseSel2, 505)
+const glucoseSel = [
+  bgRangeScale[0],
+  bgRangeScale[Math.floor(bgRangeScale.length * 0.25)],
+  bgRangeScale[Math.floor(bgRangeScale.length * 0.5)],
+  bgRangeScale[Math.floor(bgRangeScale.length * 0.75)],
+  bgRangeScale[0],
+];
+const glucoseInterpolated: number[] = interpolateArray(glucoseSel, 1005);
+console.log(glucoseInterpolated);
+const scaleOff = Math.floor(bgRangeScale.length * 0.125);
+const glucoseSel2 = [
+  bgRangeScale[0 + scaleOff],
+  bgRangeScale[Math.floor(bgRangeScale.length * 0.25) + scaleOff],
+  bgRangeScale[Math.floor(bgRangeScale.length * 0.5) + scaleOff],
+  bgRangeScale[Math.floor(bgRangeScale.length * 0.75) + scaleOff],
+  bgRangeScale[0 + scaleOff],
+];
+const glucoseInterpolated2: number[] = interpolateArray(glucoseSel2, 505);
 
 //generating values to drive the colours of the visuals
 const r1: number = bgRangeColour[0];
-const g1: number = bgRangeColour[Math.floor(glucoseValues.length*0.167)]
-const b1: number = bgRangeColour[Math.floor(glucoseValues.length*0.333)]
-const r2: number = bgRangeColour[Math.floor(glucoseValues.length*0.5)]
-const g2: number = bgRangeColour[Math.floor(glucoseValues.length*0.667)]
-const b2: number = bgRangeColour[Math.floor(glucoseValues.length*0.833)]
-console.log("colour", r1, g1, b1, r2, g2, b2)
+const g1: number = bgRangeColour[Math.floor(glucoseValues.length * 0.167)];
+const b1: number = bgRangeColour[Math.floor(glucoseValues.length * 0.333)];
+const r2: number = bgRangeColour[Math.floor(glucoseValues.length * 0.5)];
+const g2: number = bgRangeColour[Math.floor(glucoseValues.length * 0.667)];
+const b2: number = bgRangeColour[Math.floor(glucoseValues.length * 0.833)];
+console.log('colour', r1, g1, b1, r2, g2, b2);
 
 //generating values to drive the osc sync of the visuals
 const oscSync1 = bgRangeOscSync[0];
-const oscSync2 = bgRangeOscSync[bgRangeOscSync.length-1]
-console.log("oscSync", oscSync1, oscSync2)
+const oscSync2 = bgRangeOscSync[bgRangeOscSync.length - 1];
+console.log('oscSync', oscSync1, oscSync2);
 
 //generating values to drive the rotation speed of the visuals
 const rota1 = bgRangeRota[1];
-const rota2 = bgRangeRota[bgRangeOscSync.length-2]
-console.log("rota", rota1, rota2)
+const rota2 = bgRangeRota[bgRangeOscSync.length - 2];
+console.log('rota', rota1, rota2);
 
 //generating values to drive the modulateScale multiple of the visuals
 const msMult1 = bgRangeMsMult[2];
-const msMult2 = bgRangeMsMult[bgRangeOscSync.length-3]
-console.log("msMult", msMult1, msMult2)
+const msMult2 = bgRangeMsMult[bgRangeOscSync.length - 3];
+console.log('msMult', msMult1, msMult2);
 
 //generating values to drive the modulateScale offset of the visuals
 const msOffSet1 = bgRangeMsOffSet[3];
-const msOffSet2 = bgRangeMsOffSet[bgRangeOscSync.length-4]
-console.log("msOffSet", msOffSet1, msOffSet2)
+const msOffSet2 = bgRangeMsOffSet[bgRangeOscSync.length - 4];
+console.log('msOffSet', msOffSet1, msOffSet2);
 
 //SCALE_MAKING (with help from https://www.guitarland.com/MusicTheoryWithToneJS/PlayModes.html)
 const majorFormula = [0, 2, 4, 5, 7, 9, 11];
@@ -154,7 +161,12 @@ const myKey = calcKey;
 const myModeFormula = makeModeFormula(majorFormula, myModeNum, myKey, 11);
 
 //parentScaleFormula is interval spacings to be repeated (ex. majorFormula), modeNum picks which interval to use as root (hence selects mode), root is pitch class (i.e key) base MIDI note from 0-11, formulaLength allows for creating longer and shorter repetitions of the interval spacings
-function makeModeFormula(parentScaleFormula: number[], modeNum: number, root = 0, formulaLength = 9) {
+function makeModeFormula(
+  parentScaleFormula: number[],
+  modeNum: number,
+  root = 0,
+  formulaLength = 9,
+) {
   let scaleIndex = 0;
   let modeFormula = [];
   let modeInterval;
@@ -175,7 +187,7 @@ function convertBGtoNotes(modeFormula: number[], upperLimit: number, baseOctave 
   let bgScaleDegs;
   let bgIntervals;
   bgScaleDegs = glucoseValues.map((num) =>
-    Math.round(convertRange(num, [minBG, maxBG+0.01], [0, upperLimit - 1]))
+    Math.round(convertRange(num, [minBG, maxBG + 0.01], [0, upperLimit - 1])),
   );
   bgIntervals = bgScaleDegs.map((num) => modeFormula[num] + baseOctave * 12);
   return bgIntervals;
@@ -257,15 +269,32 @@ export const playSquence = async () => {
   const bgMIDI = convertBGtoNotes(myModeFormula, majorFormula.length * 3, 4);
   const bgMIDI2 = convertBGtoNotes(myModeFormula, majorFormula.length * 4, 3);
   const bgMIDI3 = convertBGtoNotes(myModeFormula, majorFormula.length * 2, 4);
-  const bgFreqs = bgMIDI.map((num) => Tone.mtof(num as MidiNote));// this is weird, Tone.js says it wants a number... maybe because for all it knows it could be too high a number i.e above 127
+  const bgFreqs = bgMIDI.map((num) => Tone.mtof(num as MidiNote)); // this is weird, Tone.js says it wants a number... maybe because for all it knows it could be too high a number i.e above 127
   const bgFreqs2 = bgMIDI2.map((num) => Tone.mtof(num as MidiNote));
   const bgFreqs3 = bgMIDI3.map((num) => Tone.mtof(num as MidiNote));
-  console.log("freqs2 = " + bgFreqs2);
+  console.log('freqs2 = ' + bgFreqs2);
   Visuals.start();
   //Visuals.fx8(bgRange01, fftNorm);
-  Visuals.fx11(fftNorm, glucoseInterpolated, glucoseInterpolated2, oscSync1, oscSync2, rota1, rota2, msMult1, msMult2, msOffSet1, msOffSet2, r1, g1, b1, r2, g2, b2);
+  Visuals.fx11(
+    fftNorm,
+    glucoseInterpolated,
+    glucoseInterpolated2,
+    oscSync1,
+    oscSync2,
+    rota1,
+    rota2,
+    msMult1,
+    msMult2,
+    msOffSet1,
+    msOffSet2,
+    r1,
+    g1,
+    b1,
+    r2,
+    g2,
+    b2,
+  );
   //Visuals.fx11bw(fftNorm, glucoseInterpolated, glucoseInterpolated2, oscSync1, oscSync2, rota1, rota2, msMult1, msMult2, msOffSet1, msOffSet2);
-
 
   //k is # of pulses, n is # of slots, c is notename as String (ex. "C3"); this is for creating rhythms from the data
   //bjorklund funtion source: https://codepen.io/teropa/pen/zPEYbY by Tero Parvaianen
@@ -311,7 +340,7 @@ export const playSquence = async () => {
       counterS1Vel++;
     },
     undefined,
-    '8n'
+    '8n',
   );
 
   // create a new sequence with the synth - actual sequence undefined here, but defined by bgEvent function
@@ -322,7 +351,7 @@ export const playSquence = async () => {
       counterS1Vel++;
     },
     undefined,
-    '8n'
+    '8n',
   );
 
   // create a new sequence with the synth - actual sequence undefined here, but defined by bgEvent function
@@ -333,7 +362,7 @@ export const playSquence = async () => {
       counterS1Vel++;
     },
     undefined,
-    '8n'
+    '8n',
   );
 
   // create a new sequence with the synth - actual sequence undefined here, but defined by bgEvent function
@@ -341,8 +370,8 @@ export const playSquence = async () => {
     function (time, note) {
       kickSynth.triggerAttackRelease(note, '16n', time);
     },
-   undefined,
-    '2n'
+    undefined,
+    '2n',
   );
 
   // Setup the synth to be ready to play on beat 1
@@ -359,7 +388,7 @@ export const playSquence = async () => {
   Tone.Transport.start();
 
   //function for punctual events that will happen on top of the Euclidean rhythms created by the Bjorklund function
-  function swellFMEvent1(s: number, freq: number, atk:number, dur:number) {
+  function swellFMEvent1(s: number, freq: number, atk: number, dur: number) {
     Tone.Transport.schedule((time) => {
       fmSwell.triggerAttackRelease(freq, dur);
       fmSwell.set({
@@ -373,7 +402,7 @@ export const playSquence = async () => {
     }, s);
   }
 
-  function timbreShift(s:number, synthName:Tone.FMSynth, harmon:number, modindex:number) {
+  function timbreShift(s: number, synthName: Tone.FMSynth, harmon: number, modindex: number) {
     Tone.Transport.schedule((time) => {
       synthName.set({
         harmonicity: harmon,
@@ -388,7 +417,7 @@ export const playSquence = async () => {
 
   //function for scheduling changes in the Bjorklund rhythm of the specified synth part and any other change that would be synchornized with these changes
   //s is for shedule - the time at which it happens; n is the BG number
-  function bgEvent(s:number, n:number, freq:number) {
+  function bgEvent(s: number, n: number, freq: number) {
     Tone.Transport.schedule((time) => {
       synthPart.events = bjorklund(bgSplitMin(n), bgSplitMax(n), freq);
       console.log(synthPart.events);
@@ -410,7 +439,7 @@ export const playSquence = async () => {
   }
 
   //function for scheduling changes in the Bjorklund rhythm of the specified synth part and any other change that would be synchornized with these changes
-  function bgEvent2(s:number, n:number, freq:number) {
+  function bgEvent2(s: number, n: number, freq: number) {
     Tone.Transport.schedule((time) => {
       synthPart2.events = bjorklund(bgSplitMin(n), bgSplitMax(n), freq);
       console.log(synthPart2.events);
@@ -425,7 +454,7 @@ export const playSquence = async () => {
   }
 
   //function for scheduling changes in the Bjorklund rhythm of the specified synth part and any other change that would be synchornized with these changes
-  function bgEvent3(s:number, n:number, freq:number) {
+  function bgEvent3(s: number, n: number, freq: number) {
     Tone.Transport.schedule((time) => {
       synthPart3.events = bjorklund(bgSplitMin(n), bgSplitMax(n), freq);
       console.log(synthPart3.events);
@@ -440,7 +469,7 @@ export const playSquence = async () => {
   }
 
   //function for scheduling changes in the Bjorklund rhythm of the specified synth part and any other change that would be synchornized with these changes
-  function bgEvent4(s:number, n:number, freq:number) {
+  function bgEvent4(s: number, n: number, freq: number) {
     Tone.Transport.schedule((time) => {
       kickPart.events = bjorklund(bgSplitMin(n), bgSplitMax(n), freq);
       console.log(kickPart.events);
@@ -455,13 +484,13 @@ export const playSquence = async () => {
   }
 
   //helper functions for the bgEvent functions, Min splits the BG number at the decimal and returns the smaller of the two resulting integers, Max returns the larger
-  function bgSplitMin(n:number) {
+  function bgSplitMin(n: number) {
     return Math.min(Math.round((n % 1) * 10), Math.floor(n));
   }
-  function bgSplitMax(n:number) {
+  function bgSplitMax(n: number) {
     return Math.max(Math.round((n % 1) * 10), Math.floor(n));
   }
-/*
+  /*
   //function for scheduling changes in the visuals
   //  s is when it will happen - when it is scheduled for.
   function bgVisEvent(s:number) {
@@ -476,7 +505,17 @@ export const playSquence = async () => {
 */
   //function for scheduling changes in the visuals
   //  s is when it will happen - when it is scheduled for.
-  function bgVisEvent2(s:number, g:number, inv:number, sat:number, nn:number, ns:number, rot:number, lthrsh:number, ltol:number) {
+  function bgVisEvent2(
+    s: number,
+    g: number,
+    inv: number,
+    sat: number,
+    nn: number,
+    ns: number,
+    rot: number,
+    lthrsh: number,
+    ltol: number,
+  ) {
     Tone.Transport.schedule((time) => {
       Tone.Draw.schedule(() => {
         // do drawing or DOM manipulation here
@@ -499,26 +538,41 @@ export const playSquence = async () => {
   //FIGURE OUT HOW TO LOOP
   for (let i = 0; i < glucoseValues.length; i++) {
     let bg = glucoseValues[i];
-       //do something here
-      //swell event happens at the designated time and with the designated Frequecy value (multiplication by 0.5 would lower it by 1 octave)
-      swellFMEvent1(bgTime, bgFreqs[i] * 0.125, bgRange01[i], bgRange01[i] * 5);
-      //bgEvents are the Euclidean rhythms, here we determine when they change (ex. bgTime), what rhythm they change to (ex. glucoseValues[i]), and what frequency/note is played (ex. bg Freqs[i])
-      bgEvent(bgTime, glucoseValues[i], bgFreqs[i]);
-      timbreShift(bgTime, fmSynth, 1.5, fmMIOffset * bgRange01[(bgRange01.length-i) % glucoseValues.length]);
-      bgEvent2(
-        bgTimeB,
-        glucoseValues[(i + 1) % glucoseValues.length],
-        bgFreqs2[(i + 1) % glucoseValues.length]
-      );
-      timbreShift(bgTimeB, fmSynth2, 1.5, fmMIOffset * bgRange01[(bgRange01.length -i + 1) % glucoseValues.length]);
-      bgEvent3(
-        bgTimeC,
-        glucoseValues[(i + 2) % glucoseValues.length],
-        bgFreqs3[(i + 2) % glucoseValues.length]
-      );
-      timbreShift(bgTimeC, fmSynth3, 1.5, fmMIOffset * bgRange01[(bgRange01.length -i + 2) % glucoseValues.length]);
-      bgEvent4(bgTime, glucoseValues[i], bgFreqs[i] * 0.0625);
-      //REMOVED CONDITIONAL LOGIC SINCE I WASN"T USING IT AND IT MAKES IT EASIER TO EDIT
+    //do something here
+    //swell event happens at the designated time and with the designated Frequecy value (multiplication by 0.5 would lower it by 1 octave)
+    swellFMEvent1(bgTime, bgFreqs[i] * 0.125, bgRange01[i], bgRange01[i] * 5);
+    //bgEvents are the Euclidean rhythms, here we determine when they change (ex. bgTime), what rhythm they change to (ex. glucoseValues[i]), and what frequency/note is played (ex. bg Freqs[i])
+    bgEvent(bgTime, glucoseValues[i], bgFreqs[i]);
+    timbreShift(
+      bgTime,
+      fmSynth,
+      1.5,
+      fmMIOffset * bgRange01[(bgRange01.length - i) % glucoseValues.length],
+    );
+    bgEvent2(
+      bgTimeB,
+      glucoseValues[(i + 1) % glucoseValues.length],
+      bgFreqs2[(i + 1) % glucoseValues.length],
+    );
+    timbreShift(
+      bgTimeB,
+      fmSynth2,
+      1.5,
+      fmMIOffset * bgRange01[(bgRange01.length - i + 1) % glucoseValues.length],
+    );
+    bgEvent3(
+      bgTimeC,
+      glucoseValues[(i + 2) % glucoseValues.length],
+      bgFreqs3[(i + 2) % glucoseValues.length],
+    );
+    timbreShift(
+      bgTimeC,
+      fmSynth3,
+      1.5,
+      fmMIOffset * bgRange01[(bgRange01.length - i + 2) % glucoseValues.length],
+    );
+    bgEvent4(bgTime, glucoseValues[i], bgFreqs[i] * 0.0625);
+    //REMOVED CONDITIONAL LOGIC SINCE I WASN"T USING IT AND IT MAKES IT EASIER TO EDIT
     //conditional statements to allow the possibility of different things happening depending on whether the BG reading is high, on target, or low (could add more conditions and/or change existing thresholds)
     /*if (bg >= 8.0) {
       console.log('high ', glucoseValues[i], bgTime, bgFreqs[i]);
@@ -606,7 +660,7 @@ export const playSquence = async () => {
   //console.log(calcBPM*bgTime*0.01667*0.25%Math.floor(calcBPM*bgTime*0.01667*0.25))
   const bars = Math.floor(calcBPM * bgTime * 0.01667 * 0.25);
   const beats = Math.floor(
-    ((calcBPM * bgTime * 0.01667 * 0.25) % Math.floor(calcBPM * bgTime * 0.01667 * 0.25)) * 4
+    ((calcBPM * bgTime * 0.01667 * 0.25) % Math.floor(calcBPM * bgTime * 0.01667 * 0.25)) * 4,
   );
   console.log(bars);
   console.log(beats);
@@ -617,7 +671,6 @@ export const playSquence = async () => {
   Tone.Transport.setLoopPoints(0, endLoop);
   Tone.Transport.loop = true;
 };
-
 
 // * simple
 export const playSimple = async () => {
@@ -633,7 +686,7 @@ export const playSimple = async () => {
     glucoseValues.map((x) => x * 10),
     glucoseValues,
     0.6,
-    0.5
+    0.5,
   );
   synth.triggerAttackRelease('C3', '8n');
   //this works
@@ -651,7 +704,6 @@ export const playSimple = async () => {
     }
   }
 };
-
 
 // *  Scheduling
 export const playScheduling = async () => {
@@ -694,7 +746,7 @@ export const playScheduling = async () => {
       [notesArray[1], notesArray[2], notesArray[3]],
       notesArray[Math.round(bgData[3])],
       [notesArray[3], notesArray[4]],
-    ]
+    ],
   ).start(0);
 
   //play another note every off quarter-note, by starting it "8n"
@@ -757,7 +809,7 @@ export const playSamples = async () => {
   await Tone.start();
 
   const player = new Tone.Player(
-    'https://tonejs.github.io/audio/berklee/gong_1.mp3'
+    'https://tonejs.github.io/audio/berklee/gong_1.mp3',
   ).toDestination();
   Tone.loaded().then(() => {
     player.start();
