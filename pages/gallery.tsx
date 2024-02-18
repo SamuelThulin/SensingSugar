@@ -26,10 +26,10 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-type Props = {
+interface Props {
   collection: DataCollectionItem[];
   contribute: string;
-};
+}
 
 export default function Gallery({
   collection,

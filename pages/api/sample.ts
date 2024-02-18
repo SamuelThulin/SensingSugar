@@ -3,9 +3,9 @@ import { promises as fs } from 'fs';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import path from 'path';
 
-type Data = {
+interface Data {
   sugar: string;
-};
+}
 
 export const allowedFileTypes = ['.csv', '.json'];
 const regexFileType = /\.[0-9a-z]+$/i; //Match the end of a string after the . (inclusive)
@@ -27,7 +27,7 @@ const regexFileType = /\.[0-9a-z]+$/i; //Match the end of a string after the . (
  */
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Data | string | void>
+  res: NextApiResponse<Data | string | void>,
 ) {
   const id = req.query.id;
 
@@ -46,7 +46,7 @@ export default async function handler(
     return;
   }
 
-  let fileType = item.dataFile.match(regexFileType)?.[0] ?? '';
+  const fileType = item.dataFile.match(regexFileType)?.[0] ?? '';
 
   // No file type not allowed
   if (!allowedFileTypes.includes(fileType)) {

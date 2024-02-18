@@ -32,7 +32,6 @@ export const useSugar = () => {
   }, []);
 
   const loadGalleryData = async (id: string) => {
-    
     const res = await fetch(`/api/sample?id=${id}`);
 
     if (res.status >= 400) return router.push('/404');
@@ -40,7 +39,7 @@ export const useSugar = () => {
     const sampleData = await res.json();
 
     const parsedData = await parseData(sampleData.sugar);
-    if (typeof parsedData === 'string') return router.push('/404');;
+    if (typeof parsedData === 'string') return router.push('/404');
 
     setLoading(false);
     setData(parsedData);

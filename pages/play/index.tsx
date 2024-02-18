@@ -7,6 +7,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function Play(_props: InferGetStaticPropsType<typeof getStaticProps>) {
   const router = useRouter();
 
@@ -29,6 +30,7 @@ export default function Play(_props: InferGetStaticPropsType<typeof getStaticPro
     return () => {
       router.beforePopState(() => true);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router, sensingSugar]); // Add any state variables to dependencies array if needed.
 
   //Stop all sounds
@@ -36,7 +38,7 @@ export default function Play(_props: InferGetStaticPropsType<typeof getStaticPro
 
   const handleOnTitleClick = () => {
     sensingSugar?.reset();
-    router.push('/')
+    router.push('/');
   };
 
   return (

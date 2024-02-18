@@ -64,7 +64,7 @@ export const fx2 = () => {
         .color(r(), r(), r())
         .modulateRotate(o0, r(0, 0.5))
         .brightness(0.15),
-      0.7
+      0.7,
     )
     .out();
 };
@@ -95,7 +95,7 @@ export const fx6 = (
   ns: number,
   rot: number,
   lthrsh: number,
-  ltol: number
+  ltol: number,
 ) => {
   const { src, osc, noise, o0, o1 } = h;
   osc(5).color(0.5, g, 0.6).saturate(5).invert(inv).mult(noise(nn, ns)).out(o1);
@@ -110,7 +110,7 @@ export const fx7 = (
   ns: number,
   rot: number,
   lthrsh: number,
-  ltol: number
+  ltol: number,
 ) => {
   const { src, osc, noise, o0, o1 } = h;
   osc(3.5).color(0.5, g, 0.6).saturate(sat).invert(inv).mult(noise(nn, ns)).out(o1);
@@ -159,7 +159,11 @@ export const fx10 = () => {
   const { osc, shape } = h;
   var lfo = () => osc(1, 10, 0);
 
-  shape(5).color(1, 0, 0).mult(lfo()).add(shape(4).color(0, 0, 1).mult(lfo().invert()), 1).out();
+  shape(5)
+    .color(1, 0, 0)
+    .mult(lfo())
+    .add(shape(4).color(0, 0, 1).mult(lfo().invert()), 1)
+    .out();
 };
 
 //@ts-ignore
@@ -181,7 +185,7 @@ export const fx11 = (
   b1: number,
   r2: number,
   g2: number,
-  b2: number
+  b2: number,
 ) => {
   const { osc, shape, src, o0 } = h;
   var lfo = () => osc(1, 0.5, 0);
@@ -198,7 +202,7 @@ export const fx11 = (
         .rotate(120, rota2)
         //@ts-ignore
         .scale(s2.fast(10).smooth())
-        .color(r2, g2, b2)
+        .color(r2, g2, b2),
     )
     .out(o0);
 };
@@ -216,7 +220,7 @@ export const fx11bw = (
   msMult1: number,
   msMult2: number,
   msOffSet1: number,
-  msOffSet2: number
+  msOffSet2: number,
 ) => {
   const { osc, shape, src, o0 } = h;
   var lfo = () => osc(1, 0.5, 0);
@@ -231,7 +235,7 @@ export const fx11bw = (
         .modulateScale(src(o0), msMult2, msOffSet2)
         .rotate(120, rota2)
         //@ts-ignore
-        .scale(s2.fast(10).smooth())
+        .scale(s2.fast(10).smooth()),
       //.color(r2, g2, b2)
     )
     .out(o0);

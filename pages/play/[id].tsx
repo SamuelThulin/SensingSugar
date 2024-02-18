@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { getGalleryCollection } from '@/backend';
 import { Appbar, BackButton, PageHead, Title } from '@/frontend/components';
 import { PlayFrontend } from '@/frontend/play';
@@ -26,6 +27,7 @@ export default function PlaySample(_props: InferGetStaticPropsType<typeof getSta
     return () => {
       router.beforePopState(() => true);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router, sensingSugar]); // Add any state variables to dependencies array if needed.
 
   const handleSetSensingSugar = (value: SensingSugar) => setSensingSugar(value);
@@ -35,7 +37,7 @@ export default function PlaySample(_props: InferGetStaticPropsType<typeof getSta
 
   const handleOnTitleClick = () => {
     sensingSugar?.reset();
-    router.push('/')
+    router.push('/');
   };
 
   return (

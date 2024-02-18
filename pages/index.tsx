@@ -16,9 +16,9 @@ import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Link from 'next/link';
 
-type Props = {
+interface Props {
   introContent: string;
-};
+}
 
 export default function Home({ introContent }: InferGetStaticPropsType<typeof getStaticProps>) {
   const { t } = useTranslation();

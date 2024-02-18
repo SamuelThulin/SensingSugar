@@ -1,5 +1,4 @@
 import type { DocumentProps } from 'next/document';
-import { Analytics } from '@vercel/analytics/react';
 import Document, { Head, Html, Main, NextScript } from 'next/document';
 import i18nextConfig from '../next-i18next.config';
 
@@ -17,7 +16,6 @@ class MyDocument extends Document<Props> {
         <body>
           <Main />
           <NextScript />
-          <Analytics />
         </body>
       </Html>
     );
